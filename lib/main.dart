@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reto/pages/home.dart';
+import 'package:reto/pages/portada.dart';
 
 void main() => runApp(new MyApp());
 
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
    return MaterialApp(
      title: 'NavigationDrawer Demo',
      theme: ThemeData.dark(),
-     home: homePage(),
+     home: PortadaPage(),
      debugShowCheckedModeBanner: false,
    );
  }

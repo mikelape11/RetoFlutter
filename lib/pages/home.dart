@@ -1,47 +1,95 @@
 import 'package:flutter/material.dart';
 
-class homePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image:  AssetImage('images/fondo11.png'),
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.dstATop), 
-          )
-        ),
+class HomePage extends StatefulWidget {
+
+@override
+  Home createState()=> Home();
+}
+class Home extends State<HomePage>{
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
+  List<Widget> _widgetOptions() => [
+    Center(
+      child: Container(
+        padding: EdgeInsets.all(25),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 280, bottom: 100),
-                height: 130,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image:  AssetImage('images/logo.png')
-                  )
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Colors.cyan,
-                child: Text('EMPEZAR', style: TextStyle(fontSize: 22),),
-                padding: EdgeInsets.all(14),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onPressed: (){
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //   builder: (context) => InfoPiloto(datos.nombrePiloto[i], datos.piloto[i], datos.numeroPiloto[i], datos.piloto[i], datos.color1[i], datos.color2[i], datos.equipoPiloto[i], datos.biografiaPiloto[i]),
-                  // ));
-                },
-              )
+            Text(
+              'SOY CHAT', 
+              style: optionStyle,
             )
           ],
         )
-      )
+      ),
+    ),
+    Center(
+      child: Container(
+        padding: EdgeInsets.all(25),
+        child: Text(
+          'SOY MAPA',
+          style: optionStyle,
+        ),
+      ),
+    ),
+    Center(
+      child: Container(
+        padding: EdgeInsets.all(25),
+        child: Text(
+          'SOY RANKING',
+          style: optionStyle,
+        ),
+      ),
+    )
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Widget> children = _widgetOptions( );
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text("HOME"),
+      ),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget> [ 
+                Container(
+                  //child: _widgetOptions.elementAt(_selectedIndex),
+                  child: children[_selectedIndex],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Mapa',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.insert_chart_outlined),
+            label: 'Ranking',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.cyan,
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
