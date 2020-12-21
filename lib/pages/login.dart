@@ -1,25 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:reto/pages/registro.dart';
 import 'package:reto/pages/home.dart';
+import 'package:provider/provider.dart';
+import 'package:reto/theme/theme.dart';
 
 class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    
+    String _setImage() {
+      if(Theme.of(context).primaryColor == Colors.grey[900]) {
+        return "images/logo.png";
+      } else {
+        return "images/logo2.png";
+      } 
+    }
+
     return new Scaffold(
       appBar: AppBar(
         title: Text("Login"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.bedtime),
+            onPressed: () => _themeChanger.setTheme(ThemeData.dark())
+          ),
+          IconButton(
+            icon: Icon(Icons.wb_sunny_outlined),
+            onPressed: () => _themeChanger.setTheme(ThemeData.light())
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: <Widget>[
               Container(
-                margin: EdgeInsets.only(top: 100),
+                margin: EdgeInsets.only(top: 90),
                 height: 130,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image:  AssetImage('images/logo.png')
+                    //  image:  AssetImage('images/logo.png')
+                     image:  AssetImage(_setImage())
                   )
                 ),
               ),
@@ -28,11 +51,17 @@ class LoginPage extends StatelessWidget {
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
                   decoration: InputDecoration(
+                    // enabledBorder: UnderlineInputBorder(      
+                    //   borderSide: BorderSide(color: Colors.cyan),   
+                    // ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                    ),  
                     contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "Email",
+                    hintText: "Usuario",
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.email_outlined, size: 20.0, color: Colors.cyan,),
+                      child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
                     ),
                   ),
                 ),
@@ -41,18 +70,22 @@ class LoginPage extends StatelessWidget {
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
                   decoration: InputDecoration(
+                    
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                    ), 
                     contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
                     hintText: "Password",
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.lock, size: 20.0, color: Colors.cyan,),
+                      child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
                     ),
                   ),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(left: 200, top: 3),
-                child: Text('Forgot Password?')
+                child: Text('Forgot Password?',style: TextStyle( fontWeight: FontWeight.bold),)
               ),
               Container(
                 margin: EdgeInsets.only(top: 25),
@@ -70,7 +103,7 @@ class LoginPage extends StatelessWidget {
               ),
               Container(
                 margin: EdgeInsets.only(top: 20),
-                child: Text('Login with')
+                child: Text('Login with', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -90,10 +123,24 @@ class LoginPage extends StatelessWidget {
                     )
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 25,  left: 10),
+                    margin: EdgeInsets.only(top: 25,  left: 10, right: 10),
                     child: RaisedButton(
                       color: Colors.cyan,
                       child: Text('TWITTER', style: TextStyle(fontSize: 16),),
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => RegistroPage(),
+                        ));
+                      },
+                    )
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 25,  left: 10),
+                    child: RaisedButton(
+                      color: Colors.blue[800],
+                      child: Text('FACEBOOK', style: TextStyle(fontSize: 16),),
                       padding: EdgeInsets.only(left: 15, right: 15),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
@@ -108,7 +155,7 @@ class LoginPage extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 30),
                 child: InkWell(
-                  child: Text('You dont have an account? SIGN UP'),
+                  child: Text('You dont have an account? SIGN UP', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => RegistroPage(),
