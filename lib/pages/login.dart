@@ -20,7 +20,8 @@ class LoginPage extends StatelessWidget {
 
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Login"),
+        title: Text("LOGIN"),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(Icons.bedtime),

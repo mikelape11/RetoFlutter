@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reto/theme/theme.dart';
 
@@ -8,7 +10,7 @@ class HomePage extends StatefulWidget {
   Home createState()=> Home();
 }
 class Home extends State<HomePage>{
-
+  PickedFile _imageFile;
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
@@ -16,6 +18,7 @@ class Home extends State<HomePage>{
     return new Scaffold(
       appBar: AppBar(
         title: Text("HOME"),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(Icons.bedtime),
@@ -99,10 +102,66 @@ class Home extends State<HomePage>{
     Center(
       child: Container(
         padding: EdgeInsets.all(25),
-        child: Text(
-          'SOY RANKING',
-          style: optionStyle,
-        ),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'CLASIFICACIÓN EN DIRECTO',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 50),
+              child: Row(
+              children: <Widget>[
+                Stack(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(left: 0, top: 110),
+                      child: CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: Colors.cyan,
+                        child: CircleAvatar(
+                          radius: 57.0,
+                          backgroundImage: _imageFile == null
+                            ? AssetImage("images/perfil.png")
+                            : FileImage(File(_imageFile.path)),
+                        )            
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 222, top: 110),
+                      child: CircleAvatar(
+                        radius: 60.0,
+                        backgroundColor: Colors.cyan,
+                        child: CircleAvatar(
+                          radius: 57.0,
+                          backgroundImage: _imageFile == null
+                            ? AssetImage("images/perfil.png")
+                            : FileImage(File(_imageFile.path)),
+                        )            
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 84.0),
+                      child:  CircleAvatar(
+                        radius: MediaQuery.of(context).size.width/4.5,
+                        backgroundColor: Colors.cyan,
+                        child: CircleAvatar(
+                          radius:  MediaQuery.of(context).size.width/4.7,
+                          backgroundImage: _imageFile == null
+                            ? AssetImage("images/perfil.png")
+                            : FileImage(File(_imageFile.path)),
+                        )            
+                      ),
+                    ),
+                  ],
+                ),
+                
+               
+                
+              ])
+            ), 
+          ],
+        )
       ),
     )
   ];
