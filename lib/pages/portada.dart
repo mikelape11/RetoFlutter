@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import 'package:reto/pages/login.dart';
 
-import '../theme/theme.dart';
+//import '../theme/theme.dart';
 
 class PortadaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    //ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
     String _setImage() {
       if(Theme.of(context).primaryColor == Colors.grey[900]) {

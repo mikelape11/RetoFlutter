@@ -18,18 +18,22 @@ class LoginPage extends StatelessWidget {
       } 
     }
 
+    Icon _setIcon(){
+      if(Theme.of(context).primaryColor == Colors.grey[900]) {
+        return Icon(Icons.bedtime_outlined);
+      } else {
+        return Icon(Icons.wb_sunny_outlined);
+      }
+    }
+
     return new Scaffold(
       appBar: AppBar(
         title: Text("LOGIN"),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.bedtime),
-            onPressed: () => _themeChanger.setTheme(ThemeData.dark())
-          ),
-          IconButton(
-            icon: Icon(Icons.wb_sunny_outlined),
-            onPressed: () => _themeChanger.setTheme(ThemeData.light())
+            icon: _setIcon(),
+            onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
         ],
       ),

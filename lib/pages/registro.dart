@@ -26,6 +26,14 @@ class Registro extends State<RegistroPage>{
       } 
     }
 
+    Icon _setIcon(){
+      if(Theme.of(context).primaryColor == Colors.grey[900]) {
+        return Icon(Icons.bedtime_outlined);
+      } else {
+        return Icon(Icons.wb_sunny_outlined);
+      }
+    }
+
     void takePhoto(ImageSource source) async{
       final pickedFile = await _picker.getImage(
         source: source,
@@ -71,7 +79,8 @@ class Registro extends State<RegistroPage>{
                   },
                   label: Text("Galeria")
                 )
-              ],)
+              ],
+            )
           ]
         ),
       );
@@ -122,12 +131,8 @@ class Registro extends State<RegistroPage>{
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.bedtime),
-            onPressed: () => _themeChanger.setTheme(ThemeData.dark())
-          ),
-          IconButton(
-            icon: Icon(Icons.wb_sunny_outlined),
-            onPressed: () => _themeChanger.setTheme(ThemeData.light())
+            icon: _setIcon(),
+            onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
         ],
       ),
