@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:reto/pages/perfil_usuario.dart';
 import 'package:reto/theme/theme.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -21,19 +22,19 @@ class Home extends State<HomePage>{
     mapController = controller;
   }
   static const inicio = LatLng(43.345735526682304, -1.7973972095021267);
-  static const styles = [
-    'mapbox://styles/srlopezh/ckivkzf483y7i19qkmwg1kgjh',
-    'mapbox://styles/srlopezh/ckivky8na1xj319o78gpc6pgv',
-    'mapbox://styles/srlopezh/ckivkxjk91x4e19narx7vhdyu',
-    'mapbox://styles/srlopezh/ckivkww683xto1ap9ak2aklym',
-    'mapbox://styles/srlopezh/ckivkw22h3xp21al2rv9xql10',
-    'mapbox://styles/srlopezh/ckivkusmu3xp91aqly5l49iu0',
-  ];
-  var style = 0;
-  var zdirection = 1;
-  var zvalue = 0.0;
-  var tdirection = 1;
-  var tvalue = 0.0;
+  // static const styles = [
+  //   'mapbox://styles/srlopezh/ckivkzf483y7i19qkmwg1kgjh',
+  //   'mapbox://styles/srlopezh/ckivky8na1xj319o78gpc6pgv',
+  //   'mapbox://styles/srlopezh/ckivkxjk91x4e19narx7vhdyu',
+  //   'mapbox://styles/srlopezh/ckivkww683xto1ap9ak2aklym',
+  //   'mapbox://styles/srlopezh/ckivkw22h3xp21al2rv9xql10',
+  //   'mapbox://styles/srlopezh/ckivkusmu3xp91aqly5l49iu0',
+  // ];
+  // var style = 0;
+  // var zdirection = 1;
+  // var zvalue = 0.0;
+  // var tdirection = 1;
+  // var tvalue = 0.0;
 
   PickedFile _imageFile;
 
@@ -60,7 +61,11 @@ class Home extends State<HomePage>{
           ),
           IconButton(
             icon: Icon(Icons.settings_outlined),
-            onPressed: () {}
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PerfilUsuario(),
+              ));
+            }
           ),
         ],
       ),
@@ -406,7 +411,7 @@ class Home extends State<HomePage>{
 
   Widget messageListArea() {
     return Container(
-      height: 500,
+      height: 488,
     );
   }
 

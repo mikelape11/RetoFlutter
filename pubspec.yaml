@@ -55,6 +55,11 @@ flutter:
     - images/logo2.png
     - images/fondo11.png
     - images/perfil.png
+    - images/Rutas/ruta1.jpg
+    - images/Rutas/ruta2.jpg
+    - images/Rutas/ruta3.jpg
+    - images/Rutas/ruta4.jpg
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

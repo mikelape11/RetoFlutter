@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reto/pages/menu_ruta.dart';
 import 'package:reto/pages/registro.dart';
 import 'package:reto/pages/home.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,7 @@ class LoginPage extends StatelessWidget {
       }
     }
 
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text("LOGIN"),
         centerTitle: true,
@@ -101,7 +102,7 @@ class LoginPage extends StatelessWidget {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomePage(),
+                      builder: (context) => MenuRuta(),
                     ));
                   },
                 )
