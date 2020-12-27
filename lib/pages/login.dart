@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reto/pages/menu_ruta.dart';
 import 'package:reto/pages/registro.dart';
-import 'package:reto/pages/home.dart';
+//import 'package:reto/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'package:reto/theme/theme.dart';
 

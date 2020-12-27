@@ -1,11 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 //import 'package:provider/provider.dart';
-import 'package:reto/pages/login.dart';
+//import 'package:reto/pages/login.dart';
 
 //import '../theme/theme.dart';
 
-class PortadaPage extends StatelessWidget {
+class PortadaPage extends StatefulWidget {
 
+  @override
+  _PortadaPageState createState() => _PortadaPageState();
+}
+
+class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
+  
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if( state == AppLifecycleState.resumed){
+      if( await Permission.location.isGranted ){
+        Navigator.pushReplacementNamed(context, 'loading');
+      }
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     //ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
@@ -41,21 +69,43 @@ class PortadaPage extends StatelessWidget {
             ),
             Container(
               margin: EdgeInsets.only(right: 10),
-              child: RaisedButton(
+              child: MaterialButton(
                 color: Colors.cyan,
                 child: Text('EMPEZAR', style: TextStyle(fontSize: 22),),
                 padding: EdgeInsets.all(14),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
-                },
+                onPressed: () async{
+                  final status = await Permission.location.request();
+                  this.accesoGPS(status);
+                  //print(status);
+                }
               )
-            )
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20, right: 10),
+              child: Text('Es necesario el GPS para usar esta app'),
+            ),
           ],
         )
       )
     );
+  }
+
+  void accesoGPS( PermissionStatus status) {
+
+    switch(status){
+
+      case PermissionStatus.undetermined:
+        break;
+      case PermissionStatus.granted:
+        Navigator.pushReplacementNamed(context, 'login');
+        break;
+      case PermissionStatus.denied:
+      case PermissionStatus.restricted:
+      case PermissionStatus.permanentlyDenied:
+        openAppSettings();
+        
+      
+    }
   }
 }

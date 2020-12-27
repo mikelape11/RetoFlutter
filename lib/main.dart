@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:reto/pages/loading_page.dart';
+import 'package:reto/pages/login.dart';
 import 'package:reto/pages/portada.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,11 @@ class MaterialAppWithTheme extends StatelessWidget {
       home: PortadaPage(),
       theme: theme.getTheme(),
       debugShowCheckedModeBanner: false,
+      routes: {
+        'login'   : ( _ ) => LoginPage(),
+        'loading' : ( _ ) => LoadingPage(),
+        'portada' : ( _ ) => PortadaPage(),
+      },
     );
   }
 }
