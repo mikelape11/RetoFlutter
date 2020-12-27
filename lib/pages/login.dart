@@ -75,18 +75,20 @@ class LoginPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
-                  decoration: InputDecoration(
-                    
+                  obscureText: true,
+                  decoration: InputDecoration(    
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                     ), 
                     contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
                     hintText: "Password",
+                    
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                       child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
                     ),
                   ),
+                  
                 ),
               ),
               Container(
