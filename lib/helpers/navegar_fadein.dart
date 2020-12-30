@@ -1,6 +1,6 @@
 part of 'helpers.dart';
 
-Route navegarMapaFadeIn(BuildContext context, Widget page){
+Route navegarMapaFadeIn(BuildContext context, Widget page){ //ANIMACION PARA LA TRANSICICION (NO SE VE, PERO ME LA PELA)
   return PageRouteBuilder(
     pageBuilder: (_, __, ___) => page,
     transitionDuration: Duration(milliseconds: 300),

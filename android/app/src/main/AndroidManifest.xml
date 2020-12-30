@@ -26,8 +26,9 @@
         android:label="reto"
         android:icon="@mipmap/ic_launcher">
 
-        <meta-data android:name="com.mapbox.token" android:value="pk.eyJ1IjoibWlrZWxhcGUxMSIsImEiOiJja2oxZHpvamw0dG83MnFsYm9iNGZpeWp4In0._MZ-S3wU4DtFLCKZNpSawQ"
-              />
+        <meta-data android:name="com.google.android.geo.API_KEY"
+                  android:value="AIzaSyCUR_zRUzPKRSh5oZGjt-VmHKhGumQ_DEE"/>
+
 
         <activity
             android:name=".MainActivity"
@@ -64,7 +65,5 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyB8CMAD2AQxaaEeOEiwk_tn7VTMFku2nbg"/>
     </application>
 </manifest>

@@ -1,44 +1,94 @@
 //import 'dart:async';
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:provider/provider.dart';
-import 'package:reto/pages/perfil_usuario.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:reto/theme/theme.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:reto/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+import 'package:reto/bloc/mapa/mapa_bloc.dart';
+
+import 'package:reto/widgets/widgets.dart';
+import 'package:reto/pages/perfil_usuario.dart';
+
+//import 'package:flutter/services.dart' show rootBundle;
 
 class HomePage extends StatefulWidget {
-
-@override
-  Home createState()=> Home();
-}
-
-class Home extends State<HomePage>{
-
-  //MAPA 
-  MapboxMapController mapController;
-
-  void _onMapCreated(MapboxMapController controller) {
-    mapController = controller;
+  //PANTALLA HOME
+  @override
+    Home createState()=> Home();
   }
-  static const inicio = LatLng(43.345735526682304, -1.7973972095021267);
-  // static const styles = [
-  //   'mapbox://styles/srlopezh/ckivkzf483y7i19qkmwg1kgjh',
-  //   'mapbox://styles/srlopezh/ckivky8na1xj319o78gpc6pgv',
-  //   'mapbox://styles/srlopezh/ckivkxjk91x4e19narx7vhdyu',
-  //   'mapbox://styles/srlopezh/ckivkww683xto1ap9ak2aklym',
-  //   'mapbox://styles/srlopezh/ckivkw22h3xp21al2rv9xql10',
-  //   'mapbox://styles/srlopezh/ckivkusmu3xp91aqly5l49iu0',
-  // ];
-  // var style = 0;
-  // var zdirection = 1;
-  // var zvalue = 0.0;
-  // var tdirection = 1;
-  // var tvalue = 0.0;
 
-  PickedFile _imageFile;
+class Home extends State<HomePage> with WidgetsBindingObserver{
+  // final Completer<GoogleMapController> _controller = Completer();
 
-  Icon _setIcon(){
+  PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+  // String _darkMapStyle;
+  // String _lightMapStyle;
+
+  @override
+  void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
+    context.bloc<MiUbicacionBloc>().iniciarSeguimiento();
+    // WidgetsBinding.instance.addObserver(this);
+    // _loadMapStyles();
+    super.initState();
+  }
+
+  @override
+  void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
+    context.bloc<MiUbicacionBloc>().cancerlarSeguimiento();
+    // WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
+    
+    if( !state.existeUbicacion ) return Center(child: Text('Ubicando...'));
+
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
+
+    final cameraPosition = new CameraPosition(
+      target: state.ubicacion,
+      zoom: 15,
+    );
+
+    return GoogleMap(
+      initialCameraPosition: cameraPosition,
+      // mapType: MapType.normal,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      onMapCreated: mapaBloc.initMapa, 
+    );
+  }
+
+  // Future _loadMapStyles() async {
+  //   _darkMapStyle  = await rootBundle.loadString('images/map_styles/dark.json');
+  //   _lightMapStyle = await rootBundle.loadString('images/map_styles/light.json');
+  // }
+
+  // Future _setMapStyle() async {
+  //   final controller = await _controller.future;
+  //   final theme = WidgetsBinding.instance.window.platformBrightness;
+  //   if (theme == Brightness.dark)
+  //     controller.setMapStyle(_darkMapStyle);
+  //   else
+  //     controller.setMapStyle(_lightMapStyle);
+  // }
+
+  // @override
+  // void didChangePlatformBrightness() {
+  //   setState(() {
+  //     _setMapStyle();
+  //   });
+  // }
+
+  Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
     if(Theme.of(context).primaryColor == Colors.grey[900]) {
       return Icon(Icons.bedtime_outlined);
     } else {
@@ -48,18 +98,18 @@ class Home extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
-    final List<Widget> children = _widgetOptions();
-    return new Scaffold(
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
+    final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
+    return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
         title: Text("HOME"),
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
-          IconButton(
+          IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
             icon: Icon(Icons.settings_outlined),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
@@ -71,20 +121,20 @@ class Home extends State<HomePage>{
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Container(
+          child: Container( //TODA LA PANTALLA DEL HOME
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget> [ 
                 Container(
                   //child: _widgetOptions.elementAt(_selectedIndex),
-                  child: children[_selectedIndex],
+                  child: children[_selectedIndex], //SE VERA EN PANTALLA LA OPCION SELECCIONADA DEL BOTTOMNAVIGATIONBAR
                 )
               ],
             ),
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar( //LAS OPCIONES DEL BOTTOMNAVIGATIONBAR
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
@@ -108,15 +158,15 @@ class Home extends State<HomePage>{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  List<Widget> _widgetOptions() => [
+  List<Widget> _widgetOptions() => [ //LAS OPCIONES DEL B
     Center(
-      child: Container(
+      child: Container( //PANTALLA CHAT (POR HACER)
         padding: EdgeInsets.all(25),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            messageListArea(),
-            submitArea(),
+            messageListArea(), //EL CONTAINER DE LOS MENSAJES
+            submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
             // Text(
             //   'SOY CHAT', 
             //   style: optionStyle,
@@ -125,41 +175,42 @@ class Home extends State<HomePage>{
         )
       ),
     ),
-    Column(
-        children: [
-          Stack(
-            children: <Widget>[
-              Container(
-                height: 600,
-                child: MapboxMap(
-                  styleString: Theme.of(context).primaryColor == Colors.grey[900] ? 'mapbox://styles/mikelape11/ckj1f8lf22py319o3gyfnhd97' : 'mapbox://styles/mikelape11/ckj1fb9fw9kmp19s3qrxrf3t0',
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: const CameraPosition(target: inicio, zoom: 15,),
-                )
+    Column( //PANTALLA MAPA
+      children: [
+        Stack( //ES COMO POSITION ABSOLUTE PARA COLOCAR LOS BOTONES
+          children: <Widget>[
+            Container( //CONTAINER DEL MAPA
+              height: 600,
+              child: BlocBuilder<MiUbicacionBloc, MiUbicacionState>( //PARA USAR LOS BLOCS CREADOS PARA LA GESTION DEL MAPA (UBICACION)
+                builder: ( _ , state) => crearMapa(state) //LLAMO A LA FUNCION DEL MAPA
               ),
-            ]
-          ),
-         
-        ],
-      ),
-    
-    Center(
+            ),
+            Column( //COLOCACION DE TODOS LOS BOTONES
+              children: [
+                BtnUbicacion(),
+              ],
+            ),
+          ]
+        ),
+      ],
+    ),
+    Center( //PANTALLA DE RANKING
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         child: Column(
           children: <Widget>[
             Divider(),
-            Text(
+            Text( //TEXTO DEL TITULO DE LA PANTALLA
               'CLASIFICACIÓN',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             Divider(),
-            Container(
+            Container( //CONTAINER DEL PODIO
               padding: EdgeInsets.only(bottom: 5),
               margin: EdgeInsets.only(top: 0),
-              child: Row(
+              child: Row( //LAS 3 POSICIONES IRAN EN UNA FILA
               children: <Widget>[
-                Stack(
+                Stack( //PARA PODER COLOCAR LOS CONTAINERS DENTRO DE LA FILA
                   children: [
                     Container( //ESTRELLA 1
                       margin: EdgeInsets.symmetric(horizontal: 137),
@@ -325,13 +376,13 @@ class Home extends State<HomePage>{
               ])
             ),
             Divider(),
-            Container(
+            Container( //CONTENEDOR PARA LOS OTROS PUESTOS
               child: Column(
                 children: <Widget>[
-                  for(int i=4; i<9; i++)
-                  Container(
+                  for(int i=4; i<9; i++) //HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
+                  Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
                     margin: EdgeInsets.only(top: 10),
-                    child: Row(
+                    child: Row( //CREO UNA FILA PARA MOSTRARLOS
                       children: <Widget>[
                         Container( //NUMERO POSICION
                           width: 40,
@@ -403,19 +454,19 @@ class Home extends State<HomePage>{
     )
   ];
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index) { //FUNCION PARA SELECCIONAR LA PANTALLA DE LOS 3 DIFERENTES QUE EXISTEN
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  Widget messageListArea() {
+  Widget messageListArea() { //EL WIDGET PARA VER LOS MENSAJES DE TEXTO
     return Container(
       height: 488,
     );
   }
 
-  Widget submitArea() {
+  Widget submitArea() { //EL WIDGET PARA ENVIAR LOS MENSAJES
     return SizedBox(
       width: 350.0,
       height: 70.0,

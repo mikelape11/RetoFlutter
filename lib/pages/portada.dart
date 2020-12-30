@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 //import 'package:provider/provider.dart';
 //import 'package:reto/pages/login.dart';
@@ -6,13 +7,13 @@ import 'package:permission_handler/permission_handler.dart';
 //import '../theme/theme.dart';
 
 class PortadaPage extends StatefulWidget {
-
+  //PANTALLA DE LA PORTADA
   @override
   _PortadaPageState createState() => _PortadaPageState();
 }
 
 class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
-  
+  //USO ESTAS FUNCIONES PARA LA COMPROBACION DELOS PERMISOS DEL GPS, PARA COMPROBAR SI HA HABIDO ALGUN CAMBIO
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -38,15 +39,15 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
   Widget build(BuildContext context) {
     //ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    String _setImage() {
+    String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return "images/logo.png";
       } else {
         return "images/logo2.png";
       } 
     }
-    return Scaffold(
-      body: Container(
+    return Scaffold( //EMPIEZA LA PANTALLA DE LA PORTADA
+      body: Container( //LE COLOCO EL FONDO DE PANTALLA EN EL BODY
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -54,7 +55,7 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
             colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop), 
           )
         ),
-        child: Column(
+        child: Column( //LOGO
           children: <Widget>[
             Center(
               child: Container(
@@ -67,21 +68,21 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
                 ),
               ),
             ),
-            Container(
+            Container( //BOTON EMPEZAR
               margin: EdgeInsets.only(right: 10),
               child: MaterialButton(
                 color: Colors.cyan,
                 child: Text('EMPEZAR', style: TextStyle(fontSize: 22),),
                 padding: EdgeInsets.all(14),
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onPressed: () async{
+                onPressed: () async{ //PARA COMPROBAR LOS PERMISOS
                   final status = await Permission.location.request();
                   this.accesoGPS(status);
                   //print(status);
                 }
               )
             ),
-            Container(
+            Container( //TEXTO
               margin: EdgeInsets.only(top: 20, right: 10),
               child: Text('Es necesario el GPS para usar esta app'),
             ),
@@ -91,21 +92,18 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
     );
   }
 
-  void accesoGPS( PermissionStatus status) {
+  void accesoGPS( PermissionStatus status) { //FUNCION EN LA QUE COMPRUEBA EL ESTADO DE LOS PERMISOS
 
     switch(status){
-
       case PermissionStatus.undetermined:
         break;
-      case PermissionStatus.granted:
+      case PermissionStatus.granted: //SI ESTA PERMITIDO ENTRA A LA PANTALLA DE LOGIN
         Navigator.pushReplacementNamed(context, 'login');
         break;
       case PermissionStatus.denied:
       case PermissionStatus.restricted:
       case PermissionStatus.permanentlyDenied:
-        openAppSettings();
-        
-      
+        openAppSettings(); //NOS LLEVA A OPCIONES SI NO ESTA PERMITIDO EL ACCESO
     }
   }
 }

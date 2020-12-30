@@ -1,18 +1,20 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
+
 import 'package:reto/pages/home.dart';
 
 import '../theme/theme.dart';
 
 class MenuRuta extends StatelessWidget {
-
+  //PANTALLA DE ELEGIR LA RUTA
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    Icon _setIcon(){
+    Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return Icon(Icons.bedtime_outlined);
       } else {
@@ -20,12 +22,12 @@ class MenuRuta extends StatelessWidget {
       }
     }
 
-    return Scaffold(
+    return Scaffold( //EMPIEZA LA PANTALLA DEL MENU
       appBar: AppBar(
         title: Text("MENU"),
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
@@ -38,16 +40,16 @@ class MenuRuta extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Divider(),
-                Text(
+                Text( //TITULO
                   'ESCOGE TU RUTA',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Divider(),
-                Row(
+                Row( //PRIMERA FILA DE RUTAS
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    Container( //PRIMERA RUTA: IRUN
                       margin: EdgeInsets.all(0.0),
                       child: FlatButton(
                         padding: EdgeInsets.zero,
@@ -97,7 +99,7 @@ class MenuRuta extends StatelessWidget {
                       )
                       
                     ),
-                    Container(
+                    Container( //SEGUNDA RUTA: IRUN - HENDAIA
                       child: FlatButton(
                         padding: EdgeInsets.zero,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -148,11 +150,11 @@ class MenuRuta extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
+                Row( //SEGUNDA FILA DE RUTAS
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    Container( //TERCERA RUTA: DONOSTI 1
                       child: FlatButton(
                         padding: EdgeInsets.zero,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -200,7 +202,7 @@ class MenuRuta extends StatelessWidget {
                         ),
                       )
                     ),
-                    Container(
+                    Container( //CUARTA RUTA: DONOSTI 2
                       child: FlatButton(
                         padding: EdgeInsets.zero,
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -251,7 +253,7 @@ class MenuRuta extends StatelessWidget {
                   ],
                 ),
                 Divider(),
-                Text(
+                Text( //TITULO PROXIMAMENTE
                   'COMING SOON',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),

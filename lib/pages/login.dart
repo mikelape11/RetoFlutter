@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
 import 'package:reto/pages/menu_ruta.dart';
 import 'package:reto/pages/registro.dart';
 //import 'package:reto/pages/home.dart';
-import 'package:provider/provider.dart';
+
 import 'package:reto/theme/theme.dart';
 
 class LoginPage extends StatelessWidget {
-
+  //PANTALLA DE LOGIN
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     
-    String _setImage() {
+    String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return "images/logo.png";
       } else {
@@ -19,7 +22,7 @@ class LoginPage extends StatelessWidget {
       } 
     }
 
-    Icon _setIcon(){
+    Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return Icon(Icons.bedtime_outlined);
       } else {
@@ -27,12 +30,12 @@ class LoginPage extends StatelessWidget {
       }
     }
 
-    return Scaffold(
+    return Scaffold( //EMPIEZA LA PANTALLA DE LOGIN
       appBar: AppBar(
         title: Text("LOGIN"),
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
@@ -42,7 +45,7 @@ class LoginPage extends StatelessWidget {
         child: Center(
           child: Column(
             children: <Widget>[
-              Container(
+              Container( //LOGO
                 margin: EdgeInsets.only(top: 90),
                 height: 130,
                 decoration: BoxDecoration(
@@ -52,7 +55,7 @@ class LoginPage extends StatelessWidget {
                   )
                 ),
               ),
-              Container(
+              Container( //PRIMER CAMPO: USUARIO
                 margin: EdgeInsets.only(top: 15),
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
@@ -72,7 +75,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
+              Container( //SEGUNDO CAMPO: CONTRASEÑA
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
                   obscureText: true,
@@ -88,14 +91,13 @@ class LoginPage extends StatelessWidget {
                       child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
                     ),
                   ),
-                  
                 ),
               ),
-              Container(
+              Container( //TEXTO OLVIDAR CONTRASEÑA
                 margin: EdgeInsets.only(left: 200, top: 3),
                 child: Text('Forgot Password?',style: TextStyle( fontWeight: FontWeight.bold),)
               ),
-              Container(
+              Container( //BOTON LOGIN
                 margin: EdgeInsets.only(top: 25),
                 child: RaisedButton(
                   color: Colors.cyan,
@@ -109,14 +111,14 @@ class LoginPage extends StatelessWidget {
                   },
                 )
               ),
-              Container(
+              Container( //TEXTO LOGEAR CON
                 margin: EdgeInsets.only(top: 20),
                 child: Text('Login with', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
               ),
-              Row(
+              Row( //FILA DE BOTONES
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
+                  Container( //BOTON DE GOOGLE
                     margin: EdgeInsets.only(top: 25, right: 10),
                     child: RaisedButton(
                       color: Colors.red,
@@ -130,7 +132,7 @@ class LoginPage extends StatelessWidget {
                       },
                     )
                   ),
-                  Container(
+                  Container( //BOTON DE TWITTER
                     margin: EdgeInsets.only(top: 25,  left: 10, right: 10),
                     child: RaisedButton(
                       color: Colors.cyan,
@@ -144,7 +146,7 @@ class LoginPage extends StatelessWidget {
                       },
                     )
                   ),
-                  Container(
+                  Container( //BOTON DE FACEBOOK
                     margin: EdgeInsets.only(top: 25,  left: 10),
                     child: RaisedButton(
                       color: Colors.blue[800],
@@ -160,7 +162,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
+              Container( //TEXTO PARA CREAR UNA NUEVA CUENTA
                 margin: EdgeInsets.only(top: 30),
                 child: InkWell(
                   child: Text('You dont have an account? SIGN UP', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),

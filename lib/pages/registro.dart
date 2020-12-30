@@ -1,24 +1,30 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:reto/pages/home.dart';
+
 import 'package:provider/provider.dart';
-import 'package:reto/theme/theme.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:reto/pages/home.dart';
+
+import 'package:reto/theme/theme.dart';
+
 class RegistroPage extends StatefulWidget {
-@override
-  Registro createState()=> Registro();
-}
+  //PANTALLA DE REGISTRO
+  @override
+    Registro createState()=> Registro();
+  }
 
 class Registro extends State<RegistroPage>{
-  PickedFile _imageFile;
-  final ImagePicker _picker = ImagePicker();
+
+  PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+  final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+
   @override
   Widget build(BuildContext context) {
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
 
-    String _setImage() {
+    String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return "images/logo.png";
       } else {
@@ -26,7 +32,7 @@ class Registro extends State<RegistroPage>{
       } 
     }
 
-    Icon _setIcon(){
+    Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return Icon(Icons.bedtime_outlined);
       } else {
@@ -34,7 +40,7 @@ class Registro extends State<RegistroPage>{
       }
     }
 
-    void takePhoto(ImageSource source) async{
+    void takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
       final pickedFile = await _picker.getImage(
         source: source,
       );
@@ -43,7 +49,7 @@ class Registro extends State<RegistroPage>{
       });
     }
 
-    Widget bottomSheet() {
+    Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
       return Container(
         height: 100.0,
         width: MediaQuery.of(context).size.width,
@@ -86,7 +92,7 @@ class Registro extends State<RegistroPage>{
       );
     }
 
-    Widget imageProfile(){
+    Widget imageProfile(){ //EL WIDGET DONDE SE COLOCARA LA FOTO DE PERFIL
       return Center(
         child: Container(
           margin: EdgeInsets.only(top: 25),
@@ -125,12 +131,12 @@ class Registro extends State<RegistroPage>{
       );
     }
 
-    return Scaffold(
+    return Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
         title: Text("REGISTRO"),
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
@@ -140,7 +146,7 @@ class Registro extends State<RegistroPage>{
         child: Center(
           child: Column(
             children: <Widget>[
-              Container(
+              Container( //LOGO
                 margin: EdgeInsets.only(top: 90),
                 height: 130,
                 decoration: BoxDecoration(
@@ -150,7 +156,7 @@ class Registro extends State<RegistroPage>{
                   )
                 ),
               ),
-              Container(
+              Container( //PRIMER CAMPO: USUARIO
                 margin: EdgeInsets.only(top: 35),
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
@@ -170,7 +176,7 @@ class Registro extends State<RegistroPage>{
                   ),
                 ),
               ),
-              Container(
+              Container( //SEGUNDO CAMPO: CONTRASEÑA
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
                   decoration: InputDecoration(
@@ -186,8 +192,8 @@ class Registro extends State<RegistroPage>{
                   ),
                 ),
               ),
-              imageProfile(),
-              Container(
+              imageProfile(), //FOTO DE PERFIL
+              Container( //BOTON DE REGISTRO
                 margin: EdgeInsets.only(top: 25),
                 child: RaisedButton(
                   color: Colors.cyan,

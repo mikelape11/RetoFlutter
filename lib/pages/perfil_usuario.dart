@@ -1,14 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
 import 'package:reto/pages/home.dart';
+import 'package:reto/pages/login.dart';
 
 import '../theme/theme.dart';
 
 class PerfilUsuario extends StatefulWidget {
-
+  //PANTALLA DE PERFIL DE USUARIO
   @override
   PerfilUsuarioPage createState()=> PerfilUsuarioPage();
 
@@ -18,11 +21,12 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
 
   @override
   Widget build(BuildContext context) {
-    PickedFile _imageFile;
-    final ImagePicker _picker = ImagePicker();
-    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
-    Icon _setIcon(){
+    PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+    final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
+
+    Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
         return Icon(Icons.bedtime_outlined);
       } else {
@@ -30,7 +34,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       }
     }
 
-    void takePhoto(ImageSource source) async{
+    void takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
       final pickedFile = await _picker.getImage(
         source: source,
       );
@@ -39,7 +43,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       });
     }
 
-    Widget bottomSheet() {
+    Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
       return Container(
         height: 100.0,
         width: MediaQuery.of(context).size.width,
@@ -82,7 +86,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       );
     }
 
-    Widget imageProfile(){
+    Widget imageProfile(){ //EL WIDGET DONDE SE COLOCARA LA FOTO DE PERFIL
       return Center(
         child: Container(
           margin: EdgeInsets.only(top: 25),
@@ -121,12 +125,12 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       );
     }
 
-    return Scaffold(
+    return Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
         title: Text("PERFIL"),
         centerTitle: true,
         actions: [
-          IconButton(
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
@@ -136,7 +140,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         child: Center(
           child: Column(
             children: <Widget>[
-              Container(
+              Container( //PRIMER CAMPO: USUARIO
                 margin: EdgeInsets.only(top: 35),
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
@@ -156,7 +160,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   ),
                 ),
               ),
-              Container(
+              Container( //SEGUNDO CAMPO: CONTRASEÑA
                 padding: EdgeInsets.only(left: 40, right: 40),
                 child: TextFormField(
                   decoration: InputDecoration(
@@ -172,8 +176,8 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   ),
                 ),
               ),
-              imageProfile(),
-              Container(
+              imageProfile(), //FOTO DE PERFIL
+              Container( //BOTON DE GUARDAR 
                 margin: EdgeInsets.only(top: 25),
                 child: RaisedButton(
                   color: Colors.cyan,
@@ -183,6 +187,20 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => HomePage(),
+                    ));
+                  },
+                )
+              ),
+              Container( //BOTON DE CERRAR SESION
+                margin: EdgeInsets.only(top: 25),
+                child: RaisedButton(
+                  color: Colors.cyan,
+                  child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
+                  padding: EdgeInsets.only(left: 115, right: 115),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onPressed: (){
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => LoginPage(),
                     ));
                   },
                 )
