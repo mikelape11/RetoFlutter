@@ -52,6 +52,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
+    mapaBloc.add(OnNuevaUbicacion(state.ubicacion));
+
     final cameraPosition = new CameraPosition(
       target: state.ubicacion,
       zoom: 15,
@@ -59,11 +61,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
     return GoogleMap(
       initialCameraPosition: cameraPosition,
-      // mapType: MapType.normal,
+      //mapType: MapType.satellite,
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
       onMapCreated: mapaBloc.initMapa, 
+      polylines: mapaBloc.state.polylines.values.toSet(),
+      onCameraMove: (cameraPosition){
+        mapaBloc.add(OnMovioMapa(cameraPosition.target));
+      },
     );
   }
 
@@ -187,6 +193,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             ),
             Column( //COLOCACION DE TODOS LOS BOTONES
               children: [
+                BtnLineaRuta(),
+                BtnSeguirUbicacion(),
                 BtnUbicacion(),
               ],
             ),

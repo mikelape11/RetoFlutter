@@ -1,30 +1,28 @@
 part of 'widgets.dart';
 
-class BtnUbicacion extends StatelessWidget {
-  //BOTON PARA CENTRAR LA UBICACION DEL USUARIO
+class BtnLineaRuta extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
 
     final mapaBloc = context.bloc<MapaBloc>();
-    final miUbicacionBloc = context.bloc<MiUbicacionBloc>();
 
     return Container(
       alignment: FractionalOffset.bottomRight,
-      margin: EdgeInsets.only(top: 10, right: 10),
+      margin: EdgeInsets.only(top: 400, right: 10),
       child: CircleAvatar(
         maxRadius: 28,
         backgroundColor: Colors.cyan,
         child: CircleAvatar(
           maxRadius: 25,
           child: IconButton(
-            icon: Icon( Icons.my_location_outlined),
+            icon: Icon( Icons.alt_route_outlined),
             onPressed: () {
-              final destino = miUbicacionBloc.state.ubicacion;
-              mapaBloc.moverCamara(destino);
+              mapaBloc.add(OnMarcarRecorrido());
             },
           ),
-        )
-      ),
+        ),
+      )
     );
   }
 }
