@@ -55,7 +55,11 @@ flutter:
   assets:
     - images/logo.png
     - images/logo2.png
+    - images/logo3.png
+    - images/logo4.png
     - images/fondo11.png
+    - images/fondo.png
+    - images/fondo2.png
     - images/perfil.png
     - images/Rutas/ruta1.jpg
     - images/Rutas/ruta2.jpg

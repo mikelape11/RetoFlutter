@@ -143,12 +143,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       bottomNavigationBar: BottomNavigationBar( //LAS OPCIONES DEL BOTTOMNAVIGATIONBAR
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Mapa',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart_outlined),
@@ -164,23 +164,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  List<Widget> _widgetOptions() => [ //LAS OPCIONES DEL B
-    Center(
-      child: Container( //PANTALLA CHAT (POR HACER)
-        padding: EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            messageListArea(), //EL CONTAINER DE LOS MENSAJES
-            submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
-            // Text(
-            //   'SOY CHAT', 
-            //   style: optionStyle,
-            // )
-          ],
-        )
-      ),
-    ),
+  List<Widget> _widgetOptions() => [
     Column( //PANTALLA MAPA
       children: [
         Stack( //ES COMO POSITION ABSOLUTE PARA COLOCAR LOS BOTONES
@@ -201,6 +185,22 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           ]
         ),
       ],
+    ), //LAS OPCIONES DEL B
+    Center(
+      child: Container( //PANTALLA CHAT (POR HACER)
+        padding: EdgeInsets.all(25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            messageListArea(), //EL CONTAINER DE LOS MENSAJES
+            submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
+            // Text(
+            //   'SOY CHAT', 
+            //   style: optionStyle,
+            // )
+          ],
+        )
+      ),
     ),
     Center( //PANTALLA DE RANKING
       child: Container(

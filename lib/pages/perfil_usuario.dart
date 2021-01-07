@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:reto/pages/home.dart';
 import 'package:reto/pages/login.dart';
+import 'package:reto/widgets/custom_alert_dialog.dart';
 
 import '../theme/theme.dart';
 
@@ -25,6 +26,14 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
     PickedFile _imageFile; //PARA LA FOTO DE PERFIL
     final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
+
+    String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
+      if(Theme.of(context).primaryColor == Colors.grey[900]) {
+        return "images/logo3.png";
+      } else {
+        return "images/logo4.png";
+      } 
+    }
 
     Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {
@@ -125,6 +134,149 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       );
     }
 
+    void informacion(BuildContext context) {
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          contentPadding: EdgeInsets.all(5),
+          content: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.cyan, width: 4),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            width: MediaQuery.of(context).size.width / 1.2,
+            height: MediaQuery.of(context).size.height / 1.22,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 200,
+                    width: 200,//Pregunta
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image:  AssetImage(_setImage())
+                      )
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container( //Respuesta1
+                    padding: EdgeInsets.symmetric(horizontal: 45.0),
+                    child: Text(
+                      'BIENVENIDO A ROUTE QUEST',
+                      style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container( 
+                    padding: EdgeInsets.symmetric(horizontal: 23.0),//Respuesta2
+                    child: Text(
+                      'Route Quest trata sobre un juego de preguntas sobre localizaciones especificas de nuestras rutas personalizadas para aquellos que desean conocer o visitar ciertos lugares del mundo. \n\nAparte de conocer lugares nuevos, podrás competir contra otros usuarios e incluso chatear con ellos.',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Container( //Respuesta
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+    }
+
+    void pregunta(BuildContext context) {
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          contentPadding: EdgeInsets.all(5),
+          content: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.cyan, width: 4),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            width: MediaQuery.of(context).size.width / 1.2,
+            height: MediaQuery.of(context).size.height / 2,
+            //padding: EdgeInsets.all(0),
+            //color: Colors.white,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Container( //Pregunta
+                    width: 300,
+                    child: Center(child: Text('¿En qué año se abrió la biblioteca Carlos Blanco Aguinaga?',  style: TextStyle(fontSize: 24),)),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container( //Respuesta1
+                    width: 300,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
+                      },
+                    )
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container( //Respuesta2
+                    width: 300,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                      padding: EdgeInsets.only(left: 50, right: 50),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
+                      },
+                    )
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Container( //Respuesta3
+                    width: 300,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                      padding: EdgeInsets.only(left: 50, right: 50),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
+                      },
+                    )
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+    }
+
     return Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
         title: Text("PERFIL"),
@@ -133,6 +285,14 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
+          ),
+          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
+            icon: Icon(Icons.check, size: 26,),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ));
+            }
           ),
         ],
       ),
@@ -179,10 +339,10 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
               imageProfile(), //FOTO DE PERFIL
               Container( //BOTON DE GUARDAR 
                 margin: EdgeInsets.only(top: 25),
+                width: 350,
                 child: RaisedButton(
                   color: Colors.cyan,
                   child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
-                  padding: EdgeInsets.only(left: 136, right: 136),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(
@@ -191,17 +351,41 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   },
                 )
               ),
+              Container( //BOTON DE GUARDAR 
+                margin: EdgeInsets.only(top: 25),
+                width: 350,
+                child: RaisedButton(
+                  color: Colors.cyan,
+                  child: Text('INFORMACIÓN', style: TextStyle(fontSize: 16),),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onPressed: (){           
+                    informacion(context);
+                  },
+                )
+              ),
               Container( //BOTON DE CERRAR SESION
                 margin: EdgeInsets.only(top: 25),
+                width: 350,
                 child: RaisedButton(
                   color: Colors.cyan,
                   child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
-                  padding: EdgeInsets.only(left: 115, right: 115),
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => LoginPage(),
                     ));
+                  },
+                )
+              ),
+              Container( //BOTON DE CERRAR SESION
+                margin: EdgeInsets.only(top: 25),
+                width: 350,
+                child: RaisedButton(
+                  color: Colors.cyan,
+                  child: Text('POPUP', style: TextStyle(fontSize: 16),),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onPressed: (){
+                    pregunta(context);
                   },
                 )
               ),
