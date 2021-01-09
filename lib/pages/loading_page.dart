@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as Geo;
 import 'package:permission_handler/permission_handler.dart';
-//import 'package:geolocator/geolocator.dart' as Geolocator;
+import 'package:reto/widgets/custom_alert_dialog.dart';
 
 import 'package:reto/helpers/helpers.dart';
 import 'package:reto/pages/portada.dart';
@@ -31,10 +31,46 @@ class _LoadingPageState extends State<LoadingPage> with WidgetsBindingObserver{
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if( state == AppLifecycleState.resumed){
-      if( await GeolocatorPlatform.instance.isLocationServiceEnabled()){
+      if( await Geo.GeolocatorPlatform.instance.isLocationServiceEnabled()){
         Navigator.pushReplacement(context, navegarMapaFadeIn(context, LoginPage()));
       }
     }
+  }
+
+  void mensajeAlerta(BuildContext context) {
+    showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CustomAlertDialog(
+        contentPadding: EdgeInsets.all(5),
+        content: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.cyan, width: 4),
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          width: MediaQuery.of(context).size.width / 1.2,
+          height: MediaQuery.of(context).size.height / 8,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
+                Container( //Respuesta1
+                  padding: EdgeInsets.symmetric(horizontal: 45.0),
+                  child: Text(
+                    'Active el GPS',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.cyan),
+                  ),
+                ),
+                Container( //Respuesta
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -48,9 +84,6 @@ class _LoadingPageState extends State<LoadingPage> with WidgetsBindingObserver{
           }else{
             return Center( child: CircularProgressIndicator(strokeWidth: 2)); //CIRCULO DE CARGA
           }
-          // return Center(
-          //  
-          // );
         },
       ),
     );
@@ -62,7 +95,7 @@ class _LoadingPageState extends State<LoadingPage> with WidgetsBindingObserver{
     final permisoGPS = await Permission.location.isGranted;
     
     // GPS esta activo
-    final gpsActivo = await GeolocatorPlatform.instance.isLocationServiceEnabled();
+    final gpsActivo = await Geo.GeolocatorPlatform.instance.isLocationServiceEnabled();
     
     if( permisoGPS && gpsActivo ){
       Navigator.pushReplacement(context, navegarMapaFadeIn(context, LoginPage()));
@@ -71,7 +104,7 @@ class _LoadingPageState extends State<LoadingPage> with WidgetsBindingObserver{
       Navigator.pushReplacement(context, navegarMapaFadeIn(context, PortadaPage()));
       return 'Es necesario el permiso del GPS';
     }else if(!gpsActivo){
-      return 'Active el GPS';
+      return mensajeAlerta(context);
     }
   }
 }

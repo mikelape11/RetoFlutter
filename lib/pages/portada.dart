@@ -75,20 +75,20 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
                     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container( //Respuesta1
-                    padding: EdgeInsets.symmetric(horizontal: 45.0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
                       'BIENVENIDO A ROUTE QUEST',
                       style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Container( 
-                    padding: EdgeInsets.symmetric(horizontal: 23.0),//Respuesta2
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),//Respuesta2
                     child: Text(
                       'Route Quest trata sobre un juego de preguntas sobre localizaciones especificas de nuestras rutas personalizadas para aquellos que desean conocer o visitar ciertos lugares del mundo. \n\nAparte de conocer lugares nuevos, podrás competir contra otros usuarios e incluso chatear con ellos.',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
@@ -131,7 +131,7 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
           children: <Widget>[
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 280, bottom: 50),
+                margin: EdgeInsets.only(top: 280, bottom: 40),
                 height: 130,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -156,11 +156,11 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
             ),
             SizedBox(height: 15),
             Container( //TEXTO
-              margin: EdgeInsets.only(top: 20, right: 10),
-              child: Text('Es necesario el GPS para usar esta app', style: TextStyle(fontSize: 18,)),
+              margin: EdgeInsets.only(top: 10, right: 10),
+              child: Text('Es necesario el GPS para usar esta app', style: TextStyle(fontSize: 16,)),
             ),
             SizedBox(
-              height: 70,
+              height: 50,
             ),
             Container(
               margin: EdgeInsets.only(top: 0),
@@ -170,8 +170,7 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
                 onPressed: () {
                   informacion(context);
                 },
-              ),
-              
+              ),  
             ),
           ],
         )
@@ -180,7 +179,6 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
   }
 
   void accesoGPS( PermissionStatus status) { //FUNCION EN LA QUE COMPRUEBA EL ESTADO DE LOS PERMISOS
-
     switch(status){
       case PermissionStatus.undetermined:
         break;

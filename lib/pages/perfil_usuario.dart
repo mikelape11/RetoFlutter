@@ -164,20 +164,20 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Container( //Respuesta1
-                    padding: EdgeInsets.symmetric(horizontal: 45.0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
                       'BIENVENIDO A ROUTE QUEST',
                       style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Container( 
-                    padding: EdgeInsets.symmetric(horizontal: 23.0),//Respuesta2
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),//Respuesta2
                     child: Text(
                       'Route Quest trata sobre un juego de preguntas sobre localizaciones especificas de nuestras rutas personalizadas para aquellos que desean conocer o visitar ciertos lugares del mundo. \n\nAparte de conocer lugares nuevos, podrás competir contra otros usuarios e incluso chatear con ellos.',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
@@ -223,7 +223,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     height: 10,
                   ),
                   Container( //Respuesta1
-                    width: 300,
+                    width: 250,
                     child: RaisedButton(
                       color: Colors.cyan,
                       child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
@@ -239,7 +239,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     height: 15,
                   ),
                   Container( //Respuesta2
-                    width: 300,
+                    width: 250,
                     child: RaisedButton(
                       color: Colors.cyan,
                       child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
@@ -256,7 +256,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     height: 15,
                   ),
                   Container( //Respuesta3
-                    width: 300,
+                    width: 250,
                     child: RaisedButton(
                       color: Colors.cyan,
                       child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
