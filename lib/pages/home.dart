@@ -1,7 +1,9 @@
 //import 'dart:async';
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,12 +34,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   // String _darkMapStyle;
   // String _lightMapStyle;
+  MapType _currentMapType = MapType.normal;
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
   // ignore: deprecated_member_use
     context.bloc<MiUbicacionBloc>().iniciarSeguimiento();
-    // WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     // _loadMapStyles();
     super.initState();
   }
@@ -65,35 +68,68 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
     return GoogleMap(
       initialCameraPosition: cameraPosition,
-      //mapType: MapType.satellite,
+      mapType: _currentMapType,
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
-      onMapCreated: Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa : mapaBloc.initMapa2, 
+      onMapCreated: (GoogleMapController controller){
+        Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa(controller) : mapaBloc.initMapa2(controller);
+      },
       polylines: mapaBloc.state.polylines.values.toSet(),
       onCameraMove: (cameraPosition){
         mapaBloc.add(OnMovioMapa(cameraPosition.target));
       },
+
     );
   }
 
+  Widget button(Function function){
+    return Container(
+      alignment: FractionalOffset.bottomRight,
+      margin: EdgeInsets.only(top: 330, right: 10),
+      child: CircleAvatar(
+        maxRadius: 28,
+        backgroundColor: Colors.cyan,
+        child: CircleAvatar(
+          maxRadius: 25,
+          child: IconButton(
+            icon: Icon( Icons.satellite_outlined),
+            onPressed: function,
+          ),
+        ),
+      )
+    );
+  }
+
+  _onMapTypeButtonPressed(){
+    setState(() {
+      _currentMapType = _currentMapType == MapType.normal
+      ? MapType.satellite
+      : MapType.normal;
+    });
+  }
 
   // Future _loadMapStyles() async {
   //   _darkMapStyle  = await rootBundle.loadString('images/map_styles/dark.json');
   //   _lightMapStyle = await rootBundle.loadString('images/map_styles/light.json');
   // }
 
-  // Future _setMapStyle() async {
-  //   final controller = await _controller.future;
-  //   final theme = WidgetsBinding.instance.window.platformBrightness;
-  //   if (theme == Brightness.dark)
+  // void _setMapStyle() async {
+  //   print("sigue funcionando");
+  //   final GoogleMapController controller = await _controller.future;
+  //   print("still working");
+  //   if (Theme.of(context).primaryColor == Colors.grey[900]){
+  //     print('f');
   //     controller.setMapStyle(_darkMapStyle);
-  //   else
+  //   }else{
+  //     print('big f');
   //     controller.setMapStyle(_lightMapStyle);
+  //   }
   // }
 
   // @override
   // void didChangePlatformBrightness() {
+  //   print("va bien");
   //   setState(() {
   //     _setMapStyle();
   //   });
@@ -119,7 +155,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         actions: [
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
-            onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark()),
+            // onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark()),
+            onPressed: () { 
+              Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark());
+              didChangePlatformBrightness();
+            },
           ),
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
             icon: Icon(Icons.settings_outlined),
@@ -182,7 +222,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               ),
             ),
             Column( //COLOCACION DE TODOS LOS BOTONES
-              children: [
+              children: <Widget>[
+                button(_onMapTypeButtonPressed),
+                //BtnTipoMapa(),
                 BtnLineaRuta(),
                 BtnSeguirUbicacion(),
                 BtnUbicacion(),

@@ -65,6 +65,8 @@ flutter:
     - images/Rutas/ruta2.jpg
     - images/Rutas/ruta3.jpg
     - images/Rutas/ruta4.jpg
+    - images/map_styles/dark.json
+    - images/map_styles/light.json
 
   #   - images/a_dot_ham.jpeg
 

@@ -40,20 +40,18 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
 
   void initMapa(GoogleMapController controller){
 
+    this._mapController = controller;
+    this._mapController.setMapStyle(jsonEncode(mapTheme));   
 
-      this._mapController = controller;
-      this._mapController.setMapStyle(jsonEncode(mapTheme));   
-    
-       add(OnMapaListo());
-      }
+    add(OnMapaListo());
+  }
 
   void initMapa2(GoogleMapController controller){
-
-
-      this._mapController = controller;
-      this._mapController.setMapStyle(jsonEncode(mapThemeLight));   
+    this._mapController = controller;
+    this._mapController.setMapStyle(jsonEncode(mapThemeLight));  
+     
     add(OnMapaListo());
-      }
+  }
       
   void moverCamara(LatLng destino){
     final cameraUpdate = CameraUpdate.newLatLng(destino);
