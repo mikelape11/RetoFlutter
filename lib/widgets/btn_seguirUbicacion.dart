@@ -5,6 +5,7 @@ class BtnSeguirUbicacion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    // ignore: deprecated_member_use
     final mapaBloc = context.bloc<MapaBloc>();
 
     return BlocBuilder<MapaBloc, MapaState>(

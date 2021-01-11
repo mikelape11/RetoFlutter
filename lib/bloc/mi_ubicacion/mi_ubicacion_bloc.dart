@@ -20,6 +20,7 @@ class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
     //   distanceFilter: 10,
     // );
 
+// ignore: deprecated_member_use
     _positionSubscription = Geolocator.getPositionStream(
       desiredAccuracy: Geolocator.LocationAccuracy.high,
       distanceFilter: 10,

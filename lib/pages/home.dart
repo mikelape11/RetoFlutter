@@ -16,6 +16,8 @@ import 'package:reto/bloc/mapa/mapa_bloc.dart';
 import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
+import '../bloc/mapa/mapa_bloc.dart';
+
 //import 'package:flutter/services.dart' show rootBundle;
 
 class HomePage extends StatefulWidget {
@@ -33,6 +35,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
+  // ignore: deprecated_member_use
     context.bloc<MiUbicacionBloc>().iniciarSeguimiento();
     // WidgetsBinding.instance.addObserver(this);
     // _loadMapStyles();
@@ -41,6 +44,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
+  // ignore: deprecated_member_use
     context.bloc<MiUbicacionBloc>().cancerlarSeguimiento();
     // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -65,13 +69,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
-      onMapCreated: mapaBloc.initMapa, 
+      onMapCreated: Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa : mapaBloc.initMapa2, 
       polylines: mapaBloc.state.polylines.values.toSet(),
       onCameraMove: (cameraPosition){
         mapaBloc.add(OnMovioMapa(cameraPosition.target));
       },
     );
   }
+
 
   // Future _loadMapStyles() async {
   //   _darkMapStyle  = await rootBundle.loadString('images/map_styles/dark.json');
@@ -104,6 +109,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   @override
   Widget build(BuildContext context) {
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
@@ -113,7 +119,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         actions: [
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
-            onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
+            onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark()),
           ),
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
             icon: Icon(Icons.settings_outlined),
@@ -506,4 +512,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         ),
     );
   }
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

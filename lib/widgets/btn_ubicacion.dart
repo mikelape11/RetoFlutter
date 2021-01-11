@@ -5,7 +5,9 @@ class BtnUbicacion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+// ignore: deprecated_member_use
     final mapaBloc = context.bloc<MapaBloc>();
+    // ignore: deprecated_member_use
     final miUbicacionBloc = context.bloc<MiUbicacionBloc>();
 
     return Container(

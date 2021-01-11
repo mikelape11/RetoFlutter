@@ -9,9 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reto/theme/map_theme.dart';
 
 import '../../theme/map_theme.dart';
-import '../../theme/map_theme.dart';
-import '../../theme/map_theme.dart';
-import '../../theme/map_theme.dart';
 
 part 'mapa_event.dart';
 part 'mapa_state.dart';
@@ -40,18 +37,24 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   //   } 
   // }
 
+
   void initMapa(GoogleMapController controller){
 
-    if ( !state.mapaListo ){
+
       this._mapController = controller;
       this._mapController.setMapStyle(jsonEncode(mapTheme));   
+    
+       add(OnMapaListo());
+      }
 
-      add(OnMapaListo());
-    }
-    //this._mapController.setMapStyle(jsonEncode(mapThemeLight));
-    //this._mapController.setMapStyle(jsonEncode(mapTheme));   
-  }
+  void initMapa2(GoogleMapController controller){
 
+
+      this._mapController = controller;
+      this._mapController.setMapStyle(jsonEncode(mapThemeLight));   
+    add(OnMapaListo());
+      }
+      
   void moverCamara(LatLng destino){
     final cameraUpdate = CameraUpdate.newLatLng(destino);
     this._mapController?.animateCamera(cameraUpdate);
@@ -60,10 +63,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   @override
   Stream<MapaState> mapEventToState(MapaEvent event,) async* {
 
-    if(event is OnMapaListo){
-      yield state.copyWith(mapaListo: true);
-
-    } else if (event is OnNuevaUbicacion){
+     if (event is OnNuevaUbicacion){
       yield* this._onNuevaUbicacion(event);
 
     } else if (event is OnMarcarRecorrido){
