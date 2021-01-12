@@ -19,6 +19,7 @@ import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
 import '../widgets/custom_alert_dialog.dart';
+import 'package:dash_chat/dash_chat.dart';
 
 //import 'package:flutter/services.dart' show rootBundle;
 
@@ -29,13 +30,11 @@ class HomePage extends StatefulWidget {
   }
 
 class Home extends State<HomePage> with WidgetsBindingObserver{
-  // final Completer<GoogleMapController> _controller = Completer();
   GoogleMapController _controller;
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
-  // String _darkMapStyle;
-  // String _lightMapStyle;
   MapType _currentMapType = MapType.normal;
+  List<ChatMessage> mensajes = [];
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -150,9 +149,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             onPressed: () { 
               changeMapMode();
               Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark());
-              
               setState(() {});
-
             },
           ),
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
@@ -204,6 +201,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
+  
+  
   List<Widget> _widgetOptions() => [
     Column( //PANTALLA MAPA
       children: [
@@ -234,12 +233,43 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            messageListArea(), //EL CONTAINER DE LOS MENSAJES
-            submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
-            // Text(
-            //   'SOY CHAT', 
-            //   style: optionStyle,
-            // )
+            Container( 
+              child: DashChat(
+                messageContainerDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                ),
+                inputContainerStyle: BoxDecoration(        
+                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                  border: Border.all(color: Colors.cyan, width: 2),
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                height: MediaQuery.of(context).size.height/1.4,
+                user: ChatUser( 
+                  name: "Jhon Doe",
+                  uid: "xxxxxxxxx",
+                  // avatar:
+                  //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+                ),
+                messages: mensajes,
+                // messages:[ ChatMessage(
+                //   text: "Hello",
+                //   user: ChatUser(
+                //     containerColor: Colors.cyan,
+                //     name: "Fayeed",
+                //     uid: "123456789",
+                //     avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+                //   ),
+                //   createdAt: DateTime.now(),
+                //   image: "http://www.sclance.com/images/picture/Picture_753248.jpg",
+                // )],
+                onSend: (ChatMessage) {
+                  mensajes.add(ChatMessage);
+                },
+              ),
+            ),
+            // messageListArea(), //EL CONTAINER DE LOS MENSAJES
+            // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
           ],
         )
       ),
@@ -530,44 +560,45 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     });
   }
 
-  Widget messageListArea() { //EL WIDGET PARA VER LOS MENSAJES DE TEXTO
-    return Container(
-      height: 488,
-    );
-  }
+  // Widget messageListArea() { //EL WIDGET PARA VER LOS MENSAJES DE TEXTO
+  //   return Container(
+  //     height: 488,
+  //   );
+  // }
 
-  Widget submitArea() { //EL WIDGET PARA ENVIAR LOS MENSAJES
-    return SizedBox(
-      width: 350.0,
-      height: 70.0,
-      child: Card(
-      // shape: RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.circular(15.0),
-      //   side: BorderSide(
-      //     color: Colors.grey,
-      //     width: 2.0,
-      //   ),
-      // ),
-        child: ListTile(
-          contentPadding: EdgeInsets.only(bottom: 5, left: 20),
-          title: TextFormField(
-            decoration: InputDecoration(
-              hintText: "Escribe un mensaje",
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-              ),
-            ),
-            //controller: msgCon,
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.send),
-            color: Colors.cyan,
-            disabledColor: Colors.grey,
-            onPressed: (){}),
-          ),
-        ),
-    );
-  }
+  // Widget submitArea() { //EL WIDGET PARA ENVIAR LOS MENSAJES
+  //   return SizedBox(
+  //     width: 350.0,
+  //     height: 70.0,
+  //     child: Card(
+  //     // shape: RoundedRectangleBorder(
+  //     //   borderRadius: BorderRadius.circular(15.0),
+  //     //   side: BorderSide(
+  //     //     color: Colors.grey,
+  //     //     width: 2.0,
+  //     //   ),
+  //     // ),
+  //       child: ListTile(
+  //         contentPadding: EdgeInsets.only(bottom: 5, left: 20),
+  //         title: TextFormField(
+  //           decoration: InputDecoration(
+  //             hintText: "Escribe un mensaje",
+  //             focusedBorder: UnderlineInputBorder(
+  //               borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+  //             ),
+  //           ),
+  //           //controller: msgCon,
+  //         ),
+  //         trailing: IconButton(
+  //           icon: Icon(Icons.send),
+  //           color: Colors.cyan,
+  //           disabledColor: Colors.grey,
+  //           onPressed: (){}),
+  //         ),
+  //       ),
+  //   );
+  // }
+
   void detalles(BuildContext context) {
       showDialog(
       context: context,
