@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +30,7 @@ class HomePage extends StatefulWidget {
 
 class Home extends State<HomePage> with WidgetsBindingObserver{
   // final Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController _controller;
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   // String _darkMapStyle;
@@ -71,8 +73,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
-      onMapCreated: (GoogleMapController controller){
+      onMapCreated: (GoogleMapController controller){ 
         Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa(controller) : mapaBloc.initMapa2(controller);
+        _controller = controller;
       },
       polylines: mapaBloc.state.polylines.values.toSet(),
       onCameraMove: (cameraPosition){
@@ -108,32 +111,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     });
   }
 
-  // Future _loadMapStyles() async {
-  //   _darkMapStyle  = await rootBundle.loadString('images/map_styles/dark.json');
-  //   _lightMapStyle = await rootBundle.loadString('images/map_styles/light.json');
-  // }
-
-  // void _setMapStyle() async {
-  //   print("sigue funcionando");
-  //   final GoogleMapController controller = await _controller.future;
-  //   print("still working");
-  //   if (Theme.of(context).primaryColor == Colors.grey[900]){
-  //     print('f');
-  //     controller.setMapStyle(_darkMapStyle);
-  //   }else{
-  //     print('big f');
-  //     controller.setMapStyle(_lightMapStyle);
-  //   }
-  // }
-
-  // @override
-  // void didChangePlatformBrightness() {
-  //   print("va bien");
-  //   setState(() {
-  //     _setMapStyle();
-  //   });
-  // }
-
   Icon _setIcon(){ //CAMBIO EL ICONO DEPENDIENDO DEL TEMA
     if(Theme.of(context).primaryColor == Colors.grey[900]) {
       return Icon(Icons.bedtime_outlined);
@@ -142,9 +119,24 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     }
   }
 
+  changeMapMode(){
+    if(Theme.of(context).primaryColor == Colors.grey[900]){
+      getJsonFile("images/map_styles/light.json").then(setMapStyle);
+    }else{
+      getJsonFile("images/map_styles/dark.json").then(setMapStyle);
+    }
+  }
+
+  Future<String> getJsonFile(String path)async{
+   return await rootBundle.loadString(path);
+  }
+
+  void setMapStyle(String mapStyle){
+    _controller.setMapStyle(mapStyle);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mapaBloc = BlocProvider.of<MapaBloc>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
@@ -156,8 +148,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             icon: _setIcon(),
             // onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark()),
             onPressed: () { 
+              changeMapMode();
               Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark());
-              didChangePlatformBrightness();
+              
+              setState(() {});
+
             },
           ),
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO

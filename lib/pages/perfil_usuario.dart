@@ -20,11 +20,11 @@ class PerfilUsuario extends StatefulWidget {
 
 class PerfilUsuarioPage extends State<PerfilUsuario>{
 
+  PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+  final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+
   @override
   Widget build(BuildContext context) {
-
-    PickedFile _imageFile; //PARA LA FOTO DE PERFIL
-    final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
 
     String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
@@ -108,7 +108,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   radius: 77.0,
                    backgroundImage: _imageFile == null
                     ? AssetImage("images/perfil.png")
-                    : FileImage(File(_imageFile.path)),
+                    : FileImage(File(_imageFile.path))
                 )            
               ),
               Positioned(
