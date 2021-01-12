@@ -1,9 +1,7 @@
 //import 'dart:async';
-import 'dart:async';
-import 'dart:ffi';
+
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +17,7 @@ import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
+import '../widgets/custom_alert_dialog.dart';
 
 //import 'package:flutter/services.dart' show rootBundle;
 
@@ -334,43 +333,58 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                         ],
                       ),
                     ),
-                    Container( //FOTO SEGUNDA POSICION
+                   Container( //FOTO SEGUNDA POSICION
                       margin: EdgeInsets.only(left: 0, top: 110),
-                      child: CircleAvatar(
-                        radius: 60.0,
-                        backgroundColor: Colors.blueGrey[300],
+                      child: GestureDetector(
+                        onTap: () {
+                          detalles(context);
+                        },
                         child: CircleAvatar(
-                          radius: 56.0,
-                          backgroundImage: _imageFile == null
-                            ? AssetImage("images/perfil.png")
-                            : FileImage(File(_imageFile.path)),
-                        )            
+                          radius: 60.0,
+                          backgroundColor: Colors.blueGrey[300],
+                          child: CircleAvatar(
+                            radius: 56.0,
+                            backgroundImage: _imageFile == null
+                              ? AssetImage("images/perfil.png")
+                              : FileImage(File(_imageFile.path)),
+                          )            
+                        ),
                       ),
                     ),
                     Container( //FOTO TERCERA POSICION
                       margin: EdgeInsets.only(left: 214, top: 110),
-                      child: CircleAvatar(
-                        radius: 60.0,
-                        backgroundColor: Colors.brown,
+                      child: GestureDetector(
+                        onTap: () {
+                          detalles(context);
+                        },
                         child: CircleAvatar(
-                          radius: 56.0,
-                          backgroundImage: _imageFile == null
-                            ? AssetImage("images/perfil.png")
-                            : FileImage(File(_imageFile.path)),
-                        )            
+                          radius: 60.0,
+                          backgroundColor: Colors.brown,
+                          child: CircleAvatar(
+                            radius: 56.0,
+                            backgroundImage: _imageFile == null
+                              ? AssetImage("images/perfil.png")
+                              : FileImage(File(_imageFile.path)),
+                          )            
+                        ),
                       ),
                     ),
                     Container( //FOTO PRIMERA POSICION
                       margin: EdgeInsets.symmetric(vertical: 40, horizontal: 84),
-                      child:  CircleAvatar(
-                        radius: 83,
-                        backgroundColor: Colors.amberAccent[400],
-                        child: CircleAvatar(
-                          radius:  79,
-                          backgroundImage: _imageFile == null
-                            ? AssetImage("images/perfil.png")
-                            : FileImage(File(_imageFile.path)),
-                        )            
+                      child:  GestureDetector(
+                        onTap: () {
+                          detalles(context);
+                        },
+                         child: CircleAvatar(
+                          radius: 83,
+                          backgroundColor: Colors.amberAccent[400],
+                          child: CircleAvatar(
+                            radius:  79,
+                            backgroundImage: _imageFile == null
+                              ? AssetImage("images/perfil.png")
+                              : FileImage(File(_imageFile.path)),
+                          )            
+                        ),
                       ),
                     ),
                     Container( //NOMBRE SEGUNDA POSICION
@@ -435,70 +449,75 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             Container( //CONTENEDOR PARA LOS OTROS PUESTOS
               child: Column(
                 children: <Widget>[
-                  for(int i=4; i<9; i++) //HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
-                  Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
-                    margin: EdgeInsets.only(top: 10),
-                    child: Row( //CREO UNA FILA PARA MOSTRARLOS
-                      children: <Widget>[
-                        Container( //NUMERO POSICION
-                          width: 40,
-                          height: 40,
-                          color: Colors.cyan,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '${i}', 
-                            style: TextStyle(
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24.0,
-                              color: Colors.grey[900],
+                  for(int i=4; i<21; i++) //HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
+                  GestureDetector(
+                    onTap: () {
+                      detalles(context);
+                    },
+                    child: Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
+                      margin: EdgeInsets.only(top: 10),
+                      child: Row( //CREO UNA FILA PARA MOSTRARLOS
+                        children: <Widget>[
+                          Container( //NUMERO POSICION
+                            width: 40,
+                            height: 40,
+                            color: Colors.cyan,
+                            alignment: Alignment.center,
+                            child: Text(
+                              '${i}', 
+                              style: TextStyle(
+                                fontFamily: 'arial',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24.0,
+                                color: Colors.grey[900],
+                              )
                             )
-                          )
-                        ),
-                        Container( //FOTO 
-                          margin: EdgeInsets.only(left: 14),
-                          width: 70,
-                          height: 40,
-                          child: CircleAvatar(
-                            radius: 20.0,
-                            backgroundColor: Colors.cyan,
-                            child: CircleAvatar(
-                              radius: 19.0,
-                              backgroundImage: _imageFile == null
-                                ? AssetImage("images/perfil.png")
-                                : FileImage(File(_imageFile.path)),
-                            )            
                           ),
-                        ),
-                        Container( //NOMBRE DEL USUARIO
-                          margin: EdgeInsets.only(left: 13),
-                          width: 132,
-                          height: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            'Nombre Usuario', 
-                            style: TextStyle(
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
+                          Container( //FOTO 
+                            margin: EdgeInsets.only(left: 14),
+                            width: 70,
+                            height: 40,
+                            child: CircleAvatar(
+                              radius: 20.0,
+                              backgroundColor: Colors.cyan,
+                              child: CircleAvatar(
+                                radius: 19.0,
+                                backgroundImage: _imageFile == null
+                                  ? AssetImage("images/perfil.png")
+                                  : FileImage(File(_imageFile.path)),
+                              )            
+                            ),
+                          ),
+                          Container( //NOMBRE DEL USUARIO
+                            margin: EdgeInsets.only(left: 13),
+                            width: 132,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Nombre Usuario', 
+                              style: TextStyle(
+                                fontFamily: 'arial',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              )
                             )
-                          )
-                        ),
-                        Container( //PUNTUACION
-                          margin: EdgeInsets.only(left: 15),
-                          width: 50,
-                          height: 40, 
-                          alignment: Alignment.center,
-                          child: Text(
-                            '1900', 
-                            style: TextStyle(
-                              fontFamily: 'arial',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
+                          ),
+                          Container( //PUNTUACION
+                            margin: EdgeInsets.only(left: 15),
+                            width: 50,
+                            height: 40, 
+                            alignment: Alignment.center,
+                            child: Text(
+                              '1900', 
+                              style: TextStyle(
+                                fontFamily: 'arial',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                              )
                             )
-                          )
-                        ),
-                      ]
+                          ),
+                        ]
+                      ),
                     ),
                   ), 
                 ],
@@ -554,6 +573,84 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         ),
     );
   }
+  void detalles(BuildContext context) {
+      showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomAlertDialog(
+          contentPadding: EdgeInsets.all(5),
+          content: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.cyan, width: 4),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 2.75,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container( //Respuesta1
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                      'DETALLES',
+                      style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container( 
+                    padding: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            Text('Nombre', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('Puntuacion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('Duracion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('Aciertos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('Fallos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          ],
+                        ),
+                        SizedBox(width: 35,),
+                        Column(
+                          children: <Widget>[
+                            Text('Belako', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('2100', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('2H 30Min', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('7', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Divider(height: 10),
+                            Text('1', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          ],
+                        ),
+                      ],
+                    ),
+                    // child: Text(
+                    //   'Route Quest trata sobre un juego de preguntas sobre localizaciones especificas de nuestras rutas personalizadas para aquellos que desean conocer o visitar ciertos lugares del mundo. \n\nAparte de conocer lugares nuevos, podrás competir contra otros usuarios e incluso chatear con ellos.',
+                    //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
+                    // ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+    }
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
