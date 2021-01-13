@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:reto/pages/home.dart';
+import 'package:reto/theme/colors.dart';
 
 import 'package:reto/theme/theme.dart';
 
@@ -143,74 +144,129 @@ class Registro extends State<RegistroPage>{
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Container( //LOGO
-                margin: EdgeInsets.only(top: 90),
-                height: 130,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    // image:  AssetImage('images/logo.png')
-                    image:  AssetImage(_setImage())
+        child: CustomPaint(
+          painter: CurvePainter(context),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Container( //LOGO
+                  margin: EdgeInsets.only(top: 90),
+                  height: 130,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      // image:  AssetImage('images/logo.png')
+                      image:  AssetImage(_setImage())
+                    )
+                  ),
+                ),
+                Container( //PRIMER CAMPO: USUARIO
+                  margin: EdgeInsets.only(top: 35),
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      // enabledBorder: UnderlineInputBorder(      
+                      //   borderSide: BorderSide(color: Colors.cyan),   
+                      // ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                      ),  
+                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                      hintText: "Usuario",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                        child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                      ),
+                    ),
+                  ),
+                ),
+                Container( //SEGUNDO CAMPO: CONTRASEÑA
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                      ), 
+                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                      hintText: "Password",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                        child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                      ),
+                    ),
+                  ),
+                ),
+                imageProfile(), //FOTO DE PERFIL
+                Container( //BOTON DE REGISTRO
+                  margin: EdgeInsets.only(top: 25),
+                  child: RaisedButton(
+                    color: Colors.cyan,
+                    child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
+                    padding: EdgeInsets.only(left: 136, right: 136),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ));
+                    },
                   )
                 ),
-              ),
-              Container( //PRIMER CAMPO: USUARIO
-                margin: EdgeInsets.only(top: 35),
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    // enabledBorder: UnderlineInputBorder(      
-                    //   borderSide: BorderSide(color: Colors.cyan),   
-                    // ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                    ),  
-                    contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "Usuario",
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
-                    ),
-                  ),
-                ),
-              ),
-              Container( //SEGUNDO CAMPO: CONTRASEÑA
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                    ), 
-                    contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "Password",
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
-                    ),
-                  ),
-                ),
-              ),
-              imageProfile(), //FOTO DE PERFIL
-              Container( //BOTON DE REGISTRO
-                margin: EdgeInsets.only(top: 25),
-                child: RaisedButton(
-                  color: Colors.cyan,
-                  child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
-                  padding: EdgeInsets.only(left: 136, right: 136),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomePage(),
-                    ));
-                  },
-                )
-              ),
-            ],
-          )
+              ],
+            )
+          ),
         )
       )
     );
   }
 }
+
+class CurvePainter extends CustomPainter{
+
+  final BuildContext context ;
+  CurvePainter(this.context);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path = Path();
+    Paint paint = Paint();
+
+    path = Path();
+    path.lineTo(0, size.height*0.78);
+    path.quadraticBezierTo(size.width*0.10, size.height*0.55, size.width*0.22, size.height*0.71);
+    path.quadraticBezierTo(size.width*0.34, size.height*0.90, size.width*0.41, size.height*0.76);
+    path.quadraticBezierTo(size.width*0.51, size.height*0.51, size.width*0.65, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.74, size.height*0.86, size.width, size.height*0.62);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    if(Theme.of(context).primaryColor == Colors.grey[900]) {
+       paint.color = colorOne;
+     }else{
+       paint.color = colorTwo;
+     }
+    canvas.drawPath(path, paint);
+
+    path =Path();
+    path.lineTo(0, size.height*0.75);
+    path.quadraticBezierTo(size.width*0.10, size.height*0.55, size.width*0.22, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.35, size.height*0.88, size.width*0.40, size.height*0.75);
+    path.quadraticBezierTo(size.width*0.52, size.height*0.50, size.width*0.65, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.75, size.height*0.85, size.width, size.height*0.60);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    if(Theme.of(context).primaryColor == Colors.grey[900]) {
+       paint.color = colorThree;
+     }else{
+       paint.color = colorFour;
+     }
+    canvas.drawPath(path, paint);
+
+    
+  }
+
+  @override
+
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return oldDelegate != this;
+  }
+ }

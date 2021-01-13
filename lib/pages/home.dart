@@ -341,7 +341,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                       ),
                     ),
                     Container( //ESTRELLA 3
-                      margin: EdgeInsets.only(left: 245, top: 70),
+                      margin: EdgeInsets.only(left: 245, top: 80),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
@@ -381,7 +381,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                       ),
                     ),
                     Container( //FOTO TERCERA POSICION
-                      margin: EdgeInsets.only(left: 214, top: 110),
+                      margin: EdgeInsets.only(left: 214, top: 120),
                       child: GestureDetector(
                         onTap: () {
                           detalles(context);
@@ -417,59 +417,63 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                       ),
                     ),
                     Container( //NOMBRE SEGUNDA POSICION
+                      color:  Colors.blueGrey[300],
+                      padding: EdgeInsets.symmetric(vertical: 11),
                       width: 110,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 240, left: 5),
-                      child: Text(
-                        'Nombre',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey[300]),
+                      margin: EdgeInsets.only(top: 239, left: 5),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Nombre',
+                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '2100',
+                            style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ),
-                    Container( //PUNTUACION SEGUNDA POSICION
+                    Container( //NOMBRE TERCERA POSICION
+                      color: Colors.brown,
+                      padding: EdgeInsets.symmetric(vertical: 7),
                       width: 110,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 260, left: 5),
-                      child: Text(
-                        '2100',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      margin: EdgeInsets.only(top: 249, left: 220),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Nombre',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '2000',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ),
-                    Container( //FOTO PRIMERA POSICION
+                    
+                    Container( //NOMBRE PRIMERA POSICION
+                      color: Colors.amberAccent[400],
+                      padding: EdgeInsets.symmetric(vertical: 20),
                       width: 120,
                       alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 215, left: 108),
-                      child: Text(
-                        'Nombre',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.amberAccent[400]),
+                      margin: EdgeInsets.only(top: 219, left: 108),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Nombre',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '2200',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ),
-                    Container( //PUNTUACION PRIMERA POSICION
-                      width: 120,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 235, left: 108),
-                      child: Text(
-                        '2200',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container( //FOTO TERCERA POSICION
-                      width: 110,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 240, left: 220),
-                      child: Text(
-                        'Nombre',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.brown),
-                      ),
-                    ),
-                    Container( //PUNTUACION TERCERA POSICION
-                      width: 110,
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 260, left: 220),
-                      child: Text(
-                        '2000',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                    ),         
                   ],
                 ), 
               ])
