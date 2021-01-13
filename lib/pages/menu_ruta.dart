@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:reto/pages/home.dart';
+import 'package:reto/widgets/sliding_cards.dart';
 
 import '../theme/theme.dart';
 
@@ -45,219 +46,221 @@ class MenuRuta extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Divider(),
-                Row( //PRIMERA FILA DE RUTAS
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container( //PRIMERA RUTA: IRUN
-                      margin: EdgeInsets.all(0.0),
-                      child: FlatButton(
-                        padding: EdgeInsets.zero,
-	                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              child: FittedBox(
-                                child: Image.asset('images/Rutas/ruta1.jpg'),
-                                fit: BoxFit.fill,
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              height: 280,
-                              width: MediaQuery.of(context).size.width/2.5,                         
-                            ),
-                            ClipRRect(
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                                child: Container(
-                                  height: 287,
-                                  width: MediaQuery.of(context).size.width/2.4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    border: Border(
-                                      top: BorderSide(width: 1.0, color: Colors.cyan),
-                                      left: BorderSide(width: 1.0, color: Colors.cyan),
-                                      right: BorderSide(width: 1.0, color: Colors.cyan),
-                                      bottom: BorderSide(width: 1.0, color: Colors.cyan),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'IRÚN',
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ), 
-                          ],
-                        ),
-                      )
+                SlidingCardsView(),
+                Center(child: Text('DESLIZA PARA MÁS', style: TextStyle(fontSize: 25))),
+                // Row( //PRIMERA FILA DE RUTAS
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Container( //PRIMERA RUTA: IRUN
+                //       margin: EdgeInsets.all(0.0),
+                //       child: FlatButton(
+                //         padding: EdgeInsets.zero,
+	              //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //         onPressed: (){
+                //           Navigator.of(context).push(MaterialPageRoute(
+                //             builder: (context) => HomePage(),
+                //           ));
+                //         },
+                //         child: Stack(
+                //           children: <Widget>[
+                //             Container(
+                //               child: FittedBox(
+                //                 child: Image.asset('images/Rutas/ruta1.jpg'),
+                //                 fit: BoxFit.fill,
+                //               ),
+                //               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                //               height: 280,
+                //               width: MediaQuery.of(context).size.width/2.5,                         
+                //             ),
+                //             ClipRRect(
+                //               child: BackdropFilter(
+                //                 filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                //                 child: Container(
+                //                   height: 287,
+                //                   width: MediaQuery.of(context).size.width/2.4,
+                //                   decoration: BoxDecoration(
+                //                     color: Colors.white.withOpacity(0.1),
+                //                     border: Border(
+                //                       top: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       left: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       right: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       bottom: BorderSide(width: 1.0, color: Colors.cyan),
+                //                     ),
+                //                   ),
+                //                   child: Center(
+                //                     child: Text(
+                //                       'IRÚN',
+                //                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ), 
+                //           ],
+                //         ),
+                //       )
                       
-                    ),
-                    Container( //SEGUNDA RUTA: IRUN - HENDAIA
-                      child: FlatButton(
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              child: FittedBox(
-                                child: Image.asset('images/Rutas/ruta2.jpg'),
-                                fit: BoxFit.fill,
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              height: 280,
-                              width: MediaQuery.of(context).size.width/2.5,                         
-                            ),
-                            ClipRRect(
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                                child: Container(
-                                  height: 287,
-                                  width: MediaQuery.of(context).size.width/2.4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    border: Border(
-                                      top: BorderSide(width: 1.0, color: Colors.cyan),
-                                      left: BorderSide(width: 1.0, color: Colors.cyan),
-                                      right: BorderSide(width: 1.0, color: Colors.cyan),
-                                      bottom: BorderSide(width: 1.0, color: Colors.cyan),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'IRÚN - HENDAIA',
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ), 
-                          ],
-                        ),
-                      )
+                //     ),
+                //     Container( //SEGUNDA RUTA: IRUN - HENDAIA
+                //       child: FlatButton(
+                //         padding: EdgeInsets.zero,
+                //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //         onPressed: (){
+                //           Navigator.of(context).push(MaterialPageRoute(
+                //             builder: (context) => HomePage(),
+                //           ));
+                //         },
+                //         child: Stack(
+                //           children: <Widget>[
+                //             Container(
+                //               child: FittedBox(
+                //                 child: Image.asset('images/Rutas/ruta2.jpg'),
+                //                 fit: BoxFit.fill,
+                //               ),
+                //               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                //               height: 280,
+                //               width: MediaQuery.of(context).size.width/2.5,                         
+                //             ),
+                //             ClipRRect(
+                //               child: BackdropFilter(
+                //                 filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                //                 child: Container(
+                //                   height: 287,
+                //                   width: MediaQuery.of(context).size.width/2.4,
+                //                   decoration: BoxDecoration(
+                //                     color: Colors.white.withOpacity(0.1),
+                //                     border: Border(
+                //                       top: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       left: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       right: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       bottom: BorderSide(width: 1.0, color: Colors.cyan),
+                //                     ),
+                //                   ),
+                //                   child: Center(
+                //                     child: Text(
+                //                       'IRÚN - HENDAIA',
+                //                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ), 
+                //           ],
+                //         ),
+                //       )
                       
-                    ),
-                  ],
-                ),
-                Row( //SEGUNDA FILA DE RUTAS
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container( //TERCERA RUTA: DONOSTI 1
-                      child: FlatButton(
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              child: FittedBox(
-                                child: Image.asset('images/Rutas/ruta3.jpg'),
-                                fit: BoxFit.fill,
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              height: 280,
-                              width: MediaQuery.of(context).size.width/2.5,                         
-                            ),
-                            ClipRRect(
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                                child: Container(
-                                  height: 287,
-                                  width: MediaQuery.of(context).size.width/2.4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    border: Border(
-                                      top: BorderSide(width: 1.0, color: Colors.cyan),
-                                      left: BorderSide(width: 1.0, color: Colors.cyan),
-                                      right: BorderSide(width: 1.0, color: Colors.cyan),
-                                      bottom: BorderSide(width: 1.0, color: Colors.cyan),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'DONOSTI 1',
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ), 
-                          ],
-                        ),
-                      )
-                    ),
-                    Container( //CUARTA RUTA: DONOSTI 2
-                      child: FlatButton(
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              child: FittedBox(
-                                child: Image.asset('images/Rutas/ruta4.jpg'),
-                                fit: BoxFit.fill,
-                              ),
-                              margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              height: 280,
-                              width: MediaQuery.of(context).size.width/2.5,                         
-                            ),
-                            ClipRRect(
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                                child: Container(
-                                  height: 287,
-                                  width: MediaQuery.of(context).size.width/2.4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.1),
-                                    border: Border(
-                                      top: BorderSide(width: 1.0, color: Colors.cyan),
-                                      left: BorderSide(width: 1.0, color: Colors.cyan),
-                                      right: BorderSide(width: 1.0, color: Colors.cyan),
-                                      bottom: BorderSide(width: 1.0, color: Colors.cyan),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'DONOSTI 2',
-                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ), 
-                          ],
-                        ),
-                      )
-                    ),
-                  ],
-                ),
-                Divider(),
-                Text( //TITULO PROXIMAMENTE
-                  'COMING SOON',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                Divider(),
+                //     ),
+                //   ],
+                // ),
+                // Row( //SEGUNDA FILA DE RUTAS
+                //   crossAxisAlignment: CrossAxisAlignment.center,
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     Container( //TERCERA RUTA: DONOSTI 1
+                //       child: FlatButton(
+                //         padding: EdgeInsets.zero,
+                //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //         onPressed: (){
+                //           Navigator.of(context).push(MaterialPageRoute(
+                //             builder: (context) => HomePage(),
+                //           ));
+                //         },
+                //         child: Stack(
+                //           children: <Widget>[
+                //             Container(
+                //               child: FittedBox(
+                //                 child: Image.asset('images/Rutas/ruta3.jpg'),
+                //                 fit: BoxFit.fill,
+                //               ),
+                //               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                //               height: 280,
+                //               width: MediaQuery.of(context).size.width/2.5,                         
+                //             ),
+                //             ClipRRect(
+                //               child: BackdropFilter(
+                //                 filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                //                 child: Container(
+                //                   height: 287,
+                //                   width: MediaQuery.of(context).size.width/2.4,
+                //                   decoration: BoxDecoration(
+                //                     color: Colors.white.withOpacity(0.1),
+                //                     border: Border(
+                //                       top: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       left: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       right: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       bottom: BorderSide(width: 1.0, color: Colors.cyan),
+                //                     ),
+                //                   ),
+                //                   child: Center(
+                //                     child: Text(
+                //                       'DONOSTI 1',
+                //                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ), 
+                //           ],
+                //         ),
+                //       )
+                //     ),
+                //     Container( //CUARTA RUTA: DONOSTI 2
+                //       child: FlatButton(
+                //         padding: EdgeInsets.zero,
+                //         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //         onPressed: (){
+                //           Navigator.of(context).push(MaterialPageRoute(
+                //             builder: (context) => HomePage(),
+                //           ));
+                //         },
+                //         child: Stack(
+                //           children: <Widget>[
+                //             Container(
+                //               child: FittedBox(
+                //                 child: Image.asset('images/Rutas/ruta4.jpg'),
+                //                 fit: BoxFit.fill,
+                //               ),
+                //               margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                //               height: 280,
+                //               width: MediaQuery.of(context).size.width/2.5,                         
+                //             ),
+                //             ClipRRect(
+                //               child: BackdropFilter(
+                //                 filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                //                 child: Container(
+                //                   height: 287,
+                //                   width: MediaQuery.of(context).size.width/2.4,
+                //                   decoration: BoxDecoration(
+                //                     color: Colors.white.withOpacity(0.1),
+                //                     border: Border(
+                //                       top: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       left: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       right: BorderSide(width: 1.0, color: Colors.cyan),
+                //                       bottom: BorderSide(width: 1.0, color: Colors.cyan),
+                //                     ),
+                //                   ),
+                //                   child: Center(
+                //                     child: Text(
+                //                       'DONOSTI 2',
+                //                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             ), 
+                //           ],
+                //         ),
+                //       )
+                //     ),
+                //   ],
+                // ),
+                // Divider(),
+                // Text( //TITULO PROXIMAMENTE
+                //   'COMING SOON',
+                //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                // ),
+                // Divider(),
               ],
             )
           ),

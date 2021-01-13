@@ -62,10 +62,10 @@ flutter:
     - images/fondo.png
     - images/fondo2.png
     - images/perfil.png
-    - images/Rutas/ruta1.jpg
-    - images/Rutas/ruta2.jpg
-    - images/Rutas/ruta3.jpg
-    - images/Rutas/ruta4.jpg
+    - images/Rutas/irun.jpg
+    - images/Rutas/hendaia.jpg
+    - images/Rutas/donosti1.jpg
+    - images/Rutas/donosti2.jpg
     - images/map_styles/dark.json
     - images/map_styles/light.json
 
