@@ -235,9 +235,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           children: <Widget>[
             Container( 
               child: DashChat(
+                // messageDecorationBuilder: (ChatMessage msg, bool isUser) {
+                //   return BoxDecoration(
+                //     color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white70 : Colors.black87
+                //   );
+                // },
                 messageContainerDecoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
                 ),
                 inputContainerStyle: BoxDecoration(        
                   color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
