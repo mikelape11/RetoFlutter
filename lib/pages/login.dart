@@ -7,6 +7,7 @@ import 'package:reto/pages/registro.dart';
 //import 'package:reto/pages/home.dart';
 
 import 'package:reto/theme/theme.dart';
+import 'package:reto/theme/colors.dart';
 
 class LoginPage extends StatelessWidget {
   //PANTALLA DE LOGIN
@@ -42,6 +43,8 @@ class LoginPage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        child: CustomPaint(
+        painter: CurvePainter(),
         child: Center(
           child: Column(
             children: <Widget>[
@@ -177,6 +180,61 @@ class LoginPage extends StatelessWidget {
           )
         )
       )
+      )
     );
   }
 }
+
+class CurvePainter extends CustomPainter{
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path = Path();
+    Paint paint = Paint();
+
+    path =Path();
+    path.lineTo(0, size.height*0.75);
+    path.quadraticBezierTo(size.width*0.10, size.height*0.55, size.width*0.22, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.30, size.height*0.90, size.width*0.40, size.height*0.75);
+    path.quadraticBezierTo(size.width*0.52, size.height*0.50, size.width*0.65, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.75, size.height*0.85, size.width, size.height*0.60);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    paint.color = colorTwo;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return oldDelegate != this;
+  }
+
+// class _HeaderPaintDiagonal extends CustomPainter {
+//   @override
+//   void paint(Canvas canvas, Size size) {
+//     final paint = Paint()
+//     ..color = Colors.cyan
+//     ..style = PaintingStyle.stroke //una vez dibujado cambiar por .fill
+//     ..strokeWidth = 15;
+//     final path = Path();
+//     path.lineTo(size.width, size.width*0.20);
+//     canvas.drawPath(path, paint);
+//     final path2 = Path();
+//     path2.moveTo(-10,20);
+//     path2.lineTo(size.width, size.width*0.26);
+//     canvas.drawPath(path2, paint);
+//     final path3 = Path();
+//     path3.moveTo(-10,580);
+//     path3.lineTo(size.width, size.width*1.66);
+//     canvas.drawPath(path3, paint);
+//     final path4 = Path();
+//     path4.moveTo(-10,600);
+//     path4.lineTo(size.width, size.width*1.72);
+//     canvas.drawPath(path4, paint);
+//   }
+//   @override
+//   bool shouldRepaint(CustomPainter oldDelegate) => false;
+ }
+

@@ -257,7 +257,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                   //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
                 ),
                 messages: mensajes,
-                // messages:[ ChatMessage(
+                // messages: [ ChatMessage(
                 //   text: "Hello",
                 //   user: ChatUser(
                 //     containerColor: Colors.cyan,
@@ -266,7 +266,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 //     avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
                 //   ),
                 //   createdAt: DateTime.now(),
-                //   image: "http://www.sclance.com/images/picture/Picture_753248.jpg",
                 // )],
                 onSend: (ChatMessage) {
                   mensajes.add(ChatMessage);
