@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-usuarioModelo usuarioModeloJson(String str)=>
-  usuarioModelo.fromJson(json.decode(str));
+usuarioModelo usuarioModeloJson(String str)=> usuarioModelo.fromJson(json.decode(str));
 
 String usuarioModeloToJson(usuarioModelo data) => json.encode(data.toJson());
 

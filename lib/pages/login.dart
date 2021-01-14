@@ -188,6 +188,8 @@ class LoginPage extends StatelessWidget {
                           String password = secondController.text;
                           int cont = 0;
                           for(int i=0; i<snapshot.data.length; i++){
+                            if (_formKeysList[1].currentState.validate()) { 
+                            }
                             if(snapshot.data[i].usuario == usuario && snapshot.data[i].password == password){
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MenuRuta(),

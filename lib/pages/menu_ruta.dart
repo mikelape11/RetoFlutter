@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import 'package:reto/pages/home.dart';
 import 'package:reto/widgets/sliding_cards.dart';
 
 import '../theme/theme.dart';
+
 
 class MenuRuta extends StatelessWidget {
   //PANTALLA DE ELEGIR LA RUTA
@@ -22,6 +22,7 @@ class MenuRuta extends StatelessWidget {
         return Icon(Icons.wb_sunny_outlined);
       }
     }
+
 
     return Scaffold( //EMPIEZA LA PANTALLA DEL MENU
       appBar: AppBar(

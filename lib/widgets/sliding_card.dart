@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:reto/pages/home.dart';
 
+
 class SlidingCard extends StatelessWidget {
   final String name; //<-- title of the event
   final String date; //<-- date of the event
   final String assetName; //<-- name of the image to be displayed
+  final String distancia;
+  final String tiempo;
 
   const SlidingCard({
     Key key,
     @required this.name,
     @required this.date,
     @required this.assetName,
+    @required this.distancia,
+    @required this.tiempo,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +40,8 @@ class SlidingCard extends StatelessWidget {
             child: _CardContent( //<--replace the Container with CardContent
               name: name,
               date: date,
+              distancia: distancia,
+              tiempo: tiempo,
             ),
           ),
         ],
@@ -45,10 +53,13 @@ class SlidingCard extends StatelessWidget {
 class _CardContent extends StatelessWidget {
   final String name;
   final String date;
+  final String distancia;
+  final String tiempo;
 
-  const _CardContent({Key key, @required this.name, @required this.date})
+  const _CardContent({Key key, @required this.name, @required this.date, @required this.distancia,@required this.tiempo})
       : super(key: key);
 
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,28 +75,29 @@ class _CardContent extends StatelessWidget {
           SizedBox(height: 18),
           Center(
             child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    //Text(date, style: TextStyle(color: Colors.grey)),
-                      Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                      SizedBox(width: 10),
-                      Text("2.5 KM", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                    ],
-                  ), 
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("DURACIÓN: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                      SizedBox(width: 10),
-                      Text("2H 30MIN", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                    ],
-                  ),
-                ],
-              ),
+             
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      //Text(date, style: TextStyle(color: Colors.grey)),
+                        Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
+                        SizedBox(width: 10),
+                        Text(distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                      ],
+                    ), 
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("DURACIÓN: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
+                        SizedBox(width: 10),
+                        Text(tiempo, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                      ],
+                    ),
+                  ],
+                ),
             ),
           ),
           Spacer(),
