@@ -14,6 +14,7 @@ import 'package:reto/theme/colors.dart';
 import '../models/usuarioModelo.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:form_field_validator/form_field_validator.dart';
 
 class LoginPage extends StatelessWidget {
   //PANTALLA DE LOGIN
@@ -39,7 +40,36 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController firstController = TextEditingController();
   TextEditingController secondController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  String _usuario;
+  String _password;
+   List<GlobalKey<FormState>> _formKeysList= [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+  ];
+
+  String validarUsuario(String value) {
+    if (value.isEmpty) {
+      return "Rellena el campo";
+    } else if (value.length < 5) {
+      return "El usuario tiene que tener como minimo 5 caracteres";
+    }  else if(value == _usuario){
+      return "El usuario no existe";
+    } else 
+      return null;
+  }
+
+  String validarPassword(String value) {
+    if (value.isEmpty) {
+      return "Rellena el campo";
+    } else if (value.length < 8) {
+      return "La contraseña tiene que tener como minimo 8 caracteres";
+    }  else if(value == _password){
+      print(value);
+      print(_password);
+      return "La contraseña no es correcta";
+    } else 
+      return null;
+  }
 
   Future<List<usuarioModelo>> getUsuarios() async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
@@ -68,7 +98,7 @@ class LoginPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          autovalidate: true,
           child: CustomPaint(
             painter: CurvePainter(context),
             child: Center(
@@ -87,55 +117,54 @@ class LoginPage extends StatelessWidget {
                   Container( //PRIMER CAMPO: USUARIO
                     margin: EdgeInsets.only(top: 15),
                     padding: EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                      controller: firstController,
-                      validator: (String value){
-                        if(value.isEmpty){
-                          return 'rellena el campo';
-                        }else if(value == "no existe"){
-                          firstController.text = "";
-                          return 'el usuario no existe';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        // enabledBorder: UnderlineInputBorder(      
-                        //   borderSide: BorderSide(color: Colors.cyan),   
-                        // ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                        ),  
-                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "Usuario",
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                          child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                    child: Form(
+                      autovalidate: true,
+                      key: _formKeysList[0],
+                      child: TextFormField(
+                        controller: firstController,
+                        validator: validarUsuario,
+                        onSaved: (String value){
+                          _usuario = value;
+                        },
+                        decoration: InputDecoration(
+                          // enabledBorder: UnderlineInputBorder(      
+                          //   borderSide: BorderSide(color: Colors.cyan),   
+                          // ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                          ),  
+                          contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                          hintText: "Usuario",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                            child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Container( //SEGUNDO CAMPO: CONTRASEÑA
                     padding: EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: secondController,
-                      validator: (String value){
-                        if(value.isEmpty){
-                          return 'rellena el campo';
-                        }else if(value == "no coincide"){
-                          secondController.text = "";
-                          return 'contraseña incorrecta';
-                        }
-                      },
-                      decoration: InputDecoration(    
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                        ), 
-                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "Password",
-                        
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                          child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                    child: Form(
+                      autovalidate: true,
+                      key: _formKeysList[1],
+                      child: TextFormField(
+                        obscureText: true,
+                        controller: secondController,
+                        validator: validarPassword,
+                         onSaved: (String value){
+                          _password = value;
+                        },
+                        decoration: InputDecoration(    
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                          ), 
+                          contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                          hintText: "Password",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                            child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                          ),
                         ),
                       ),
                     ),
@@ -157,27 +186,29 @@ class LoginPage extends StatelessWidget {
                         onPressed: () async{
                           String usuario = firstController.text;
                           String password = secondController.text;
+                          int cont = 0;
                           for(int i=0; i<snapshot.data.length; i++){
-                              //print(snapshot.data[i].usuario);
-                                if (_formKey.currentState.validate()) {
-                                    Scaffold.of(context);
-                                  }
-                              if(snapshot.data[i].usuario == usuario && snapshot.data[i].password == password){
-                                print("Existe"); 
-                                  Navigator.of(context).push(MaterialPageRoute(
+                            if(snapshot.data[i].usuario == usuario && snapshot.data[i].password == password){
+                                Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MenuRuta(),
-                                ));                              
-                              }else{
-                            
-                                if(snapshot.data[i].usuario != usuario){
-                                  firstController.text = "no existe";
-                                    if (_formKey.currentState.validate()) {
-                                    Scaffold.of(context);
+                                ));  
+                            }else{
+                              if(snapshot.data[i].usuario != usuario){
+                                 cont ++; 
+                              }
+                            if(cont == snapshot.data.length){
+                                if (_formKeysList[0].currentState.validate()) { 
+                                    _formKeysList[0].currentState.save();
                                   }
-                                }else if(snapshot.data[i].usuario == usuario && snapshot.data[i].password != password){
-                                  secondController.text = "no coincide";
-                                }   
-                              }       
+                            }
+                            if(snapshot.data[i].password != password && snapshot.data[i].usuario == usuario){
+                              if (_formKeysList[1].currentState.validate()) { 
+                                _formKeysList[1].currentState.save();
+                                print(_password);
+                              }
+                                
+                              }  
+                            }       
                           }  
                         },
                       

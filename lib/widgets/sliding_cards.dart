@@ -19,10 +19,10 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       child: PageView(
         controller: pageController,
         children: <Widget>[
-           SlidingCard(
-            name: 'Irún',
-            date: '2 Horas',
-            assetName: 'irun.jpg',
+          SlidingCard(
+            name: 'Donosti 1',
+            date: '3 Horas',
+            assetName: 'donosti2.jpg',
           ),
           SlidingCard(
             name: 'Irún - Hendaia',
@@ -30,14 +30,14 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
             assetName: 'hendaia.jpg',
           ),
           SlidingCard(
-            name: 'Donosti 1',
+            name: 'Donosti 2',
             date: '2 Horas',
             assetName: 'donosti1.jpg',
           ),
-          SlidingCard(
-            name: 'Donosti 2',
-            date: '3 Horas',
-            assetName: 'donosti2.jpg',
+           SlidingCard(
+            name: 'Irún',
+            date: '2 Horas',
+            assetName: 'irun.jpg',
           ),
         ],
       ),

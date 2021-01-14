@@ -15,7 +15,9 @@ import 'package:reto/theme/colors.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'home.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+
+import 'menu_ruta.dart';
 
 class RegistroPage extends StatefulWidget {
   //PANTALLA DE REGISTRO
@@ -39,6 +41,7 @@ Future<usuarioModelo> registrarUsuario(String usuario, String password, String r
 class Registro extends State<RegistroPage>{
 
   //var employess = List<usuarioModelo>.generate(200, (index) => null);
+  String _usuario;
 
   Future<List<usuarioModelo>> getUsuarios() async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
@@ -53,9 +56,21 @@ class Registro extends State<RegistroPage>{
     return usuario;
   }
 
+  String validarUsuario(String value) {
+    if (value.isEmpty) {
+      return "Rellena el campo";
+    } else if (value.length < 5) {
+      return "El usuario tiene que tener como minimo 5 caracteres";
+    }  else if(value == _usuario){
+      return "El usuario ya existe";
+    } else 
+      return null;
+  }
+
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
-  final _formKey = GlobalKey<FormState>();
+
+   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   TextEditingController firstController = TextEditingController();
   TextEditingController secondController = TextEditingController();
@@ -194,7 +209,8 @@ class Registro extends State<RegistroPage>{
       ),
       body: SingleChildScrollView(
         child: Form(
-          key: _formKey,
+          autovalidate: true, //comprueba validacion a tiempo real
+          key: formkey,
           child: CustomPaint(
             painter: CurvePainter(context),
             child: Center(
@@ -214,14 +230,10 @@ class Registro extends State<RegistroPage>{
                     margin: EdgeInsets.only(top: 35),
                     padding: EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                      controller: firstController,
-                      validator: (String value){
-                        if(value.isEmpty){
-                          return 'rellena el campo';
-                        }else if(value == "existe"){
-                          firstController.text = "";
-                          return 'usuario existe';
-                        }
+                    controller: firstController,
+                     validator: validarUsuario,
+                     onSaved: (String value){
+                        _usuario = value;
                       },
                       decoration: InputDecoration(
                         // enabledBorder: UnderlineInputBorder(      
@@ -237,6 +249,7 @@ class Registro extends State<RegistroPage>{
                           child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
                         ),
                       ),
+                        
                     ),
                   ),
                   Container( //SEGUNDO CAMPO: CONTRASEÑA
@@ -244,11 +257,12 @@ class Registro extends State<RegistroPage>{
                     child: TextFormField(
                       obscureText: true,
                       controller: secondController,
-                      validator: (String value){
-                        if(value.isEmpty){
-                          return 'rellena el campo';
-                        }
-                      },
+                      validator: MultiValidator([
+                      RequiredValidator(errorText: "Rellena el campo"),
+                      MinLengthValidator(8,
+                          errorText: "La contraseña tiene que ser de al menos 8 caracteres"),
+                     
+                    ]),
                       decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.cyan, width: 2.0),
@@ -275,24 +289,21 @@ class Registro extends State<RegistroPage>{
                           padding: EdgeInsets.only(left: 136, right: 136),
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           onPressed: () async {
-                          
                             String usuario = firstController.text;
                             String password = secondController.text;
                             int cont = 0;
                             for(int i=0; i<snapshot.data.length; i++){
                               //print(snapshot.data[i].usuario);
                               if(snapshot.data[i].usuario == usuario){
-                                print("Existe"); 
-                                firstController.text = "existe";
+                                formkey.currentState.save();
+                                //print(_usuario);
                               }else{
-                                print("No Existe");
-                                if (_formKey.currentState.validate()) {
-                                  Scaffold.of(context);
-                                }else{
-                                  cont ++;    
-                                }
+                                if (formkey.currentState.validate()) {
+                                    cont ++; 
+                                } else {
+                                  print("Not Validated");        
+                                }                
                               }
-
                               if(cont == snapshot.data.length){
                                 usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "images/logo.png");
                                 firstController.text = '';
@@ -301,10 +312,9 @@ class Registro extends State<RegistroPage>{
                                   usuario = usuarios as String;
                                 });
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => HomePage(),
+                                    builder: (context) => MenuRuta(),
                                   )
-                                  );
-                                  
+                                );  
                               }
                             }
                           },
