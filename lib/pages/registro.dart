@@ -38,7 +38,7 @@ Future<usuarioModelo> registrarUsuario(String usuario, String password, String r
 
 class Registro extends State<RegistroPage>{
 
-  var employess = List<usuarioModelo>.generate(200, (index) => null);
+  //var employess = List<usuarioModelo>.generate(200, (index) => null);
 
   Future<List<usuarioModelo>> getUsuarios() async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
@@ -55,6 +55,7 @@ class Registro extends State<RegistroPage>{
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController firstController = TextEditingController();
   TextEditingController secondController = TextEditingController();
@@ -192,118 +193,128 @@ class Registro extends State<RegistroPage>{
         ],
       ),
       body: SingleChildScrollView(
-              child: Form(
-            child: CustomPaint(
+        child: Form(
+          key: _formKey,
+          child: CustomPaint(
             painter: CurvePainter(context),
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Container( //LOGO
-                  margin: EdgeInsets.only(top: 90),
-                  height: 130,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      // image:  AssetImage('images/logo.png')
-                      image:  AssetImage(_setImage())
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Container( //LOGO
+                    margin: EdgeInsets.only(top: 90),
+                    height: 130,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        // image:  AssetImage('images/logo.png')
+                        image:  AssetImage(_setImage())
+                      )
+                    ),
+                  ),
+                  Container( //PRIMER CAMPO: USUARIO
+                    margin: EdgeInsets.only(top: 35),
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                      controller: firstController,
+                      validator: (String value){
+                        if(value.isEmpty){
+                          return 'rellena el campo';
+                        }else if(value == "existe"){
+                          firstController.text = "";
+                          return 'usuario existe';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        // enabledBorder: UnderlineInputBorder(      
+                        //   borderSide: BorderSide(color: Colors.cyan),   
+                        // ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                        ),  
+                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                        hintText: "Usuario",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                          child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container( //SEGUNDO CAMPO: CONTRASEÑA
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: secondController,
+                      validator: (String value){
+                        if(value.isEmpty){
+                          return 'rellena el campo';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                        ), 
+                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                        hintText: "Password",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                          child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                        ),
+                      ),
+                    ),
+                  ),
+                  imageProfile(), //FOTO DE PERFIL
+                  Container( 
+                    //BOTON DE REGISTRO
+                    margin: EdgeInsets.only(top: 25),
+                    child: FutureBuilder(
+                      future: getUsuarios(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return RaisedButton(
+                          color: Colors.cyan,
+                          child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
+                          padding: EdgeInsets.only(left: 136, right: 136),
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          onPressed: () async {
+                          
+                            String usuario = firstController.text;
+                            String password = secondController.text;
+                            int cont = 0;
+                            for(int i=0; i<snapshot.data.length; i++){
+                              //print(snapshot.data[i].usuario);
+                              if(snapshot.data[i].usuario == usuario){
+                                print("Existe"); 
+                                firstController.text = "existe";
+                              }else{
+                                print("No Existe");
+                                if (_formKey.currentState.validate()) {
+                                  Scaffold.of(context);
+                                }else{
+                                  cont ++;    
+                                }
+                              }
+
+                              if(cont == snapshot.data.length){
+                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "images/logo.png");
+                                firstController.text = '';
+                                secondController.text = '';
+                                setState(() {
+                                  usuario = usuarios as String;
+                                });
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  )
+                                  );
+                                  
+                              }
+                            }
+                          },
+                        );
+                      }
                     )
                   ),
-                ),
-                Container( //PRIMER CAMPO: USUARIO
-                  margin: EdgeInsets.only(top: 35),
-                  padding: EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                    controller: firstController,
-                    validator: (String value){
-                      if(value.isEmpty){
-                        return 'rellena el campo';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      // enabledBorder: UnderlineInputBorder(      
-                      //   borderSide: BorderSide(color: Colors.cyan),   
-                      // ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                      ),  
-                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                      hintText: "Usuario",
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                        child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
-                      ),
-                    ),
-                  ),
-                ),
-                Container( //SEGUNDO CAMPO: CONTRASEÑA
-                  padding: EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                    obscureText: true,
-                    controller: secondController,
-                    validator: (String value){
-                      if(value.isEmpty){
-                        return 'rellena el campo';
-                      }
-                    },
-                    decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                      ), 
-                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                      hintText: "Password",
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                        child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
-                      ),
-                    ),
-                  ),
-                ),
-                imageProfile(), //FOTO DE PERFIL
-                Container( 
-                  //BOTON DE REGISTRO
-                  margin: EdgeInsets.only(top: 25),
-                  child: FutureBuilder(
-                    future: getUsuarios(),
-                     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return RaisedButton(
-                        color: Colors.cyan,
-                        child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
-                        padding: EdgeInsets.only(left: 136, right: 136),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        onPressed: () async {
-                          String usuario = firstController.text;
-                          String password = secondController.text;
-                          int cont = 0;
-                          for(int i=0; i<snapshot.data.length; i++){
-                            //print(snapshot.data[i].usuario);
-                            if(snapshot.data[i].usuario == usuario){
-                              print("Existe");                              
-                            }else{
-                              print("No Existe");
-                              cont ++;    
-                            }
-
-                            if(cont == snapshot.data.length){
-                              usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "images/logo.png");
-                              firstController.text = '';
-                              secondController.text = '';
-                              setState(() {
-                                usuario = usuarios as String;
-                              });
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                )
-                                );
-                                
-                            }
-                           }
-                        },
-                      );
-                     }
-                  )
-                ),
-              ],
+                ],
+              )
             )
-          )
         )
         ),
       ),
