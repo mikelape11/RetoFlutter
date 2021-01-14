@@ -47,7 +47,16 @@ class MenuRuta extends StatelessWidget {
                 ),
                 Divider(),
                 SlidingCardsView(),
-                Center(child: Text('DESLIZA PARA MÁS', style: TextStyle(fontSize: 25))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('DESLIZA PARA MÁS ', style: TextStyle(fontSize: 25)),
+                    Icon(
+                      Icons.double_arrow,
+                      size: 35,
+                    ),
+                  ],
+                ),
                 // Row( //PRIMERA FILA DE RUTAS
                 //   crossAxisAlignment: CrossAxisAlignment.center,
                 //   mainAxisAlignment: MainAxisAlignment.center,

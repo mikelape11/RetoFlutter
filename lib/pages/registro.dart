@@ -1,14 +1,21 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+//import 'package:path_provider/path_provider.dart';
 
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:reto/pages/home.dart';
+import 'package:reto/theme/theme.dart';
+
+import 'package:reto/models/usuarioModelo.dart';
 import 'package:reto/theme/colors.dart';
 
-import 'package:reto/theme/theme.dart';
+
+import 'package:http/http.dart' as http;
+
+import 'home.dart';
 
 class RegistroPage extends StatefulWidget {
   //PANTALLA DE REGISTRO
@@ -16,10 +23,42 @@ class RegistroPage extends StatefulWidget {
     Registro createState()=> Registro();
   }
 
+
+Future<usuarioModelo> registrarUsuario(String usuario, String password, String rol, String avatar) async{
+  var Url = "http://10.0.2.2:8080/usuarios/nuevo";
+  var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
+  body:jsonEncode(<String , String>{
+    "usuario" : usuario,
+    "password" : password,
+    "rol": rol,
+    "avatar": avatar
+  }));
+
+}
+
 class Registro extends State<RegistroPage>{
+
+  var employess = List<usuarioModelo>.generate(200, (index) => null);
+
+  Future<List<usuarioModelo>> getUsuarios() async {
+    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var jsonData = json.decode(data.body);
+
+    List<usuarioModelo> usuario = [];
+    for (var e in jsonData) {
+      usuarioModelo usuarios = new usuarioModelo();
+      usuarios.usuario = e["usuario"];
+      usuario.add(usuarios);
+    }
+    return usuario;
+  }
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+
+  TextEditingController firstController = TextEditingController();
+  TextEditingController secondController = TextEditingController();
+  usuarioModelo usuario;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +84,17 @@ class Registro extends State<RegistroPage>{
       final pickedFile = await _picker.getImage(
         source: source,
       );
+      // using your method of getting an image
+// final File image = await ImagePicker.pickImage(source: source);
+
+// // getting a directory path for saving
+// final String path = "images";
+
+// // copy the file to a new path
+// final File newImage = await image.copy('$path/image1.png');
       setState((){
         _imageFile = pickedFile;
+        print(_imageFile.path);
       });
     }
 
@@ -144,8 +192,9 @@ class Registro extends State<RegistroPage>{
         ],
       ),
       body: SingleChildScrollView(
-        child: CustomPaint(
-          painter: CurvePainter(context),
+              child: Form(
+            child: CustomPaint(
+            painter: CurvePainter(context),
           child: Center(
             child: Column(
               children: <Widget>[
@@ -163,6 +212,12 @@ class Registro extends State<RegistroPage>{
                   margin: EdgeInsets.only(top: 35),
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: TextFormField(
+                    controller: firstController,
+                    validator: (String value){
+                      if(value.isEmpty){
+                        return 'rellena el campo';
+                      }
+                    },
                     decoration: InputDecoration(
                       // enabledBorder: UnderlineInputBorder(      
                       //   borderSide: BorderSide(color: Colors.cyan),   
@@ -182,6 +237,13 @@ class Registro extends State<RegistroPage>{
                 Container( //SEGUNDO CAMPO: CONTRASEÑA
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: TextFormField(
+                    obscureText: true,
+                    controller: secondController,
+                    validator: (String value){
+                      if(value.isEmpty){
+                        return 'rellena el campo';
+                      }
+                    },
                     decoration: InputDecoration(
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.cyan, width: 2.0),
@@ -196,25 +258,55 @@ class Registro extends State<RegistroPage>{
                   ),
                 ),
                 imageProfile(), //FOTO DE PERFIL
-                Container( //BOTON DE REGISTRO
+                Container( 
+                  //BOTON DE REGISTRO
                   margin: EdgeInsets.only(top: 25),
-                  child: RaisedButton(
-                    color: Colors.cyan,
-                    child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
-                    padding: EdgeInsets.only(left: 136, right: 136),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => HomePage(),
-                      ));
-                    },
+                  child: FutureBuilder(
+                    future: getUsuarios(),
+                     builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      return RaisedButton(
+                        color: Colors.cyan,
+                        child: Text('REGISTRO', style: TextStyle(fontSize: 16),),
+                        padding: EdgeInsets.only(left: 136, right: 136),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        onPressed: () async {
+                          String usuario = firstController.text;
+                          String password = secondController.text;
+                          int cont = 0;
+                          for(int i=0; i<snapshot.data.length; i++){
+                            //print(snapshot.data[i].usuario);
+                            if(snapshot.data[i].usuario == usuario){
+                              print("Existe");                              
+                            }else{
+                              print("No Existe");
+                              cont ++;    
+                            }
+
+                            if(cont == snapshot.data.length){
+                              usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "images/logo.png");
+                              firstController.text = '';
+                              secondController.text = '';
+                              setState(() {
+                                usuario = usuarios as String;
+                              });
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                )
+                                );
+                                
+                            }
+                           }
+                        },
+                      );
+                     }
                   )
                 ),
               ],
             )
-          ),
+          )
         )
-      )
+        ),
+      ),
     );
   }
 }
