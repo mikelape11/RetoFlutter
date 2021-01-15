@@ -48,8 +48,8 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
 
   usuarioModelo usuario;
   Future<List<usuarioModelo>> usuarios;
-  TextEditingController firstController = TextEditingController();
-  TextEditingController lastController = TextEditingController();
+  TextEditingController firstController = TextEditingController(text: "${globals.usuario}");
+  TextEditingController lastController = TextEditingController(text: "${globals.password}");
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
@@ -395,7 +395,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                           borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                         ),  
                         contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "${globals.usuario}",
+                        hintText: "Usuario",
                         prefixIcon: Padding(
                           padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                           child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
@@ -421,7 +421,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                         borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                         ), 
                         contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "${globals.password}",
+                        hintText: "Password",
                         prefixIcon: Padding(
                           padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                           child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
@@ -466,32 +466,33 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                         for(int i=0; i<snapshot.data.length; i++){
                             if(snapshot.data[i].usuario == usuario){
                               _formKeysList[0].currentState.save();
-                            }else{
-                              if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
-                                if(snapshot.data[i].usuario == globals.usuario){
-                                  globals.id = snapshot.data[i].id;
-                                }
-                                usuarioModelo usu = new usuarioModelo();
-                                usu.id = globals.id;
-                                usu.usuario = firstController.text;
-                                usu.password = lastController.text;
-                                usu.rol = "0";
-                                usu.avatar = "${globals.avatar}";
-                                usuarioModelo usuarios = await actualizarUsuario(usu);
-                                setState(() {
-                                  usuario = usuarios as String;
-                                });
-                                globals.usuario = firstController.text;
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ));
-                              } else {
-                                print("Not Validated");        
-                              }                
                             }
-
-                        }
-                          
+                            
+                            if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
+                              if(snapshot.data[i].usuario == globals.usuario){
+                                globals.id = snapshot.data[i].id;
+                                print("eeeeeee ${globals.id}");
+                              }
+                              usuarioModelo usu = new usuarioModelo();
+                              usu.id = globals.id;
+                              usu.usuario = firstController.text;
+                              usu.password = lastController.text;
+                              usu.rol = "0";
+                              usu.avatar = "${globals.avatar}";
+                              usuarioModelo usuarios = await actualizarUsuario(usu);
+                              setState(() {
+                                usuario = usuarios as String;
+                              });
+                            
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => HomePage(),
+                              ));
+                            } else {
+                              print("Not Validated");        
+                            }                
+                          }
+                        globals.usuario = firstController.text;
+                        globals.password = lastController.text;
                       }
                     )
                   );

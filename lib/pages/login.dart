@@ -56,7 +56,7 @@ class LoginPage extends StatelessWidget {
       } else if (value.length > 10) {
         return "Tiene que tener como maximo 10 caracteres";
       } else if(value == _usuario){
-        return "El usuario ya existe";
+        return "El usuario no existe";
       } else 
         return null;
     }
@@ -215,9 +215,7 @@ class LoginPage extends StatelessWidget {
                             if(snapshot.data[i].password != password && snapshot.data[i].usuario == usuario){
                               if (_formKeysList[1].currentState.validate()) { 
                                 _formKeysList[1].currentState.save();
-                                print(_password);
-                              }
-                                
+                              } 
                               }  
                             }       
                           }  
