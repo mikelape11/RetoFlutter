@@ -71,7 +71,8 @@ class Registro extends State<RegistroPage>{
   TextEditingController firstController = TextEditingController();
   TextEditingController secondController = TextEditingController();
   usuarioModelo usuario;
-
+  String guardarRuta = "";
+  
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -92,7 +93,7 @@ class Registro extends State<RegistroPage>{
       }
     }
 
-    Future<void> takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
+   Future<void> takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
       final pickedFile = await ImagePicker.pickImage(source: source, maxWidth: 600,);    
 
       setState((){
@@ -296,7 +297,12 @@ class Registro extends State<RegistroPage>{
                                 }                
                               }
                               if(cont == snapshot.data.length){
-                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "${savedImage.path}");
+                                if(savedImage == null){
+                                    guardarRuta = "images/perfil.png";
+                                }else{
+                                  guardarRuta = savedImage.path;
+                                }
+                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", guardarRuta);
                                 firstController.text = '';
                                 secondController.text = '';
                                 setState(() {
@@ -304,7 +310,8 @@ class Registro extends State<RegistroPage>{
      
                                 });
                                   globals.password = password;
-                                  globals.avatar = "${savedImage.path}";
+                                  //print(savedImage.path);
+                                  globals.avatar = guardarRuta;
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => MenuRuta(),
                                   )

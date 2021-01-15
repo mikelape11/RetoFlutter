@@ -22,9 +22,23 @@ class PerfilUsuario extends StatefulWidget {
 
 }
 
+ Future<List<usuarioModelo>> getUsuarios() async {
+    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var jsonData = json.decode(data.body);
+
+    List<usuarioModelo> usuario = [];
+    for (var e in jsonData) {
+      usuarioModelo usuarios = new usuarioModelo();
+      usuarios.id = e["_id"];
+      usuarios.usuario = e["usuario"];
+      usuarios.password = e["password"];
+      usuarios.avatar = e["avatar"];
+      usuario.add(usuarios);
+    }
+    return usuario;
+  }
 
 class PerfilUsuarioPage extends State<PerfilUsuario>{
-
 
   Future<usuarioModelo> actualizarUsuario(usuarioModelo usuario) async{
     var Url = "http://10.0.2.2:8080/usuarios/actualizar";
@@ -119,14 +133,27 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
           margin: EdgeInsets.only(top: 25),
           child: Stack(
             children: <Widget>[
-               CircleAvatar(
-                radius: 80.0,
-                backgroundColor: Colors.cyan,
-                child: CircleAvatar(
-                  radius: 77.0,
-                   backgroundImage: FileImage(File(globals.avatar))
-                )            
-              ),
+              FutureBuilder(
+                future: getUsuarios(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                for(int i=0; i<snapshot.data.length; i++)
+                if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                    globals.existeAvatar = true;
+                }else{
+                    globals.existeAvatar = false;
+                }
+                return CircleAvatar(
+                    radius: 80.0,
+                    backgroundColor: Colors.cyan,
+                    child: CircleAvatar(
+                      radius: 77.0,
+                      backgroundImage: globals.existeAvatar
+                       ? AssetImage("images/perfil.png") 
+                       : FileImage(File(globals.avatar))
+                    )            
+                );
+                }
+               ),
               Positioned(
                 bottom: 25.0,
                 right: 25.0,
@@ -354,29 +381,40 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                   ),
                 ),
                 imageProfile(), //FOTO DE PERFIL
-                Container( //BOTON DE GUARDAR 
-                  margin: EdgeInsets.only(top: 25),
-                  width: 350,
-                  child: RaisedButton(
-                    color: Colors.cyan,
-                    child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: () async {
-                      usuarioModelo usu = new usuarioModelo();
-                      usu.usuario = firstController.text;
-                      usu.password = lastController.text;
-                      usu.rol = "0";
-                      usu.avatar = "${globals.avatar}";
-                      usuarioModelo usuarios = await actualizarUsuario(usu);
-                      setState(() {
-                        usuario = usuarios;
-                      });
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //   builder: (context) => HomePage(),
-                      // ));
-                        
-                    }
-                  )
+                FutureBuilder(
+                  future: getUsuarios(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  return Container( //BOTON DE GUARDAR 
+                    margin: EdgeInsets.only(top: 25),
+                    width: 350,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: () async {
+                        for(int i=0; i<snapshot.data.length; i++){
+                          if(snapshot.data[i].usuario == globals.usuario){
+                            globals.id = snapshot.data[i].id;
+                          }
+                        }
+                        usuarioModelo usu = new usuarioModelo();
+                        usu.id = globals.id;
+                        usu.usuario = firstController.text;
+                        usu.password = lastController.text;
+                        usu.rol = "0";
+                        usu.avatar = "${globals.avatar}";
+                        usuarioModelo usuarios = await actualizarUsuario(usu);
+                        setState(() {
+                          usuario = usuarios;
+                        });
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //   builder: (context) => HomePage(),
+                        // ));
+                          
+                      }
+                    )
+                  );
+                  }
                 ),
                 Container( //BOTON DE GUARDAR 
                   margin: EdgeInsets.only(top: 25),
