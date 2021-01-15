@@ -53,6 +53,13 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+  String _usuario;
+  String _password;
+  List<GlobalKey<FormState>> _formKeysList= [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+  ];
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +90,31 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       });
     }
 
+    String validarUsuario(String value) {
+      if (value.isEmpty) {
+        return "Rellena el campo";
+      } else if (value.length < 3) {
+        return "El usuario tiene que tener como minimo 5 caracteres";
+      }  else if(value == _usuario){
+        return "El usuario ya existe";
+      } else 
+        return null;
+    }
+
+    String validarPassword(String value) {
+      if (value.isEmpty) {
+        return "Rellena el campo";
+      } else if (value.length < 8) {
+        return "Tiene que tener como minimo 8 caracteres";
+      } else if (value.length > 12) {
+        return "Tiene que tener como maximo 12 caracteres";
+      } else if(value == _password){
+        print(value);
+        print(_password);
+        return "La contraseña no es correcta";
+      } else 
+        return null;
+    }
 
     Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
       return Container(
@@ -339,47 +371,84 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       ),
       body: SingleChildScrollView(
         child: Form(
+          autovalidate: true,
           child: Center(
             child: Column(
               children: <Widget>[
                 Container( //PRIMER CAMPO: USUARIO
                   margin: EdgeInsets.only(top: 35),
                   padding: EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                    controller: firstController,
-                    decoration: InputDecoration(
-                      // enabledBorder: UnderlineInputBorder(      
-                      //   borderSide: BorderSide(color: Colors.cyan),   
-                      // ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                      ),  
-                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                      hintText: "${globals.usuario}",
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                        child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                  child: Form(
+                    autovalidate: true,
+                    key: _formKeysList[0],
+                    child: TextFormField(
+                      controller: firstController,
+                      validator: validarUsuario,
+                        onSaved: (String value){
+                          _usuario = value;
+                        },
+                      decoration: InputDecoration(
+                        // enabledBorder: UnderlineInputBorder(      
+                        //   borderSide: BorderSide(color: Colors.cyan),   
+                        // ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                        ),  
+                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                        hintText: "${globals.usuario}",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                          child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 Container( //SEGUNDO CAMPO: CONTRASEÑA
                   padding: EdgeInsets.only(left: 40, right: 40),
-                  child: TextFormField(
-                    controller: lastController,
-                    decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
+                  child: Form(
+                    autovalidate: true,
+                    key: _formKeysList[1],
+                    child: TextFormField(
+                      obscureText: !_passwordVisible,
+                      controller: lastController,
+                      validator: validarPassword,
+                          onSaved: (String value){
+                          _password = value;
+                        },
+                      decoration: InputDecoration(
+                        focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                      ), 
-                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                      hintText: "${globals.password}",
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                        child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                        ), 
+                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                        hintText: "${globals.password}",
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                          child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Padding(
+                            padding: EdgeInsets.only(top: 12), // add padding to adjust icon
+                            child: Icon(
+                              _passwordVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                              size: 25.0,
+                              color: Colors.cyan,
+                              ),
+                            ),
+                            onPressed: () {
+
+                              setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
+                        ),
                       ),
+                    
                     ),
                   ),
-                ),
                 imageProfile(), //FOTO DE PERFIL
                 FutureBuilder(
                   future: getUsuarios(),
@@ -392,24 +461,36 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: () async {
+                        String usuario = firstController.text;
+                        String password = lastController.text;
                         for(int i=0; i<snapshot.data.length; i++){
-                          if(snapshot.data[i].usuario == globals.usuario){
-                            globals.id = snapshot.data[i].id;
-                          }
+                            if(snapshot.data[i].usuario == usuario){
+                              _formKeysList[0].currentState.save();
+                            }else{
+                              if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
+                                if(snapshot.data[i].usuario == globals.usuario){
+                                  globals.id = snapshot.data[i].id;
+                                }
+                                usuarioModelo usu = new usuarioModelo();
+                                usu.id = globals.id;
+                                usu.usuario = firstController.text;
+                                usu.password = lastController.text;
+                                usu.rol = "0";
+                                usu.avatar = "${globals.avatar}";
+                                usuarioModelo usuarios = await actualizarUsuario(usu);
+                                setState(() {
+                                  usuario = usuarios as String;
+                                });
+                                globals.usuario = firstController.text;
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ));
+                              } else {
+                                print("Not Validated");        
+                              }                
+                            }
+
                         }
-                        usuarioModelo usu = new usuarioModelo();
-                        usu.id = globals.id;
-                        usu.usuario = firstController.text;
-                        usu.password = lastController.text;
-                        usu.rol = "0";
-                        usu.avatar = "${globals.avatar}";
-                        usuarioModelo usuarios = await actualizarUsuario(usu);
-                        setState(() {
-                          usuario = usuarios;
-                        });
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        //   builder: (context) => HomePage(),
-                        // ));
                           
                       }
                     )

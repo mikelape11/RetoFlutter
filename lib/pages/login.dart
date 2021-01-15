@@ -49,28 +49,32 @@ class LoginPage extends StatelessWidget {
   ];
 
   String validarUsuario(String value) {
-    if (value.isEmpty) {
-      return "Rellena el campo";
-    } else if (value.length < 5) {
-      return "El usuario tiene que tener como minimo 5 caracteres";
-    }  else if(value == _usuario){
-      return "El usuario no existe";
-    } else 
-      return null;
-  }
+      if (value.isEmpty) {
+        return "Rellena el campo";
+      } else if (value.length < 3) {
+        return "Tiene que tener como minimo 5 caracteres";
+      } else if (value.length > 10) {
+        return "Tiene que tener como maximo 10 caracteres";
+      } else if(value == _usuario){
+        return "El usuario ya existe";
+      } else 
+        return null;
+    }
 
-  String validarPassword(String value) {
-    if (value.isEmpty) {
-      return "Rellena el campo";
-    } else if (value.length < 8) {
-      return "La contraseña tiene que tener como minimo 8 caracteres";
-    }  else if(value == _password){
-      print(value);
-      print(_password);
-      return "La contraseña no es correcta";
-    } else 
-      return null;
-  }
+    String validarPassword(String value) {
+      if (value.isEmpty) {
+        return "Rellena el campo";
+      } else if (value.length < 8) {
+        return "Tiene que tener como minimo 8 caracteres";
+      } else if (value.length > 12) {
+        return "Tiene que tener como maximo 12 caracteres";
+      } else if(value == _password){
+        print(value);
+        print(_password);
+        return "La contraseña no es correcta";
+      } else 
+        return null;
+    }
 
   Future<List<usuarioModelo>> getUsuarios() async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');

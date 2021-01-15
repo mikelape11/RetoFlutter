@@ -54,9 +54,11 @@ class Registro extends State<RegistroPage>{
   String validarUsuario(String value) {
     if (value.isEmpty) {
       return "Rellena el campo";
-    } else if (value.length < 5) {
-      return "El usuario tiene que tener como minimo 5 caracteres";
-    }  else if(value == _usuario){
+    } else if (value.length < 3) {
+      return "Tiene que tener como minimo 5 caracteres";
+    } else if (value.length > 10) {
+      return "Tiene que tener como maximo 10 caracteres";
+    } else if(value == _usuario){
       return "El usuario ya existe";
     } else 
       return null;
@@ -72,6 +74,8 @@ class Registro extends State<RegistroPage>{
   TextEditingController secondController = TextEditingController();
   usuarioModelo usuario;
   String guardarRuta = "";
+  bool _passwordVisible = false;
+
   
   @override
   Widget build(BuildContext context) {
@@ -246,13 +250,12 @@ class Registro extends State<RegistroPage>{
                   Container( //SEGUNDO CAMPO: CONTRASEÑA
                     padding: EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
-                      obscureText: true,
+                      obscureText: !_passwordVisible,
                       controller: secondController,
                       validator: MultiValidator([
                       RequiredValidator(errorText: "Rellena el campo"),
-                      MinLengthValidator(8,
-                          errorText: "La contraseña tiene que ser de al menos 8 caracteres"),
-                     
+                      MinLengthValidator(8,errorText: "Tiene que tener como minimo 8 caracteres"),
+                      MaxLengthValidator(12,errorText: "Tiene que tener como maximo 12 caracteres"), 
                     ]),
                       decoration: InputDecoration(
                         focusedBorder: UnderlineInputBorder(
@@ -264,6 +267,23 @@ class Registro extends State<RegistroPage>{
                           padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                           child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
                         ),
+                        suffixIcon: IconButton(
+                          icon: Padding(
+                            padding: EdgeInsets.only(top: 12), // add padding to adjust icon
+                            child: Icon(
+                              _passwordVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                              size: 25.0,
+                              color: Colors.cyan,
+                              ),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
                       ),
                     ),
                   ),
