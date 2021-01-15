@@ -16,15 +16,26 @@ import 'package:reto/globals/globals.dart' as globals;
 import '../theme/theme.dart';
 
 class PerfilUsuario extends StatefulWidget {
-
-
   //PANTALLA DE PERFIL DE USUARIO
   @override
   PerfilUsuarioPage createState()=> PerfilUsuarioPage();
 
 }
 
+
 class PerfilUsuarioPage extends State<PerfilUsuario>{
+
+
+  Future<usuarioModelo> actualizarUsuario(usuarioModelo usuario) async{
+    var Url = "http://10.0.2.2:8080/usuarios/actualizar";
+    var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body: jsonEncode(usuario));
+  }
+
+  usuarioModelo usuario;
+  Future<List<usuarioModelo>> usuarios;
+  TextEditingController firstController = TextEditingController();
+  TextEditingController lastController = TextEditingController();
 
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
@@ -58,20 +69,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       });
     }
 
-    Future<List<usuarioModelo>> getUsuarios() async {
-    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
-    var jsonData = json.decode(data.body);
-
-    List<usuarioModelo> usuario = [];
-    for (var e in jsonData) {
-      usuarioModelo usuarios = new usuarioModelo();
-      usuarios.usuario = e["usuario"];
-      usuarios.password = e["password"];
-      usuarios.avatar = e["avatar"];
-      usuario.add(usuarios);
-    }
-    return usuario;
-  }
 
     Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
       return Container(
@@ -307,95 +304,121 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
           ),
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: Icon(Icons.check, size: 26,),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => HomePage(),
-              ));
+            onPressed: () async {
+             
             }
           ),
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Container( //PRIMER CAMPO: USUARIO
-                margin: EdgeInsets.only(top: 35),
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    // enabledBorder: UnderlineInputBorder(      
-                    //   borderSide: BorderSide(color: Colors.cyan),   
-                    // ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                    ),  
-                    contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "${globals.usuario}",
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+        child: Form(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Container( //PRIMER CAMPO: USUARIO
+                  margin: EdgeInsets.only(top: 35),
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                    controller: firstController,
+                    decoration: InputDecoration(
+                      // enabledBorder: UnderlineInputBorder(      
+                      //   borderSide: BorderSide(color: Colors.cyan),   
+                      // ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                      ),  
+                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                      hintText: "${globals.usuario}",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                        child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Container( //SEGUNDO CAMPO: CONTRASEÑA
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                    ), 
-                    contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "${globals.password}",
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                      child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                Container( //SEGUNDO CAMPO: CONTRASEÑA
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: TextFormField(
+                    controller: lastController,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                      ), 
+                      contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                      hintText: "${globals.password}",
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                        child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              imageProfile(), //FOTO DE PERFIL
-              Container( //BOTON DE GUARDAR 
-                margin: EdgeInsets.only(top: 25),
-                width: 350,
-                child: RaisedButton(
-                  color: Colors.cyan,
-                  child: Text('INFORMACIÓN', style: TextStyle(fontSize: 16),),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onPressed: (){           
-                    informacion(context);
-                  },
-                )
-              ),
-              Container( //BOTON DE CERRAR SESION
-                margin: EdgeInsets.only(top: 25),
-                width: 350,
-                child: RaisedButton(
-                  color: Colors.cyan,
-                  child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
-                  },
-                )
-              ),
-              Container( //BOTON DE CERRAR SESION
-                margin: EdgeInsets.only(top: 25),
-                width: 350,
-                child: RaisedButton(
-                  color: Colors.cyan,
-                  child: Text('POPUP', style: TextStyle(fontSize: 16),),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onPressed: (){
-                    pregunta(context);
-                  },
-                )
-              ),
-            ],
-          )
+                imageProfile(), //FOTO DE PERFIL
+                Container( //BOTON DE GUARDAR 
+                  margin: EdgeInsets.only(top: 25),
+                  width: 350,
+                  child: RaisedButton(
+                    color: Colors.cyan,
+                    child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onPressed: () async {
+                      usuarioModelo usu = new usuarioModelo();
+                      usu.usuario = firstController.text;
+                      usu.password = lastController.text;
+                      usu.rol = "0";
+                      usu.avatar = "${globals.avatar}";
+                      usuarioModelo usuarios = await actualizarUsuario(usu);
+                      setState(() {
+                        usuario = usuarios;
+                      });
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //   builder: (context) => HomePage(),
+                      // ));
+                        
+                    }
+                  )
+                ),
+                Container( //BOTON DE GUARDAR 
+                  margin: EdgeInsets.only(top: 25),
+                  width: 350,
+                  child: RaisedButton(
+                    color: Colors.cyan,
+                    child: Text('INFORMACIÓN', style: TextStyle(fontSize: 16),),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onPressed: (){           
+                      informacion(context);
+                    },
+                  )
+                ),
+                Container( //BOTON DE CERRAR SESION
+                  margin: EdgeInsets.only(top: 25),
+                  width: 350,
+                  child: RaisedButton(
+                    color: Colors.cyan,
+                    child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ));
+                    },
+                  )
+                ),
+                Container( //BOTON DE CERRAR SESION
+                  margin: EdgeInsets.only(top: 25),
+                  width: 350,
+                  child: RaisedButton(
+                    color: Colors.cyan,
+                    child: Text('POPUP', style: TextStyle(fontSize: 16),),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    onPressed: (){
+                      pregunta(context);
+                    },
+                  )
+                ),
+              ],
+            )
+          ),
         )
       )
     );
