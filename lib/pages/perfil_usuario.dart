@@ -1,17 +1,23 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:reto/models/usuarioModelo.dart';
 
 import 'package:reto/pages/home.dart';
 import 'package:reto/pages/login.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
+import 'package:http/http.dart' as http;
+import 'package:reto/globals/globals.dart' as globals;
 
 import '../theme/theme.dart';
 
 class PerfilUsuario extends StatefulWidget {
+
+
   //PANTALLA DE PERFIL DE USUARIO
   @override
   PerfilUsuarioPage createState()=> PerfilUsuarioPage();
@@ -51,6 +57,21 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         _imageFile = pickedFile;
       });
     }
+
+    Future<List<usuarioModelo>> getUsuarios() async {
+    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var jsonData = json.decode(data.body);
+
+    List<usuarioModelo> usuario = [];
+    for (var e in jsonData) {
+      usuarioModelo usuarios = new usuarioModelo();
+      usuarios.usuario = e["usuario"];
+      usuarios.password = e["password"];
+      usuarios.avatar = e["avatar"];
+      usuario.add(usuarios);
+    }
+    return usuario;
+  }
 
     Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
       return Container(
@@ -106,9 +127,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                 backgroundColor: Colors.cyan,
                 child: CircleAvatar(
                   radius: 77.0,
-                   backgroundImage: _imageFile == null
-                    ? AssetImage("images/perfil.png")
-                    : FileImage(File(_imageFile.path))
+                   backgroundImage: FileImage(File(globals.avatar))
                 )            
               ),
               Positioned(
@@ -312,7 +331,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                     ),  
                     contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "Usuario",
+                    hintText: "${globals.usuario}",
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                       child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
@@ -328,7 +347,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                     ), 
                     contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                    hintText: "Password",
+                    hintText: "${globals.password}",
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(top: 15), // add padding to adjust icon
                       child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
@@ -337,20 +356,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                 ),
               ),
               imageProfile(), //FOTO DE PERFIL
-              Container( //BOTON DE GUARDAR 
-                margin: EdgeInsets.only(top: 25),
-                width: 350,
-                child: RaisedButton(
-                  color: Colors.cyan,
-                  child: Text('GUARDAR', style: TextStyle(fontSize: 16),),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomePage(),
-                    ));
-                  },
-                )
-              ),
               Container( //BOTON DE GUARDAR 
                 margin: EdgeInsets.only(top: 25),
                 width: 350,

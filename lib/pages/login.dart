@@ -14,7 +14,8 @@ import 'package:reto/theme/colors.dart';
 import '../models/usuarioModelo.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:form_field_validator/form_field_validator.dart';
+
+import 'package:reto/globals/globals.dart' as globals;
 
 class LoginPage extends StatelessWidget {
   //PANTALLA DE LOGIN
@@ -80,6 +81,7 @@ class LoginPage extends StatelessWidget {
       usuarioModelo usuarios = new usuarioModelo();
       usuarios.usuario = e["usuario"];
       usuarios.password = e["password"];
+      usuarios.avatar = e["avatar"];
       usuario.add(usuarios);
     }
     return usuario;
@@ -191,6 +193,9 @@ class LoginPage extends StatelessWidget {
                             if (_formKeysList[1].currentState.validate()) { 
                             }
                             if(snapshot.data[i].usuario == usuario && snapshot.data[i].password == password){
+                                globals.usuario = usuario;
+                                globals.password = password;
+                                globals.avatar = snapshot.data[i].avatar;
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => MenuRuta(),
                                 ));  

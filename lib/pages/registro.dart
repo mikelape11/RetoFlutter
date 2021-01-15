@@ -2,21 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-//import 'package:path_provider/path_provider.dart';
-
+import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-
 import 'package:reto/theme/theme.dart';
-
 import 'package:reto/models/usuarioModelo.dart';
 import 'package:reto/theme/colors.dart';
-
-
+import 'package:reto/globals/globals.dart' as globals;
 import 'package:http/http.dart' as http;
-
 import 'package:form_field_validator/form_field_validator.dart';
-
 import 'menu_ruta.dart';
 
 class RegistroPage extends StatefulWidget {
@@ -67,8 +62,9 @@ class Registro extends State<RegistroPage>{
       return null;
   }
 
-  PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+  File _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+  File savedImage;
 
    GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
@@ -96,22 +92,16 @@ class Registro extends State<RegistroPage>{
       }
     }
 
-    void takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
-      final pickedFile = await _picker.getImage(
-        source: source,
-      );
-      // using your method of getting an image
-// final File image = await ImagePicker.pickImage(source: source);
+    Future<void> takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
+      final pickedFile = await ImagePicker.pickImage(source: source, maxWidth: 600,);    
 
-// // getting a directory path for saving
-// final String path = "images";
-
-// // copy the file to a new path
-// final File newImage = await image.copy('$path/image1.png');
       setState((){
         _imageFile = pickedFile;
         print(_imageFile.path);
       });
+      final appDir = await syspaths.getApplicationDocumentsDirectory();    
+      final fileName = path.basename(_imageFile.path);    
+      savedImage = await pickedFile.copy('${appDir.path}/$fileName'); 
     }
 
     Widget bottomSheet() { //FUNCION PARA LAS OPCIONES DE LA FOTO DE PERFIL
@@ -300,17 +290,21 @@ class Registro extends State<RegistroPage>{
                               }else{
                                 if (formkey.currentState.validate()) {
                                     cont ++; 
+                                    globals.usuario = usuario;
                                 } else {
                                   print("Not Validated");        
                                 }                
                               }
                               if(cont == snapshot.data.length){
-                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "images/logo.png");
+                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", "${savedImage.path}");
                                 firstController.text = '';
                                 secondController.text = '';
                                 setState(() {
                                   usuario = usuarios as String;
+     
                                 });
+                                  globals.password = password;
+                                  globals.avatar = "${savedImage.path}";
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => MenuRuta(),
                                   )

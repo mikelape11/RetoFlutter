@@ -6,6 +6,8 @@ import 'package:reto/widgets/sliding_card.dart';
 import 'package:http/http.dart' as http;
 
 class SlidingCardsView extends StatefulWidget {
+
+
   @override
   _SlidingCardsViewState createState() => _SlidingCardsViewState();
 }

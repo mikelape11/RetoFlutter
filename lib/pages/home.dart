@@ -24,6 +24,7 @@ import 'package:dash_chat/dash_chat.dart';
 //import 'package:flutter/services.dart' show rootBundle;
 
 class HomePage extends StatefulWidget {
+
   //PANTALLA HOME
   @override
     Home createState()=> Home();
