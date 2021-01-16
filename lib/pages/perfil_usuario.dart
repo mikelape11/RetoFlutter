@@ -94,8 +94,10 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       if (value.isEmpty) {
         return "Rellena el campo";
       } else if (value.length < 3) {
-        return "El usuario tiene que tener como minimo 5 caracteres";
-      }  else if(value == _usuario){
+        return "El usuario tiene que tener como minimo 3 caracteres";
+      } else if (value.length > 12) {
+        return "El usuario tiene que tener como maximo 12 caracteres";
+      } else if(value == _usuario){
         return "El usuario ya existe";
       } else 
         return null;
@@ -108,10 +110,10 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         return "Tiene que tener como minimo 8 caracteres";
       } else if (value.length > 12) {
         return "Tiene que tener como maximo 12 caracteres";
-      } else if(value == _password){
-        print(value);
-        print(_password);
-        return "La contraseña no es correcta";
+      // } else if(value == _password){
+      //   print(value);
+      //   print(_password);
+      //   return "La contraseña no es correcta";
       } else 
         return null;
     }
@@ -361,12 +363,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
             icon: _setIcon(),
             onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark())
           ),
-          IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
-            icon: Icon(Icons.check, size: 26,),
-            onPressed: () async {
-             
-            }
-          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -463,36 +459,113 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       onPressed: () async {
                         String usuario = firstController.text;
                         String password = lastController.text;
-                        for(int i=0; i<snapshot.data.length; i++){
-                            if(snapshot.data[i].usuario == usuario){
-                              _formKeysList[0].currentState.save();
-                            }
-                            
-                            if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
-                              if(snapshot.data[i].usuario == globals.usuario){
-                                globals.id = snapshot.data[i].id;
-                                print("eeeeeee ${globals.id}");
-                              }
-                              usuarioModelo usu = new usuarioModelo();
-                              usu.id = globals.id;
-                              usu.usuario = firstController.text;
-                              usu.password = lastController.text;
-                              usu.rol = "0";
-                              usu.avatar = "${globals.avatar}";
-                              usuarioModelo usuarios = await actualizarUsuario(usu);
-                              setState(() {
-                                usuario = usuarios as String;
-                              });
-                            
+                        int contador = 0;
+                        for(int i=0; i<snapshot.data.length; i++){ //recorre los usuarios
+
+                          // OPCION 1
+
+                          if(globals.usuario == snapshot.data[i].usuario && globals.password == snapshot.data[i].password){
+                            if(usuario == snapshot.data[i].usuario && password == snapshot.data[i].password){
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => HomePage(),
                               ));
-                            } else {
-                              print("Not Validated");        
-                            }                
+                              print("No se han realizado cambios");
+                              break;
+                            }else if(usuario == snapshot.data[i].usuario && password != snapshot.data[i].password){
+                              if(snapshot.data[i].usuario == usuario){
+                                _formKeysList[1].currentState.save();
+                              }
+                              if (_formKeysList[1].currentState.validate()) {
+                                globals.id = snapshot.data[i].id;
+                                globals.usuario = firstController.text;
+                                globals.password = lastController.text;
+                                usuarioModelo usu = new usuarioModelo();
+                                usu.id = globals.id;
+                                usu.usuario = firstController.text;
+                                usu.password = lastController.text;
+                                usu.rol = "0";
+                                usu.avatar = "${globals.avatar}";
+                                usuarioModelo usuarios = await actualizarUsuario(usu);
+                                setState(() {
+                                  usuario = usuarios as String;
+                                });
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ));
+                                print("Se ha cambiado la contraseña");
+                                break;
+                              }else{
+                                print("Contraseña no valida");
+                              }
+                            }else{
+                              for(int n=0; n<snapshot.data.length; n++){
+                                // print("Campo: ${firstController.text}");
+                                // print("BBDD: ${snapshot.data[n].usuario}");
+                                // print(snapshot.data.length);                               
+                                if(firstController.text == snapshot.data[n].usuario){
+                                  if (_formKeysList[0].currentState.validate()) { 
+                                    _formKeysList[0].currentState.save();
+                                  }
+                                  print("Hay un usuario con ese nombre");  
+                                }else if(firstController.text != snapshot.data[n].usuario){
+                                  contador++;
+                                  if(contador == snapshot.data.length){
+                                    if (_formKeysList[0].currentState.validate()) { 
+                                      print("No existe ese usuario");
+                                      globals.id = snapshot.data[i].id;
+                                      globals.usuario = firstController.text;
+                                      globals.password = lastController.text;
+                                      usuarioModelo usu = new usuarioModelo();
+                                      usu.id = globals.id;
+                                      usu.usuario = firstController.text;
+                                      usu.password = lastController.text;
+                                      usu.rol = "0";
+                                      usu.avatar = "${globals.avatar}";
+                                      usuarioModelo usuarios = await actualizarUsuario(usu);
+                                      setState(() {
+                                        usuario = usuarios as String;
+                                      });
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => HomePage(),
+                                      ));
+                                      print("Se ha cambiado la el usuario");
+                                    }                                 
+                                  }
+                                }    
+                              }
+                            }
                           }
-                        globals.usuario = firstController.text;
-                        globals.password = lastController.text;
+
+                          //OPCION 2
+
+                          // if(snapshot.data[i].usuario == usuario){ //comprueba si el usuario del textfield esta en la bbdd
+                          //   _formKeysList[0].currentState.save(); //valida el usuario
+                          // }
+                          
+                          // if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
+                          //   if(snapshot.data[i].usuario == globals.usuario){
+                          //     globals.id = snapshot.data[i].id;
+                          //     print("eeeeeee ${globals.id}");
+                          //   }
+                          //   usuarioModelo usu = new usuarioModelo();
+                          //   usu.id = globals.id;
+                          //   usu.usuario = firstController.text;
+                          //   usu.password = lastController.text;
+                          //   usu.rol = "0";
+                          //   usu.avatar = "${globals.avatar}";
+                          //   usuarioModelo usuarios = await actualizarUsuario(usu);
+                          //   setState(() {
+                          //     usuario = usuarios as String;
+                          //   });
+                          //   globals.usuario = firstController.text;
+                          //   globals.password = lastController.text;
+                          //   Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (context) => HomePage(),
+                          //   ));
+                          // } else {
+                          //   print("Not Validated");        
+                          // }                
+                        }
                       }
                     )
                   );
