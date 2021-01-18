@@ -211,8 +211,8 @@ class Registro extends State<RegistroPage>{
               child: Column(
                 children: <Widget>[
                   Container( //LOGO
-                    margin: EdgeInsets.only(top: 90),
-                    height: 130,
+                    margin: EdgeInsets.only(top: 75),
+                    height: 145,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         // image:  AssetImage('images/logo.png')
@@ -221,7 +221,7 @@ class Registro extends State<RegistroPage>{
                     ),
                   ),
                   Container( //PRIMER CAMPO: USUARIO
-                    margin: EdgeInsets.only(top: 35),
+                    margin: EdgeInsets.only(top: 10),
                     padding: EdgeInsets.only(left: 40, right: 40),
                     child: TextFormField(
                     controller: firstController,
@@ -366,7 +366,7 @@ class CurvePainter extends CustomPainter{
     path.lineTo(0, size.height*0.78);
     path.quadraticBezierTo(size.width*0.10, size.height*0.55, size.width*0.22, size.height*0.71);
     path.quadraticBezierTo(size.width*0.34, size.height*0.90, size.width*0.41, size.height*0.76);
-    path.quadraticBezierTo(size.width*0.51, size.height*0.51, size.width*0.65, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.51, size.height*0.51, size.width*0.64, size.height*0.70);
     path.quadraticBezierTo(size.width*0.74, size.height*0.86, size.width, size.height*0.62);
     path.lineTo(size.width, 0);
     path.close();

@@ -182,6 +182,39 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
+         leading: FutureBuilder(
+          future: getUsuarios(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+          for(int i=0; i<snapshot.data.length; i++)
+            if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                globals.existeAvatar = true;
+                  print("TRUE");
+                  break;
+            }else{
+                globals.existeAvatar = false;
+                print("FALSE");
+            }
+          return Center(
+            child: Container(
+              child: Stack(
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 22.0,
+                    backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                    child: CircleAvatar(
+                      radius: 20.0,
+                      backgroundImage: globals.existeAvatar
+                      ? AssetImage("images/perfil.png") 
+                      : FileImage(File(globals.avatar))
+                    )            
+                  ),
+                ],
+              )
+            ),
+        );
+        }
+         ),
+        automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
         actions: [

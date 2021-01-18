@@ -16,6 +16,7 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 
 import '../theme/theme.dart';
+import 'menu_ruta.dart';
 
 class PerfilUsuario extends StatefulWidget {
   //PANTALLA DE PERFIL DE USUARIO
@@ -336,8 +337,11 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
               for(int i=0; i<snapshot.data.length; i++)
                 if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
                     globals.existeAvatar = true;
+                     print("TRUE");
+                     break;
                 }else{
                     globals.existeAvatar = false;
+                    print("FALSE");
                 }
             return Form(
             autovalidate: true,
@@ -569,11 +573,23 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     width: 350,
                     child: RaisedButton(
                       color: Colors.cyan,
-                      child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
+                      child: Text('POPUP', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => LoginPage(),
+                        pregunta(context);
+                      },
+                    )
+                  ),
+                  Container( //BOTON DE CERRAR SESION
+                    margin: EdgeInsets.only(top: 25),
+                    width: 350,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('VOLVER AL MENÚ', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                         Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MenuRuta(),
                         ));
                       },
                     )
@@ -583,10 +599,12 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     width: 350,
                     child: RaisedButton(
                       color: Colors.cyan,
-                      child: Text('POPUP', style: TextStyle(fontSize: 16),),
+                      child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
-                        pregunta(context);
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
                       },
                     )
                   ),

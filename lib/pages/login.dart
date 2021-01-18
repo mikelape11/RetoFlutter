@@ -16,6 +16,7 @@ import '../models/usuarioModelo.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:reto/globals/globals.dart' as globals;
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginPage extends StatelessWidget {
   //PANTALLA DE LOGIN
@@ -111,8 +112,8 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   Container( //LOGO
-                    margin: EdgeInsets.only(top: 90),
-                    height: 130,
+                    margin: EdgeInsets.only(top: 60),
+                    height: 145,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         //  image:  AssetImage('images/logo.png')
@@ -121,7 +122,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                   Container( //PRIMER CAMPO: USUARIO
-                    margin: EdgeInsets.only(top: 15),
+                    margin: EdgeInsets.only(top: 5),
                     padding: EdgeInsets.only(left: 40, right: 40),
                     child: Form(
                       autovalidate: true,
@@ -175,10 +176,6 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container( //TEXTO OLVIDAR CONTRASEÑA
-                    margin: EdgeInsets.only(left: 200, top: 3),
-                    child: Text('Forgot Password?',style: TextStyle( fontWeight: FontWeight.bold),)
-                  ),
                   Container( //BOTON LOGIN
                     margin: EdgeInsets.only(top: 25),
                     child: FutureBuilder(
@@ -225,66 +222,59 @@ class LoginPage extends StatelessWidget {
                       }
                     )
                   ),
-                  Container( //TEXTO LOGEAR CON
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text('Login with', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))
-                  ),
-                  Row( //FILA DE BOTONES
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column( //FILA DE BOTONES
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container( //BOTON DE GOOGLE
-                        margin: EdgeInsets.only(top: 25, right: 10),
-                        child: RaisedButton(
-                          color: Colors.red,
-                          child: Text('GOOGLE', style: TextStyle(fontSize: 16),),
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          onPressed: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => RegistroPage(),
-                            ));
-                          },
-                        )
+                        margin: EdgeInsets.only(top: 20),
+                        child: SignInButtonBuilder(
+                            text: 'Sign in with Email',
+                            icon: Icons.email,
+                            onPressed: () {},
+                            backgroundColor: Colors.red,
+                          )
                       ),
-                      Container( //BOTON DE TWITTER
-                        margin: EdgeInsets.only(top: 25,  left: 10, right: 10),
-                        child: RaisedButton(
-                          color: Colors.cyan,
-                          child: Text('TWITTER', style: TextStyle(fontSize: 16),),
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          onPressed: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => RegistroPage(),
-                            ));
+                      Container( //BOTON DE GOOGLE
+                        margin: EdgeInsets.only(top: 2),
+                        child: SignInButton(
+                          Buttons.GitHub,
+                          onPressed: () {
                           },
-                        )
+                        ),
                       ),
-                      Container( //BOTON DE FACEBOOK
-                        margin: EdgeInsets.only(top: 25,  left: 10),
-                        child: RaisedButton(
-                          color: Colors.blue[800],
-                          child: Text('FACEBOOK', style: TextStyle(fontSize: 16),),
-                          padding: EdgeInsets.only(left: 15, right: 15),
-                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          onPressed: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => RegistroPage(),
-                            ));
+                      Container( //BOTON DE GOOGLE
+                        margin: EdgeInsets.only(top: 2),
+                        child: SignInButton(
+                          Buttons.Twitter,
+                          onPressed: () {
                           },
-                        )
+                        ),
                       ),
                     ],
                   ),
                   Container( //TEXTO PARA CREAR UNA NUEVA CUENTA
-                    margin: EdgeInsets.only(top: 30),
+                    margin: EdgeInsets.only(top: 15),
                     child: InkWell(
-                      child: Text('You dont have an account? SIGN UP', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                      child: Text('¿Todavía no tienes cuenta?', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
                       onTap: (){
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => RegistroPage(),
                         ));
                       },
+                    )
+                  ),
+                  Container( //BOTON REGISTRO
+                    margin: EdgeInsets.only(top: 15),
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('REGISTRATE', style: TextStyle(fontSize: 16),),
+                      padding: EdgeInsets.only(left: 120, right: 120),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: () async{
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => RegistroPage(),
+                        ));                     
+                      }
                     )
                   ),
                 ],
@@ -311,7 +301,7 @@ class CurvePainter extends CustomPainter{
     path.lineTo(0, size.height*0.78);
     path.quadraticBezierTo(size.width*0.10, size.height*0.55, size.width*0.22, size.height*0.71);
     path.quadraticBezierTo(size.width*0.34, size.height*0.90, size.width*0.41, size.height*0.76);
-    path.quadraticBezierTo(size.width*0.51, size.height*0.51, size.width*0.65, size.height*0.70);
+    path.quadraticBezierTo(size.width*0.51, size.height*0.51, size.width*0.64, size.height*0.70);
     path.quadraticBezierTo(size.width*0.74, size.height*0.86, size.width, size.height*0.62);
     path.lineTo(size.width, 0);
     path.close();
@@ -346,30 +336,5 @@ class CurvePainter extends CustomPainter{
     return oldDelegate != this;
   }
 
-// class _HeaderPaintDiagonal extends CustomPainter {
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     final paint = Paint()
-//     ..color = Colors.cyan
-//     ..style = PaintingStyle.stroke //una vez dibujado cambiar por .fill
-//     ..strokeWidth = 15;
-//     final path = Path();
-//     path.lineTo(size.width, size.width*0.20);
-//     canvas.drawPath(path, paint);
-//     final path2 = Path();
-//     path2.moveTo(-10,20);
-//     path2.lineTo(size.width, size.width*0.26);
-//     canvas.drawPath(path2, paint);
-//     final path3 = Path();
-//     path3.moveTo(-10,580);
-//     path3.lineTo(size.width, size.width*1.66);
-//     canvas.drawPath(path3, paint);
-//     final path4 = Path();
-//     path4.moveTo(-10,600);
-//     path4.lineTo(size.width, size.width*1.72);
-//     canvas.drawPath(path4, paint);
-//   }
-//   @override
-//   bool shouldRepaint(CustomPainter oldDelegate) => false;
  }
 

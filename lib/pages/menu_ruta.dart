@@ -27,6 +27,7 @@ class MenuRuta extends StatelessWidget {
 
     return Scaffold( //EMPIEZA LA PANTALLA DEL MENU
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text("MENU"),
         centerTitle: true,
         actions: [
