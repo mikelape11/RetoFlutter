@@ -102,7 +102,6 @@ class Registro extends State<RegistroPage>{
 
       setState((){
         _imageFile = pickedFile;
-        print(_imageFile.path);
       });
       final appDir = await syspaths.getApplicationDocumentsDirectory();    
       final fileName = path.basename(_imageFile.path);    

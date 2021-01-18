@@ -17,7 +17,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   double pageOffset = 0;
 
 
- Future<List<rutasModelo>> getRutas() async {
+ Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
     var data = await http.get('http://10.0.2.2:8080/routes/all');
     var jsonData = json.decode(data.body);
 
@@ -33,29 +33,36 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       
     }
     return ruta;
-  }
+  });
   
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getRutas(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.68,  //<-- set height of the card
-        child: PageView(
-          controller: pageController,
-          children: <Widget>[
-            for(int i=0; i<snapshot.data.length; i++)
-            SlidingCard(
-              name: '${snapshot.data[i].ciudad}',
-              date: '3 Horas',
-              distancia: "${snapshot.data[i].distancia}",
-              tiempo: "${snapshot.data[i].tiempo}",
-              assetName: 'donosti2.jpg',
+        if(snapshot.hasData){
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.68,  //<-- set height of the card
+            child: PageView(
+              controller: pageController,
+              children: <Widget>[
+                for(int i=0; i<snapshot.data.length; i++)
+                SlidingCard(
+                  name: '${snapshot.data[i].ciudad}',
+                  date: '3 Horas',
+                  distancia: "${snapshot.data[i].distancia}",
+                  tiempo: "${snapshot.data[i].tiempo}",
+                  assetName: 'donosti2.jpg',
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          );
+        }else{
+          return Container(
+            height: 500,
+            child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          );
+        }
       }
     );
   }

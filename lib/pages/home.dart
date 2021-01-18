@@ -20,6 +20,7 @@ import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
+import '../models/rankingModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:http/http.dart' as http;
@@ -324,9 +325,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         child: FutureBuilder(
           future: getRanking(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if(!snapshot2.hasData){
+            return Container(
+              height: 600,
+              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            );
+          }else{
           List<int> puntuaciones = [];
           List<int> puntuacionesOrdenadas = [];
           List<String> nombres = [];
+          List<String> fotos = [];
           for(int i=0; i<snapshot.data.length; i++){
             puntuaciones.add(snapshot.data[i].puntos);
           }  
@@ -340,6 +348,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               }
             }
           }     
+          print(nombres);
+          for(int k=0;k<nombres.length;k++){
+            for(int j=0;j<puntuacionesOrdenadas.length;j++){
+              if(nombres[k] == snapshot2.data[j].usuario){
+                fotos.add(snapshot2.data[j].avatar);
+              }
+            }
+          }
+          print(fotos);
           return Column(
             children: <Widget>[ 
               Divider(),
@@ -421,21 +438,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                             )
                           ],
                         ),
-                      ),      
+                      ),  
                      Container( //FOTO SEGUNDA POSICION
                         margin: EdgeInsets.only(left: 0, top: 110),
                         child: GestureDetector(
-                          onTap: () {
-                            detalles(context);
-                          },
+                         
                           child: CircleAvatar(
                             radius: 60.0,
                             backgroundColor: Colors.blueGrey[300],
                             child: CircleAvatar(
                               radius: 56.0,
-                              backgroundImage: globals.existeAvatar
+                              backgroundImage: fotos[1] == "images/perfil.png"
                                 ? AssetImage("images/perfil.png") 
-                                : FileImage(File(globals.avatar)),
+                                : FileImage(File(fotos[1]))
                             )            
                           ),
                         ),
@@ -443,36 +458,29 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                       Container( //FOTO TERCERA POSICION
                         margin: EdgeInsets.only(left: 214, top: 120),
                         child: GestureDetector(
-                          onTap: () {
-                            detalles(context);
-                          },
                           child: CircleAvatar(
                             radius: 60.0,
                             backgroundColor: Colors.brown,
                             child: CircleAvatar(
                               radius: 56.0,
-                              backgroundImage: globals.existeAvatar
+                              backgroundImage: fotos[2] == "images/perfil.png"
                                 ? AssetImage("images/perfil.png") 
-                                : FileImage(File(globals.avatar))
+                                : FileImage(File(fotos[2]))
                             )            
                           ),
                         ),
                       ),
-                      
                       Container( //FOTO PRIMERA POSICION
                         margin: EdgeInsets.symmetric(vertical: 40, horizontal: 84),
                         child:  GestureDetector(
-                          onTap: () {
-                            detalles(context);
-                          },
                            child: CircleAvatar(
                             radius: 83,
                             backgroundColor: Colors.amberAccent[400],
                             child: CircleAvatar(
                               radius:  79,
-                              backgroundImage: globals.existeAvatar
+                              backgroundImage: fotos[0] == "images/perfil.png"
                                 ? AssetImage("images/perfil.png") 
-                                : FileImage(File(globals.avatar))
+                                : FileImage(File(fotos[0]))
                             )            
                           ),
                         ),
@@ -487,9 +495,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                           children: [
                             for(int n=0; n<puntuacionesOrdenadas.length;n++)
                               if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].nombre}',
-                              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                            GestureDetector(
+                                onTap: () {
+                                  detalles(context, snapshot.data[n].nombre, snapshot);
+                                },
+                               child: Text(
+                                '${snapshot.data[n].nombre}',
+                                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                              ),
                             ),
                             for(int n=0; n<puntuacionesOrdenadas.length;n++)
                               if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
@@ -510,9 +523,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                           children: [
                             for(int n=0; n<puntuacionesOrdenadas.length;n++)
                               if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].nombre}',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            GestureDetector(
+                              onTap: () {
+                                  detalles(context, snapshot.data[n].nombre, snapshot);
+                                },
+                              child: Text(
+                                '${snapshot.data[n].nombre}',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
                             ),
                              for(int n=0; n<puntuacionesOrdenadas.length;n++)
                               if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
@@ -534,9 +552,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                           children: [
                           for(int n=0; n<puntuacionesOrdenadas.length;n++)
                             if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].nombre}',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            GestureDetector(
+                               onTap: () {
+                                  detalles(context, snapshot.data[n].nombre, snapshot);
+                                },
+                              child: Text(
+                                '${snapshot.data[n].nombre}',
+                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
                             ),
                             for(int n=0; n<puntuacionesOrdenadas.length;n++)
                               if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
@@ -552,6 +575,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 ])
               ),
               Divider(),
+             
               Container( //CONTENEDOR PARA LOS OTROS PUESTOS
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -559,7 +583,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                     for(int n=3; n<puntuacionesOrdenadas.length;n++)//HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
                     GestureDetector(
                       onTap: () {
-                        detalles(context);
+                        detalles(context, nombres[n], snapshot);
                       },
                       child: Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
                         width: MediaQuery.of(context).size.width,
@@ -591,9 +615,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                 backgroundColor: Colors.cyan,
                                 child: CircleAvatar(
                                   radius: 19.0,
-                                  backgroundImage: _imageFile == null
-                                    ? AssetImage("images/perfil.png")
-                                    : FileImage(File(_imageFile.path)),
+                                  backgroundImage: fotos[n] == "images/perfil.png"
+                                ? AssetImage("images/perfil.png") 
+                                : FileImage(File(fotos[n]))
                                 )            
                               ),
                             ),
@@ -603,7 +627,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               height: 40,
                               alignment: Alignment.center,
                               child: Text(
-                                '${snapshot.data[n].nombre}', 
+                                '${nombres[n]}', 
                                 style: TextStyle(
                                   fontFamily: 'arial',
                                   fontWeight: FontWeight.bold,
@@ -635,7 +659,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             ],
           );
           }
-          
+          }
         )
       );
       }
@@ -648,46 +672,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     });
   }
 
-  // Widget messageListArea() { //EL WIDGET PARA VER LOS MENSAJES DE TEXTO
-  //   return Container(
-  //     height: 488,
-  //   );
-  // }
+  void detalles(BuildContext context, String usuario, AsyncSnapshot snapshot) {
 
-  // Widget submitArea() { //EL WIDGET PARA ENVIAR LOS MENSAJES
-  //   return SizedBox(
-  //     width: 350.0,
-  //     height: 70.0,
-  //     child: Card(
-  //     // shape: RoundedRectangleBorder(
-  //     //   borderRadius: BorderRadius.circular(15.0),
-  //     //   side: BorderSide(
-  //     //     color: Colors.grey,
-  //     //     width: 2.0,
-  //     //   ),
-  //     // ),
-  //       child: ListTile(
-  //         contentPadding: EdgeInsets.only(bottom: 5, left: 20),
-  //         title: TextFormField(
-  //           decoration: InputDecoration(
-  //             hintText: "Escribe un mensaje",
-  //             focusedBorder: UnderlineInputBorder(
-  //               borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-  //             ),
-  //           ),
-  //           //controller: msgCon,
-  //         ),
-  //         trailing: IconButton(
-  //           icon: Icon(Icons.send),
-  //           color: Colors.cyan,
-  //           disabledColor: Colors.grey,
-  //           onPressed: (){}),
-  //         ),
-  //       ),
-  //   );
-  // }
-
-  void detalles(BuildContext context) {
       showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -735,17 +721,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                           ],
                         ),
                         SizedBox(width: 35,),
+                        for(int i=0;i<snapshot.data.length;i++)
+                          if(snapshot.data[i].nombre == usuario)
                         Column(
                           children: <Widget>[
-                            Text('Belako', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Text('${usuario}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                             Divider(height: 10),
-                            Text('2100', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Text('${snapshot.data[i].puntos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                             Divider(height: 10),
-                            Text('2H 30Min', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Text('${snapshot.data[i].tiempo}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                             Divider(height: 10),
-                            Text('7', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Text('${snapshot.data[i].aciertos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                             Divider(height: 10),
-                            Text('1', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                            Text('${snapshot.data[i].fallos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                           ],
                         ),
                       ],

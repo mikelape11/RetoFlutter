@@ -12,6 +12,8 @@ import 'package:reto/pages/login.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
+import 'package:path_provider/path_provider.dart' as syspaths;
+import 'package:path/path.dart' as path;
 
 import '../theme/theme.dart';
 
@@ -22,7 +24,7 @@ class PerfilUsuario extends StatefulWidget {
 
 }
 
- Future<List<usuarioModelo>> getUsuarios() async {
+ Future<List<usuarioModelo>> getUsuarios() => Future.delayed(Duration(milliseconds: 2000 ), () async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
     var jsonData = json.decode(data.body);
 
@@ -36,7 +38,7 @@ class PerfilUsuario extends StatefulWidget {
       usuario.add(usuarios);
     }
     return usuario;
-  }
+  });
 
 class PerfilUsuarioPage extends State<PerfilUsuario>{
 
@@ -51,8 +53,10 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
   TextEditingController firstController = TextEditingController(text: "${globals.usuario}");
   TextEditingController lastController = TextEditingController(text: "${globals.password}");
 
-  PickedFile _imageFile; //PARA LA FOTO DE PERFIL
+  String guardarRuta = "";
+  File _imageFile; //PARA LA FOTO DE PERFIL
   final ImagePicker _picker = ImagePicker(); //PARA LA FOTO DE PERFIL
+  File savedImage;
   String _usuario;
   String _password;
   List<GlobalKey<FormState>> _formKeysList= [
@@ -81,13 +85,20 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       }
     }
 
-    void takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
-      final pickedFile = await _picker.getImage(
-        source: source,
-      );
+    Future<void> takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
+     globals.existeAvatar = true;
+      final pickedFile = await ImagePicker.pickImage(source: source, maxWidth: 600,);
+
       setState((){
         _imageFile = pickedFile;
+        print(_imageFile.path);
       });
+
+      final appDir = await syspaths.getApplicationDocumentsDirectory();
+      final fileName = path.basename(_imageFile.path);
+      savedImage = await pickedFile.copy('${appDir.path}/$fileName'); 
+      guardarRuta = savedImage.path;
+      globals.avatar = guardarRuta;
     }
 
     String validarUsuario(String value) {
@@ -161,55 +172,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       );
     }
 
-    Widget imageProfile(){ //EL WIDGET DONDE SE COLOCARA LA FOTO DE PERFIL
-      return Center(
-        child: Container(
-          margin: EdgeInsets.only(top: 25),
-          child: Stack(
-            children: <Widget>[
-              FutureBuilder(
-                future: getUsuarios(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                for(int i=0; i<snapshot.data.length; i++)
-                if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                    globals.existeAvatar = true;
-                }else{
-                    globals.existeAvatar = false;
-                }
-                return CircleAvatar(
-                    radius: 80.0,
-                    backgroundColor: Colors.cyan,
-                    child: CircleAvatar(
-                      radius: 77.0,
-                      backgroundImage: globals.existeAvatar
-                       ? AssetImage("images/perfil.png") 
-                       : FileImage(File(globals.avatar))
-                    )            
-                );
-                }
-               ),
-              Positioned(
-                bottom: 25.0,
-                right: 25.0,
-                child: InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context, 
-                      builder: ((builder) => bottomSheet()),
-                    );
-                  },
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.cyan,
-                    size: 28.0,
-                  ),
-                )
-              )
-            ],
-          )
-        ),
-      );
-    }
+  
 
     void informacion(BuildContext context) {
       showDialog(
@@ -366,90 +329,133 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         ],
       ),
       body: SingleChildScrollView(
-        child: Form(
-          autovalidate: true,
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                Container( //PRIMER CAMPO: USUARIO
-                  margin: EdgeInsets.only(top: 35),
-                  padding: EdgeInsets.only(left: 40, right: 40),
-                  child: Form(
-                    autovalidate: true,
-                    key: _formKeysList[0],
-                    child: TextFormField(
-                      controller: firstController,
-                      validator: validarUsuario,
-                        onSaved: (String value){
-                          _usuario = value;
-                        },
-                      decoration: InputDecoration(
-                        // enabledBorder: UnderlineInputBorder(      
-                        //   borderSide: BorderSide(color: Colors.cyan),   
-                        // ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                        ),  
-                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "Usuario",
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                          child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container( //SEGUNDO CAMPO: CONTRASEÑA
-                  padding: EdgeInsets.only(left: 40, right: 40),
-                  child: Form(
-                    autovalidate: true,
-                    key: _formKeysList[1],
-                    child: TextFormField(
-                      obscureText: !_passwordVisible,
-                      controller: lastController,
-                      validator: validarPassword,
+        child: FutureBuilder(
+          future: getUsuarios(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(snapshot.hasData){
+              for(int i=0; i<snapshot.data.length; i++)
+                if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                    globals.existeAvatar = true;
+                }else{
+                    globals.existeAvatar = false;
+                }
+            return Form(
+            autovalidate: true,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  Container( //PRIMER CAMPO: USUARIO
+                    margin: EdgeInsets.only(top: 35),
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Form(
+                      autovalidate: true,
+                      key: _formKeysList[0],
+                      child: TextFormField(
+                        controller: firstController,
+                        validator: validarUsuario,
                           onSaved: (String value){
-                          _password = value;
-                        },
-                      decoration: InputDecoration(
-                        focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.cyan, width: 2.0),
-                        ), 
-                        contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
-                        hintText: "Password",
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.only(top: 15), // add padding to adjust icon
-                          child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Padding(
-                            padding: EdgeInsets.only(top: 12), // add padding to adjust icon
-                            child: Icon(
-                              _passwordVisible
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                              size: 25.0,
-                              color: Colors.cyan,
-                              ),
-                            ),
-                            onPressed: () {
-
-                              setState(() {
-                                  _passwordVisible = !_passwordVisible;
-                              });
-                            },
+                            _usuario = value;
+                          },
+                        decoration: InputDecoration(
+                          // enabledBorder: UnderlineInputBorder(      
+                          //   borderSide: BorderSide(color: Colors.cyan),   
+                          // ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                          ),  
+                          contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                          hintText: "Usuario",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                            child: Icon(Icons.account_circle_outlined, size: 20.0, color: Colors.cyan,),
                           ),
                         ),
                       ),
-                    
                     ),
                   ),
-                imageProfile(), //FOTO DE PERFIL
-                FutureBuilder(
-                  future: getUsuarios(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  return Container( //BOTON DE GUARDAR 
+                  Container( //SEGUNDO CAMPO: CONTRASEÑA
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Form(
+                      autovalidate: true,
+                      key: _formKeysList[1],
+                      child: TextFormField(
+                        obscureText: !_passwordVisible,
+                        controller: lastController,
+                        validator: validarPassword,
+                            onSaved: (String value){
+                            _password = value;
+                          },
+                        decoration: InputDecoration(
+                          focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.cyan, width: 2.0),
+                          ), 
+                          contentPadding: EdgeInsets.only(top: 22), // add padding to adjust text
+                          hintText: "Password",
+                          prefixIcon: Padding(
+                            padding: EdgeInsets.only(top: 15), // add padding to adjust icon
+                            child: Icon(Icons.lock_outline, size: 20.0, color: Colors.cyan,),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Padding(
+                              padding: EdgeInsets.only(top: 12), // add padding to adjust icon
+                              child: Icon(
+                                _passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                                size: 25.0,
+                                color: Colors.cyan,
+                                ),
+                              ),
+                              onPressed: () {
+
+                                setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      
+                      ),
+                    ),
+                    
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 25),
+                      child: Stack(
+                        children: <Widget>[
+                          CircleAvatar(
+                            radius: 80.0,
+                            backgroundColor: Colors.cyan,
+                            child: CircleAvatar(
+                              radius: 77.0,
+                              backgroundImage: globals.existeAvatar
+                              ? AssetImage("images/perfil.png") 
+                              : FileImage(File(globals.avatar))
+                            )            
+                          ),
+                          Positioned(
+                            bottom: 25.0,
+                            right: 25.0,
+                            child: InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context, 
+                                  builder: ((builder) => bottomSheet()),
+                                );
+                              },
+                              child: Icon(
+                                Icons.camera_alt_outlined,
+                                color: Colors.cyan,
+                                size: 28.0,
+                              ),
+                            )
+                          )
+                        ],
+                      )
+                    ),
+                  ),
+                  Container( //BOTON DE GUARDAR 
                     margin: EdgeInsets.only(top: 25),
                     width: 350,
                     child: RaisedButton(
@@ -461,9 +467,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                         String password = lastController.text;
                         int contador = 0;
                         for(int i=0; i<snapshot.data.length; i++){ //recorre los usuarios
-
-                          // OPCION 1
-
                           if(globals.usuario == snapshot.data[i].usuario && globals.password == snapshot.data[i].password){
                             if(usuario == snapshot.data[i].usuario && password == snapshot.data[i].password){
                               Navigator.of(context).push(MaterialPageRoute(
@@ -484,7 +487,12 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                 usu.usuario = firstController.text;
                                 usu.password = lastController.text;
                                 usu.rol = "0";
-                                usu.avatar = "${globals.avatar}";
+                                if(savedImage == null){
+                                    guardarRuta = "images/perfil.png";
+                                }else{
+                                  guardarRuta = savedImage.path;
+                                }
+                                usu.avatar = guardarRuta;
                                 usuarioModelo usuarios = await actualizarUsuario(usu);
                                 setState(() {
                                   usuario = usuarios as String;
@@ -520,7 +528,12 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                       usu.usuario = firstController.text;
                                       usu.password = lastController.text;
                                       usu.rol = "0";
-                                      usu.avatar = "${globals.avatar}";
+                                      if(savedImage == null){
+                                          guardarRuta = "images/perfil.png";
+                                      }else{
+                                        guardarRuta = savedImage.path;
+                                      }
+                                      usu.avatar = guardarRuta;
                                       usuarioModelo usuarios = await actualizarUsuario(usu);
                                       setState(() {
                                         usuario = usuarios as String;
@@ -535,84 +548,59 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                               }
                             }
                           }
-
-                          //OPCION 2
-
-                          // if(snapshot.data[i].usuario == usuario){ //comprueba si el usuario del textfield esta en la bbdd
-                          //   _formKeysList[0].currentState.save(); //valida el usuario
-                          // }
-                          
-                          // if (_formKeysList[0].currentState.validate() && _formKeysList[1].currentState.validate()) {
-                          //   if(snapshot.data[i].usuario == globals.usuario){
-                          //     globals.id = snapshot.data[i].id;
-                          //     print("eeeeeee ${globals.id}");
-                          //   }
-                          //   usuarioModelo usu = new usuarioModelo();
-                          //   usu.id = globals.id;
-                          //   usu.usuario = firstController.text;
-                          //   usu.password = lastController.text;
-                          //   usu.rol = "0";
-                          //   usu.avatar = "${globals.avatar}";
-                          //   usuarioModelo usuarios = await actualizarUsuario(usu);
-                          //   setState(() {
-                          //     usuario = usuarios as String;
-                          //   });
-                          //   globals.usuario = firstController.text;
-                          //   globals.password = lastController.text;
-                          //   Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) => HomePage(),
-                          //   ));
-                          // } else {
-                          //   print("Not Validated");        
-                          // }                
                         }
                       }
+                    )    
+                  ),
+                  Container( //BOTON DE GUARDAR 
+                    margin: EdgeInsets.only(top: 25),
+                    width: 350,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('INFORMACIÓN', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){           
+                        informacion(context);
+                      },
                     )
-                  );
-                  }
-                ),
-                Container( //BOTON DE GUARDAR 
-                  margin: EdgeInsets.only(top: 25),
-                  width: 350,
-                  child: RaisedButton(
-                    color: Colors.cyan,
-                    child: Text('INFORMACIÓN', style: TextStyle(fontSize: 16),),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: (){           
-                      informacion(context);
-                    },
-                  )
-                ),
-                Container( //BOTON DE CERRAR SESION
-                  margin: EdgeInsets.only(top: 25),
-                  width: 350,
-                  child: RaisedButton(
-                    color: Colors.cyan,
-                    child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: (){
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ));
-                    },
-                  )
-                ),
-                Container( //BOTON DE CERRAR SESION
-                  margin: EdgeInsets.only(top: 25),
-                  width: 350,
-                  child: RaisedButton(
-                    color: Colors.cyan,
-                    child: Text('POPUP', style: TextStyle(fontSize: 16),),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onPressed: (){
-                      pregunta(context);
-                    },
-                  )
-                ),
-              ],
-            )
-          ),
-        )
+                  ),
+                  Container( //BOTON DE CERRAR SESION
+                    margin: EdgeInsets.only(top: 25),
+                    width: 350,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ));
+                      },
+                    )
+                  ),
+                  Container( //BOTON DE CERRAR SESION
+                    margin: EdgeInsets.only(top: 25),
+                    width: 350,
+                    child: RaisedButton(
+                      color: Colors.cyan,
+                      child: Text('POPUP', style: TextStyle(fontSize: 16),),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      onPressed: (){
+                        pregunta(context);
+                      },
+                    )
+                  ),
+                ],
+              )
+            ),
+          );
+          }else{
+            return Container(
+              height: 600,
+              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+            );
+          }
+        })
       )
     );
   }
