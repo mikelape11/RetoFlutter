@@ -28,7 +28,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       rutas.nombre = n["nombre"];
       rutas.ciudad = n["ciudad"];
       rutas.distancia = n["distancia"].toString();
-      rutas.tiempo = n["tiempo"].toString();
+      rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
       
     }
@@ -50,7 +50,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                 SlidingCard(
                   name: '${snapshot.data[i].ciudad}',
                   date: '3 Horas',
-                  distancia: "${snapshot.data[i].distancia}",
+                  distancia: "${snapshot.data[i].distancia} KM" ,
                   tiempo: "${snapshot.data[i].tiempo}",
                   assetName: 'donosti2.jpg',
                 ),

@@ -24,7 +24,7 @@ class PerfilUsuario extends StatefulWidget {
 
 }
 
- Future<List<usuarioModelo>> getUsuarios() => Future.delayed(Duration(milliseconds: 2000 ), () async {
+ Future<List<usuarioModelo>> getUsuarios() => Future.delayed(Duration(milliseconds: 0 ), () async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
     var jsonData = json.decode(data.body);
 

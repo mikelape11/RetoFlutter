@@ -10,7 +10,7 @@ class rutasModelo{
   String nombre;
 	String ciudad;
 	String distancia;
-  String tiempo;
+  int tiempo;
 
   rutasModelo({this.nombre,this.ciudad,this.distancia,this.tiempo});
 
@@ -35,7 +35,7 @@ class rutasModelo{
 
   String get distanciaRuta => distancia;
 
-  String get tiempoRuta => tiempo;
+  int get tiempoRuta => tiempo;
 
 
 

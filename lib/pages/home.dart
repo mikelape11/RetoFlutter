@@ -96,7 +96,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
     
-    if( !state.existeUbicacion ) return Center(child: Text('Ubicando...'));
+    if( !state.existeUbicacion ) return Center(child: CircularProgressIndicator(strokeWidth: 2));
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
@@ -113,6 +113,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       myLocationEnabled: true,
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
+      compassEnabled: true,
       onMapCreated: (GoogleMapController controller){ 
         Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa(controller) : mapaBloc.initMapa2(controller);
         _controller = controller;
@@ -442,7 +443,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                      Container( //FOTO SEGUNDA POSICION
                         margin: EdgeInsets.only(left: 0, top: 110),
                         child: GestureDetector(
-                         
                           child: CircleAvatar(
                             radius: 60.0,
                             backgroundColor: Colors.blueGrey[300],
@@ -685,7 +685,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
             ),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2.75,
+            height: MediaQuery.of(context).size.height / 2.6,
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
