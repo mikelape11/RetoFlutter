@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'dart:ffi';
+import 'package:reto/models/rutasDataModelo.dart';
 
 rutasModelo rutasModeloJson(String str)=> rutasModelo.fromJson(json.decode(str));
 
@@ -11,22 +11,29 @@ class rutasModelo{
 	String ciudad;
 	String distancia;
   int tiempo;
+  List<rutasDataModelo> rutas_data;
 
-  rutasModelo({this.nombre,this.ciudad,this.distancia,this.tiempo});
+  rutasModelo({this.nombre,this.ciudad,this.distancia,this.tiempo,this.rutas_data});
 
-  factory rutasModelo.fromJson(Map<String,dynamic> json) => rutasModelo(
+  factory rutasModelo.fromJson(Map<String,dynamic> json){
+      var list = json['rutas_data'] as List;
+      List<rutasDataModelo> lista = list.map((i) => rutasDataModelo.fromJson(i)).toList();
+
+   return rutasModelo(
     nombre: json["nombre"],
     ciudad: json["ciudad"],
     distancia: json["distancia"],
-    tiempo: json["tiempo"]
+    tiempo: json["tiempo"],
+    rutas_data: lista
   );
 
+  }
+   
   Map<String,dynamic> toJson()=>{
     "nombre": nombre,
     "ciudad": ciudad,
     "distancia": distancia,
-    "tiempo": tiempo
-
+    "tiempo": tiempo,
   };
 
   String get nombreRuta => nombre;
@@ -36,7 +43,5 @@ class rutasModelo{
   String get distanciaRuta => distancia;
 
   int get tiempoRuta => tiempo;
-
-
 
 }

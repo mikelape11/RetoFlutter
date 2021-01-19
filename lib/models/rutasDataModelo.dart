@@ -1,0 +1,39 @@
+import 'dart:convert';
+
+import 'dart:ffi';
+
+rutasDataModelo rutasDataModeloJson(String str)=> rutasDataModelo.fromJson(json.decode(str));
+
+String rutasDataModeloToJson(rutasDataModelo data) => json.encode(data.toJson());
+
+class rutasDataModelo{
+  String id;
+	Float lat;
+	Float lng;
+
+  
+
+  rutasDataModelo({this.id,this.lat,this.lng});
+
+  factory rutasDataModelo.fromJson(Map<String,dynamic> json) => rutasDataModelo(
+    id: json["_id"],
+    lat: json["lat"],
+    lng: json["lng"]
+  );
+
+  Map<String,dynamic> toJson()=>{
+    "_id": id,
+    "lat": lat,
+    "lng": lng
+
+  };
+
+  String get idRutaData => id;
+
+  Float get latRutaData => lat;
+
+  Float get lngRutaDara => lng;
+
+
+
+}

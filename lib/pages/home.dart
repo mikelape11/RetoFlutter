@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reto/models/rankingModelo.dart';
+import 'package:reto/models/rutasDataModelo.dart';
 import 'package:reto/models/usuarioModelo.dart';
 import 'package:reto/theme/theme.dart';
 import 'dart:convert';
@@ -21,6 +22,7 @@ import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
 import '../models/rankingModelo.dart';
+import '../models/rutasModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
 import 'package:dash_chat/dash_chat.dart';
 import 'package:http/http.dart' as http;
@@ -73,7 +75,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return ranking;
   }
 
-     Future<List<usuarioModelo>> getAvatar() async {
+  Future<List<usuarioModelo>> getAvatar() async {
     var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
     var jsonData = json.decode(data.body);
 
@@ -85,6 +87,23 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     }
     return usuario;
   }
+
+  Future<List<rutasModelo>> getRutasData() async {
+    var data = await http.get('http://10.0.2.2:8080/routes/all');
+    var jsonData = json.decode(data.body);
+    // print(jsonData);
+    List<rutasModelo> datos = [];
+    for (var e in jsonData) {
+      rutasModelo rutas = new rutasModelo();
+      print("nn ${e["rutas_data"]}");
+      var list = e['rutas_data'] as List;
+      rutas.rutas_data =  list.map((i) => rutasDataModelo.fromJson(i)).toList();
+      print("aaaaa $rutas");
+      datos.add(rutas);
+    }
+    return datos;
+  }
+
 
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -183,34 +202,37 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
          leading: FutureBuilder(
-          future: getUsuarios(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-          for(int i=0; i<snapshot.data.length; i++)
-            if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                globals.existeAvatar = true;
-                  print("TRUE");
-                  break;
-            }else{
-                globals.existeAvatar = false;
-                print("FALSE");
-            }
-          return Center(
-            child: Container(
-              child: Stack(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 22.0,
-                    backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                    child: CircleAvatar(
-                      radius: 20.0,
-                      backgroundImage: globals.existeAvatar
-                      ? AssetImage("images/perfil.png") 
-                      : FileImage(File(globals.avatar))
-                    )            
-                  ),
-                ],
-              )
-            ),
+          future: getRutasData(),
+          builder: (BuildContext context, AsyncSnapshot snapshot2) {
+          return FutureBuilder(
+            future: getUsuarios(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            for(int i=0; i<snapshot.data.length; i++)
+              if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                  globals.existeAvatar = true;
+                    break;
+              }else{
+                  globals.existeAvatar = false;
+              }
+            return Center(
+              child: Container(
+                child: Stack(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 22.0,
+                      backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                      child: CircleAvatar(
+                        radius: 20.0,
+                        backgroundImage: globals.existeAvatar
+                        ? AssetImage("images/perfil.png") 
+                        : FileImage(File(globals.avatar))
+                      )            
+                    ),
+                  ],
+                )
+              ),
+        );
+        }
         );
         }
          ),

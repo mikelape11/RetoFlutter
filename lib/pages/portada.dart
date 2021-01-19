@@ -119,61 +119,64 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
       } 
     }
     return Scaffold( //EMPIEZA LA PANTALLA DE LA PORTADA
-      body: Container( //LE COLOCO EL FONDO DE PANTALLA EN EL BODY
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image:  AssetImage('images/fondo.png'),
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop), 
-          )
-        ),
-        child: Column( //LOGO
-          children: <Widget>[
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 280, bottom: 40),
-                height: 130,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image:  AssetImage(_setImage())
-                  )
+      body: SingleChildScrollView(
+        child: Container( //LE COLOCO EL FONDO DE PANTALLA EN EL BODY
+        height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image:  AssetImage('images/fondo.png'),
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop), 
+            )
+          ),
+          child: Column( //LOGO
+            children: <Widget>[
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 280, bottom: 40),
+                  height: 130,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image:  AssetImage(_setImage())
+                    )
+                  ),
                 ),
               ),
-            ),
-            Container( //BOTON EMPEZAR
-              margin: EdgeInsets.only(right: 10),
-              child: MaterialButton(
-                color: Colors.cyan,
-                child: Text('EMPEZAR', style: TextStyle(fontSize: 22),),
-                padding: EdgeInsets.all(14),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                onPressed: () async{ //PARA COMPROBAR LOS PERMISOS
-                  final status = await Permission.location.request();
-                  this.accesoGPS(status);
-                  //print(status);
-                }
-              )
-            ),
-            SizedBox(height: 15),
-            Container( //TEXTO
-              margin: EdgeInsets.only(top: 10, right: 10),
-              child: Text('Es necesario el GPS para usar esta app', style: TextStyle(fontSize: 16,)),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 0),
-              child: IconButton(
-                icon: Icon(Icons.contact_support),
-                iconSize: 70,
-                onPressed: () {
-                  informacion(context);
-                },
-              ),  
-            ),
-          ],
-        )
+              Container( //BOTON EMPEZAR
+                margin: EdgeInsets.only(right: 10),
+                child: MaterialButton(
+                  color: Colors.cyan,
+                  child: Text('EMPEZAR', style: TextStyle(fontSize: 22),),
+                  padding: EdgeInsets.all(14),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  onPressed: () async{ //PARA COMPROBAR LOS PERMISOS
+                    final status = await Permission.location.request();
+                    this.accesoGPS(status);
+                    //print(status);
+                  }
+                )
+              ),
+              SizedBox(height: 15),
+              Container( //TEXTO
+                margin: EdgeInsets.only(top: 10, right: 10),
+                child: Text('Es necesario el GPS para usar esta app', style: TextStyle(fontSize: 16,)),
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 0),
+                child: IconButton(
+                  icon: Icon(Icons.contact_support),
+                  iconSize: 70,
+                  onPressed: () {
+                    informacion(context);
+                  },
+                ),  
+              ),
+            ],
+          )
+        ),
       )
     );
   }
