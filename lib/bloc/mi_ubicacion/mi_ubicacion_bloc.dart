@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:geolocator/geolocator.dart' as Geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:meta/meta.dart';
+import 'package:reto/globals/globals.dart' as globals;
+
 
 part 'mi_ubicacion_event.dart';
 part 'mi_ubicacion_state.dart';
@@ -27,6 +29,10 @@ class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
     ).listen((Geolocator.Position position) {
       //print(position);
       final nuevaUbicacion = new LatLng(position.latitude, position.longitude);
+      globals.nuevaUbicacion = nuevaUbicacion;
+      print("KAKAKAKAKAKA");
+      print(globals.nuevaUbicacion.latitude);
+      print(globals.nuevaUbicacion.longitude);
       add(OnUbicacionCambio( nuevaUbicacion ));
     });
 

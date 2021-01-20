@@ -1,8 +1,10 @@
 //import 'dart:async';
 
+import 'dart:collection';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +23,7 @@ import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
+import '../globals/globals.dart';
 import '../models/rankingModelo.dart';
 import '../models/rutasModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
@@ -45,12 +48,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   MapType _currentMapType = MapType.normal;
   List<ChatMessage> mensajes = [];
+  Set<Circle> _circles = HashSet<Circle>();
+  Set<Marker> _markers = HashSet<Marker>();
+  bool _isVisible = false;
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
   // ignore: deprecated_member_use
     context.bloc<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
+    _distanceFromCircle();
+    _setMarkers();
     // _loadMapStyles();
     super.initState();
   }
@@ -113,8 +121,58 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     super.dispose();
   }
 
+  Future<void> _distanceFromCircle() async {
+
+    for (var circulo in Set.from(_circles)) {
+      var distancia = Geolocator.distanceBetween(
+          globals.nuevaUbicacion.latitude,
+          globals.nuevaUbicacion.longitude,
+          circulo.center.latitude,
+          circulo.center.longitude);
+      if (distancia < 30) {
+        setState(() {
+          _isVisible = true;
+          print("HA LLEGADO");
+        });
+        break;
+      } else {
+        setState(() {
+          _isVisible = false;
+        });
+      }
+    }
+
+    LatLng latLngPosition =
+        LatLng(globals.nuevaUbicacion.latitude, globals.nuevaUbicacion.longitude);
+
+    _distanceFromCircle();
+  }
+
+  void _setMarkers() {
+    setState(() {
+      _circles.add(Circle(
+        strokeWidth: 1,
+        strokeColor: Colors.cyan,
+        circleId: CircleId("1"),
+        center: LatLng(43.34087208626177, -1.7961018398153477),
+        radius: 30,
+      ));
+    });
+
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId("1"),
+          position: LatLng(43.34087208626177, -1.7961018398153477),
+          consumeTapEvents: false));
+    });
+  }
+
+  
+
+
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
-    
+    print(globals.nuevaUbicacion.latitude);
+    print(globals.nuevaUbicacion.longitude);
     if( !state.existeUbicacion ) return Center(child: CircularProgressIndicator(strokeWidth: 2));
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
@@ -141,6 +199,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       onCameraMove: (cameraPosition){
         mapaBloc.add(OnMovioMapa(cameraPosition.target));
       },
+      circles: _circles,
+      markers: _markers,
 
     );
   }
@@ -311,6 +371,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             ),
             Column( //COLOCACION DE TODOS LOS BOTONES
               children: <Widget>[
+                Visibility(
+                  visible: _isVisible,
+                  child: Container(
+                    child: Text("Lo has logrado"),
+                    height: 100,
+                    width: 200,
+                    color: Colors.amber,
+                  )
+                ),
                 button(_onMapTypeButtonPressed),
                 //BtnTipoMapa(),
                 BtnLineaRuta(),
