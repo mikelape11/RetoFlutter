@@ -23,7 +23,6 @@ import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
-import '../globals/globals.dart';
 import '../models/rankingModelo.dart';
 import '../models/rutasModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
@@ -385,85 +384,92 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               children: <Widget>[
                 Visibility(
                   visible: _isVisible,
-                  child: CustomAlertDialog(
-                    contentPadding: EdgeInsets.all(5),
-                    content: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.cyan, width: 4),
-                            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          height: MediaQuery.of(context).size.height / 2,
-                          //padding: EdgeInsets.all(0),
-                          //color: Colors.white,
-                          child: Center(
-                            child: Column(
-                              children: <Widget>[
-                                Container( //Pregunta
-                                  width: 300,
-                                  child: Center(child: Text('¿En qué año se abrió la biblioteca Carlos Blanco Aguinaga?',  style: TextStyle(fontSize: 24),)),
-                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
                                 ),
-                                SizedBox(
-                                  height: 10,
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container( //Pregunta
+                                        width: 300,
+                                        child: Center(child: Text('¿En qué año se abrió la biblioteca Carlos Blanco Aguinaga?',  style: TextStyle(fontSize: 24),)),
+                                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container( //Respuesta1
+                                        width: 250,
+                                        child: RaisedButton(
+                                          color: Colors.cyan,
+                                          child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          onPressed: (){
+                                            // Navigator.of(context).push(MaterialPageRoute(
+                                            //   builder: (context) => LoginPage(),
+                                            // ));
+                                          },
+                                        )
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Container( //Respuesta2
+                                        width: 250,
+                                        child: RaisedButton(
+                                          color: Colors.cyan,
+                                          child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                          padding: EdgeInsets.only(left: 50, right: 50),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          onPressed: (){
+                                            // Navigator.of(context).push(MaterialPageRoute(
+                                            //   builder: (context) => LoginPage(),
+                                            // ));
+                                          },
+                                        )
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Container( //Respuesta3
+                                        width: 250,
+                                        child: RaisedButton(
+                                          color: Colors.cyan,
+                                          child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                          padding: EdgeInsets.only(left: 50, right: 50),
+                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                          onPressed: (){
+                                            // Navigator.of(context).push(MaterialPageRoute(
+                                            //   builder: (context) => LoginPage(),
+                                            // ));
+                                          },
+                                        )
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Container( //Respuesta1
-                                  width: 250,
-                                  child: RaisedButton(
-                                    color: Colors.cyan,
-                                    child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    onPressed: (){
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //   builder: (context) => LoginPage(),
-                                      // ));
-                                    },
-                                  )
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Container( //Respuesta2
-                                  width: 250,
-                                  child: RaisedButton(
-                                    color: Colors.cyan,
-                                    child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
-                                    padding: EdgeInsets.only(left: 50, right: 50),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    onPressed: (){
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //   builder: (context) => LoginPage(),
-                                      // ));
-                                    },
-                                  )
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                Container( //Respuesta3
-                                  width: 250,
-                                  child: RaisedButton(
-                                    color: Colors.cyan,
-                                    child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
-                                    padding: EdgeInsets.only(left: 50, right: 50),
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    onPressed: (){
-                                      // Navigator.of(context).push(MaterialPageRoute(
-                                      //   builder: (context) => LoginPage(),
-                                      // ));
-                                    },
-                                  )
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ]
                   ),
                 ),
                 button(_onMapTypeButtonPressed),
