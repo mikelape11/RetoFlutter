@@ -54,8 +54,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
-  // ignore: deprecated_member_use
-    context.bloc<MiUbicacionBloc>().iniciarSeguimiento();
+    context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
     _distanceFromCircle();
     _setMarkers();
@@ -121,15 +120,25 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     super.dispose();
   }
 
-  Future<void> _distanceFromCircle() async {
+  Future<Position> _localizacionUsuario() async {
+    return Future((){
+      return Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+    });
+  }
 
+  Position _currentPosition;
+
+  Future<void> _distanceFromCircle() async {
+    _currentPosition = await _localizacionUsuario();
     for (var circulo in Set.from(_circles)) {
       var distancia = Geolocator.distanceBetween(
-          globals.nuevaUbicacion.latitude,
-          globals.nuevaUbicacion.longitude,
-          circulo.center.latitude,
-          circulo.center.longitude);
-      if (distancia < 30) {
+        _currentPosition.latitude,
+        _currentPosition.longitude,
+        circulo.center.latitude,
+        circulo.center.longitude);
+      if (distancia < 15) {
         setState(() {
           _isVisible = true;
           print("HA LLEGADO");
@@ -141,10 +150,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         });
       }
     }
-
-    LatLng latLngPosition =
-        LatLng(globals.nuevaUbicacion.latitude, globals.nuevaUbicacion.longitude);
-
     _distanceFromCircle();
   }
 
@@ -155,7 +160,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         strokeColor: Colors.cyan,
         circleId: CircleId("1"),
         center: LatLng(43.34087208626177, -1.7961018398153477),
-        radius: 30,
+        radius: 15,
       ));
     });
 
@@ -267,6 +272,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           return FutureBuilder(
             future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if(!snapshot.hasData){
+                return Container(
+                height: 600,
+                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+              );
+            }else{
             for(int i=0; i<snapshot.data.length; i++)
               if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
                   globals.existeAvatar = true;
@@ -293,9 +304,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               ),
         );
         }
-        );
+            });
         }
-         ),
+          ),
+          
         automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
@@ -373,12 +385,86 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               children: <Widget>[
                 Visibility(
                   visible: _isVisible,
-                  child: Container(
-                    child: Text("Lo has logrado"),
-                    height: 100,
-                    width: 200,
-                    color: Colors.amber,
-                  )
+                  child: CustomAlertDialog(
+                    contentPadding: EdgeInsets.all(5),
+                    content: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.cyan, width: 4),
+                            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          height: MediaQuery.of(context).size.height / 2,
+                          //padding: EdgeInsets.all(0),
+                          //color: Colors.white,
+                          child: Center(
+                            child: Column(
+                              children: <Widget>[
+                                Container( //Pregunta
+                                  width: 300,
+                                  child: Center(child: Text('¿En qué año se abrió la biblioteca Carlos Blanco Aguinaga?',  style: TextStyle(fontSize: 24),)),
+                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container( //Respuesta1
+                                  width: 250,
+                                  child: RaisedButton(
+                                    color: Colors.cyan,
+                                    child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    onPressed: (){
+                                      // Navigator.of(context).push(MaterialPageRoute(
+                                      //   builder: (context) => LoginPage(),
+                                      // ));
+                                    },
+                                  )
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Container( //Respuesta2
+                                  width: 250,
+                                  child: RaisedButton(
+                                    color: Colors.cyan,
+                                    child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                    padding: EdgeInsets.only(left: 50, right: 50),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    onPressed: (){
+                                      // Navigator.of(context).push(MaterialPageRoute(
+                                      //   builder: (context) => LoginPage(),
+                                      // ));
+                                    },
+                                  )
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Container( //Respuesta3
+                                  width: 250,
+                                  child: RaisedButton(
+                                    color: Colors.cyan,
+                                    child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                    padding: EdgeInsets.only(left: 50, right: 50),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    onPressed: (){
+                                      // Navigator.of(context).push(MaterialPageRoute(
+                                      //   builder: (context) => LoginPage(),
+                                      // ));
+                                    },
+                                  )
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 button(_onMapTypeButtonPressed),
                 //BtnTipoMapa(),
