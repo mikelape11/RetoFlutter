@@ -30,8 +30,6 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
 
-
-
 //import 'package:flutter/services.dart' show rootBundle;
 
 class HomePage extends StatefulWidget {
@@ -51,6 +49,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Set<Marker> _markers = HashSet<Marker>();
   bool _isVisible = false;
   final Set<Polyline> _polyline = {};
+  List<LatLng> listaRutas = List();
 
 
   @override
@@ -59,7 +58,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
     _distanceFromCircle();
     _setMarkers();
-    devolverLista();
     // _loadMapStyles();
     super.initState();
   }
@@ -189,6 +187,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       zoom: 17,
     );
 
+    _polyline.add(Polyline(
+        polylineId: PolylineId('line1'),
+        visible: true,
+        //latlng is List<LatLng>
+        points: listaRutas,
+        width: 2,
+        color: Colors.blue,
+      ));
+
 
     return GoogleMap(
       initialCameraPosition: cameraPosition,
@@ -201,7 +208,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         Theme.of(context).primaryColor == Colors.grey[900] ? mapaBloc.initMapa(controller) : mapaBloc.initMapa2(controller);
         _controller = controller;
       },
-      polylines: mapaBloc.state.polylines.values.toSet(),
+      polylines: _polyline,
       onCameraMove: (cameraPosition){
         mapaBloc.add(OnMovioMapa(cameraPosition.target));
       },
@@ -261,6 +268,25 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _controller.setMapStyle(mapStyle);
   }
 
+
+  Future<List<LatLng>> devolverLista(AsyncSnapshot snapshot2) async{
+    List<double> rutasLat = [];
+    List<double> rutasLng = [];
+    
+    print(snapshot2.data[0].rutas_data.length);
+    for(int n=0; n<snapshot2.data[0].rutas_data.length;n++){
+        rutasLat.add(snapshot2.data[0].rutas_data[n].lat);
+        rutasLng.add(snapshot2.data[0].rutas_data[n].lng);
+    }  
+    print(rutasLat);
+    print(rutasLng); 
+    for(int m=0;m<rutasLat.length;m++){
+        LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
+        listaRutas.add(data$m);
+    }
+    return listaRutas;
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -270,20 +296,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
          leading: FutureBuilder(
           future: getRutasData(),
           builder: (BuildContext context, AsyncSnapshot snapshot2) {
-          Future<List<LatLng>> devolverLista() async{
-            List<double> rutasLat = [];
-            List<double> rutasLng = [];
-            List<LatLng> listaRutas = List();
-            for(int n=0; n<snapshot2.data[0].rutas_data.length;n++){
-                rutasLat.add(snapshot2.data[0].rutas_data[n].lat);
-                rutasLng.add(snapshot2.data[0].rutas_data[n].lng);
-            }   
-            for(int m=0;m<rutasLat.length;m++){
-                LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
-                listaRutas.add(data$m);
-            }
-            return listaRutas;
-          }
+          if(!snapshot2.hasData){
+            print("KAKA MIERDA BAT DA HAU");
+          }else{
+
+          
+          devolverLista(snapshot2);
           return FutureBuilder(
             future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -320,6 +338,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         );
         }
             });
+          }
         }
           ),
           

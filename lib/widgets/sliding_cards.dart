@@ -27,11 +27,13 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
     for (var n in jsonData) {
       //print(jsonData2);
       rutasModelo rutas = new rutasModelo();
+      rutas.id = n["_id"];
       rutas.nombre = n["nombre"];
       rutas.ciudad = n["ciudad"];
       rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
+      globals.id = n["_id"];
       
     }
     return ruta;
@@ -49,13 +51,14 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
               controller: pageController,
               children: <Widget>[
                 for(int i=0; i<snapshot.data.length; i++)
-                SlidingCard(
-                  name: '${snapshot.data[i].ciudad}',
-                  date: '3 Horas',
-                  distancia: "${snapshot.data[i].distancia} KM" ,
-                  tiempo: "${snapshot.data[i].tiempo}",
-                  assetName: 'donosti2.jpg',
-                ),
+                  SlidingCard(      
+                    id: i,
+                    name: '${snapshot.data[i].ciudad}',
+                    distancia: "${snapshot.data[i].distancia} KM" ,
+                    tiempo: "${snapshot.data[i].tiempo}",
+                    assetName: 'donosti2.jpg',
+                    length: snapshot.data.length,
+                  ),
               ],
             ),
           );

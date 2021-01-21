@@ -3,19 +3,21 @@ import 'package:reto/pages/home.dart';
 
 
 class SlidingCard extends StatelessWidget {
+  final int id;
   final String name; //<-- title of the event
-  final String date; //<-- date of the event
   final String assetName; //<-- name of the image to be displayed
   final String distancia;
   final String tiempo;
+  final int length;
 
   const SlidingCard({
     Key key,
+    @required this.id,
     @required this.name,
-    @required this.date,
     @required this.assetName,
     @required this.distancia,
     @required this.tiempo,
+    @required this.length,
   }) : super(key: key);
 
 
@@ -38,10 +40,11 @@ class SlidingCard extends StatelessWidget {
           SizedBox(height: 8),
           Expanded(
             child: _CardContent( //<--replace the Container with CardContent
+              id: id,
               name: name,
-              date: date,
               distancia: distancia,
               tiempo: tiempo,
+              length: length,
             ),
           ),
         ],
@@ -51,12 +54,13 @@ class SlidingCard extends StatelessWidget {
 }
 
 class _CardContent extends StatelessWidget {
+  final int id;
   final String name;
-  final String date;
   final String distancia;
   final String tiempo;
+  final int length;
 
-  const _CardContent({Key key, @required this.name, @required this.date, @required this.distancia,@required this.tiempo})
+  const _CardContent({Key key, @required this.id, @required this.name, @required this.distancia,@required this.tiempo, @required this.length})
       : super(key: key);
 
   
@@ -81,7 +85,6 @@ class _CardContent extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                      //Text(date, style: TextStyle(color: Colors.grey)),
                         Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
                         SizedBox(width: 10),
                         Text(distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
@@ -112,6 +115,10 @@ class _CardContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 onPressed: () {
+                  
+                  if(id == 0){
+
+                  }
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ));
