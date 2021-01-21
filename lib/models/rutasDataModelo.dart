@@ -1,17 +1,13 @@
 import 'dart:convert';
 
-import 'dart:ffi';
-
 rutasDataModelo rutasDataModeloJson(String str)=> rutasDataModelo.fromJson(json.decode(str));
 
 String rutasDataModeloToJson(rutasDataModelo data) => json.encode(data.toJson());
 
 class rutasDataModelo{
   String id;
-	Float lat;
-	Float lng;
-
-  
+    double lat;
+    double lng;
 
   rutasDataModelo({this.id,this.lat,this.lng});
 
@@ -27,13 +23,5 @@ class rutasDataModelo{
     "lng": lng
 
   };
-
-  String get idRutaData => id;
-
-  Float get latRutaData => lat;
-
-  Float get lngRutaDara => lng;
-
-
 
 }

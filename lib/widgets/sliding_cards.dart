@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:reto/models/rutasModelo.dart';
 import 'package:reto/widgets/sliding_card.dart';
 import 'package:http/http.dart' as http;
+import 'package:reto/globals/globals.dart' as globals;
+
 
 class SlidingCardsView extends StatefulWidget {
 
@@ -18,7 +20,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
 
  Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
-    var data = await http.get('http://10.0.2.2:8080/routes/all');
+    var data = await http.get('${globals.ipBase}/routes/all');
     var jsonData = json.decode(data.body);
 
     List<rutasModelo> ruta = [];
@@ -27,7 +29,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       rutasModelo rutas = new rutasModelo();
       rutas.nombre = n["nombre"];
       rutas.ciudad = n["ciudad"];
-      rutas.distancia = n["distancia"].toString();
+      rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
       

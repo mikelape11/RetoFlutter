@@ -78,9 +78,9 @@ class LoginPage extends StatelessWidget {
     }
 
   Future<List<usuarioModelo>> getUsuarios() async {
-    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var data = await http.get('${globals.ipBase}/usuarios/todos');
     var jsonData = json.decode(data.body);
-
+    
     List<usuarioModelo> usuario = [];
     for (var e in jsonData) {
       usuarioModelo usuarios = new usuarioModelo();

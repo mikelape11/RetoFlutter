@@ -22,7 +22,7 @@ class RegistroPage extends StatefulWidget {
 
 
 Future<usuarioModelo> registrarUsuario(String usuario, String password, String rol, String avatar) async{
-  var Url = "http://10.0.2.2:8080/usuarios/nuevo";
+  var Url = "${globals.ipBase}/usuarios/nuevo";
   var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
   body:jsonEncode(<String , String>{
     "usuario" : usuario,
@@ -39,7 +39,7 @@ class Registro extends State<RegistroPage>{
   String _usuario;
 
   Future<List<usuarioModelo>> getUsuarios() async {
-    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var data = await http.get('${globals.ipBase}/usuarios/todos');
     var jsonData = json.decode(data.body);
 
     List<usuarioModelo> usuario = [];

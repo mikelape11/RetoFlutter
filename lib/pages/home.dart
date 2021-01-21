@@ -62,7 +62,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<rankingModelo>> getRanking() async {
-    var data = await http.get('http://10.0.2.2:8080/ranking/all');
+    var data = await http.get('${globals.ipBase}/ranking/all');
     var jsonData = json.decode(data.body);
 
     List<rankingModelo> ranking = [];
@@ -82,7 +82,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<usuarioModelo>> getAvatar() async {
-    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var data = await http.get('${globals.ipBase}/usuarios/todos');
     var jsonData = json.decode(data.body);
 
     List<usuarioModelo> usuario = [];
@@ -95,16 +95,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<rutasModelo>> getRutasData() async {
-    var data = await http.get('http://10.0.2.2:8080/routes/all');
+    var data = await http.get('${globals.ipBase}/routes/all');
     var jsonData = json.decode(data.body);
     // print(jsonData);
     List<rutasModelo> datos = [];
     for (var e in jsonData) {
       rutasModelo rutas = new rutasModelo();
-      print("nn ${e["rutas_data"]}");
       var list = e['rutas_data'] as List;
       rutas.rutas_data =  list.map((i) => rutasDataModelo.fromJson(i)).toList();
-      print("aaaaa $rutas");
       datos.add(rutas);
     }
     return datos;
@@ -152,7 +150,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _distanceFromCircle();
   }
 
-  void _setMarkers() {
+  Future<void> _setMarkers() async {
     setState(() {
       _circles.add(Circle(
         strokeWidth: 1,
@@ -162,9 +160,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         radius: 15,
       ));
     });
-
+    String _iconImage = 'images/marker.png';
+    final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
     setState(() {
       _markers.add(Marker(
+          //icon: bitmapIcon,
           markerId: MarkerId("1"),
           position: LatLng(43.34087208626177, -1.7961018398153477),
           consumeTapEvents: false));
@@ -175,8 +175,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
 
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
-    print(globals.nuevaUbicacion.latitude);
-    print(globals.nuevaUbicacion.longitude);
     if( !state.existeUbicacion ) return Center(child: CircularProgressIndicator(strokeWidth: 2));
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
@@ -185,7 +183,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
     final cameraPosition = new CameraPosition(
       target: state.ubicacion,
-      zoom: 15,
+      zoom: 17,
     );
 
     return GoogleMap(
@@ -421,6 +419,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                           child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
                                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                           onPressed: (){
+                                            setState(() {
+                                              _isVisible = false;
+                                            });
+                                            
                                             // Navigator.of(context).push(MaterialPageRoute(
                                             //   builder: (context) => LoginPage(),
                                             // ));

@@ -26,7 +26,7 @@ class PerfilUsuario extends StatefulWidget {
 }
 
  Future<List<usuarioModelo>> getUsuarios() => Future.delayed(Duration(milliseconds: 0 ), () async {
-    var data = await http.get('http://10.0.2.2:8080/usuarios/todos');
+    var data = await http.get('${globals.ipBase}/usuarios/todos');
     var jsonData = json.decode(data.body);
 
     List<usuarioModelo> usuario = [];
@@ -44,7 +44,7 @@ class PerfilUsuario extends StatefulWidget {
 class PerfilUsuarioPage extends State<PerfilUsuario>{
 
   Future<usuarioModelo> actualizarUsuario(usuarioModelo usuario) async{
-    var Url = "http://10.0.2.2:8080/usuarios/actualizar";
+    var Url = "${globals.ipBase}/usuarios/actualizar";
     var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
     body: jsonEncode(usuario));
   }

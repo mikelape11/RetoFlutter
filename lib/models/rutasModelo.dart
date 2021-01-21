@@ -8,8 +8,8 @@ String rutasModeloToJson(rutasModelo data) => json.encode(data.toJson());
 
 class rutasModelo{
   String nombre;
-	String ciudad;
-	String distancia;
+    String ciudad;
+    double distancia;
   int tiempo;
   List<rutasDataModelo> rutas_data;
 
@@ -24,11 +24,11 @@ class rutasModelo{
     ciudad: json["ciudad"],
     distancia: json["distancia"],
     tiempo: json["tiempo"],
-    rutas_data: lista
+    rutas_data: lista,
   );
 
   }
-   
+
   Map<String,dynamic> toJson()=>{
     "nombre": nombre,
     "ciudad": ciudad,
@@ -36,12 +36,5 @@ class rutasModelo{
     "tiempo": tiempo,
   };
 
-  String get nombreRuta => nombre;
-
-  String get ciudadRuta => ciudad;
-
-  String get distanciaRuta => distancia;
-
-  int get tiempoRuta => tiempo;
 
 }
