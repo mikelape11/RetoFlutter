@@ -115,10 +115,12 @@ class _CardContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 onPressed: () {
-                  
-                  if(id == 0){
-
+                  for(int i=0; i<length; i++){
+                    if(id == i){
+                      
+                    }
                   }
+                  
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ));
