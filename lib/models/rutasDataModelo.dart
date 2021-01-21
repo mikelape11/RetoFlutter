@@ -6,8 +6,8 @@ String rutasDataModeloToJson(rutasDataModelo data) => json.encode(data.toJson())
 
 class rutasDataModelo{
   String id;
-    double lat;
-    double lng;
+  double lat;
+  double lng;
 
   rutasDataModelo({this.id,this.lat,this.lng});
 
@@ -23,5 +23,12 @@ class rutasDataModelo{
     "lng": lng
 
   };
+
+  String get idRutasdDataModelo => id;
+
+  double get latRutasdDataModelo => lat;
+
+  double get lngRutasdDataModeloa => lng;
+
 
 }

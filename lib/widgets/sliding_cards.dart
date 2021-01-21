@@ -20,7 +20,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
 
 
  Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
-    var data = await http.get('${globals.ipBase}/routes/all');
+    var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);
 
     List<rutasModelo> ruta = [];

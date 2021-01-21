@@ -11,7 +11,7 @@ class MapaState{
   final Map<String, Polyline> polylines;
 
   MapaState({
-    this.dibujarRecorrido = true,
+    this.dibujarRecorrido = false,
     this.seguirUbicacion = false,
     this.ubicacionCentral,
     Map<String, Polyline> polylines

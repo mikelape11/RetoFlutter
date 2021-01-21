@@ -50,6 +50,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Set<Circle> _circles = HashSet<Circle>();
   Set<Marker> _markers = HashSet<Marker>();
   bool _isVisible = false;
+  final Set<Polyline> _polyline = {};
+
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -57,12 +59,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
     _distanceFromCircle();
     _setMarkers();
+    devolverLista();
     // _loadMapStyles();
     super.initState();
   }
 
   Future<List<rankingModelo>> getRanking() async {
-    var data = await http.get('${globals.ipBase}/ranking/all');
+    var data = await http.get('${globals.ipLocal}/ranking/all');
     var jsonData = json.decode(data.body);
 
     List<rankingModelo> ranking = [];
@@ -82,7 +85,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<usuarioModelo>> getAvatar() async {
-    var data = await http.get('${globals.ipBase}/usuarios/todos');
+    var data = await http.get('${globals.ipLocal}/usuarios/todos');
     var jsonData = json.decode(data.body);
 
     List<usuarioModelo> usuario = [];
@@ -95,7 +98,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<rutasModelo>> getRutasData() async {
-    var data = await http.get('${globals.ipBase}/routes/all');
+    var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);
     // print(jsonData);
     List<rutasModelo> datos = [];
@@ -186,6 +189,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       zoom: 17,
     );
 
+
     return GoogleMap(
       initialCameraPosition: cameraPosition,
       mapType: _currentMapType,
@@ -266,6 +270,20 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
          leading: FutureBuilder(
           future: getRutasData(),
           builder: (BuildContext context, AsyncSnapshot snapshot2) {
+          Future<List<LatLng>> devolverLista() async{
+            List<double> rutasLat = [];
+            List<double> rutasLng = [];
+            List<LatLng> listaRutas = List();
+            for(int n=0; n<snapshot2.data[0].rutas_data.length;n++){
+                rutasLat.add(snapshot2.data[0].rutas_data[n].lat);
+                rutasLng.add(snapshot2.data[0].rutas_data[n].lng);
+            }   
+            for(int m=0;m<rutasLat.length;m++){
+                LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
+                listaRutas.add(data$m);
+            }
+            return listaRutas;
+          }
           return FutureBuilder(
             future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {

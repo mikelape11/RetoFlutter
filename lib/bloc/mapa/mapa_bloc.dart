@@ -71,7 +71,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       yield* this._onSeguirUbicacion(event);
 
     } else if ( event is OnMovioMapa){
-      print( event.centroMapa );
+      //print( event.centroMapa );
       yield state.copyWith( ubicacionCentral: event.centroMapa );
 
     }
