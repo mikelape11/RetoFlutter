@@ -54,6 +54,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   final Set<Polyline> _polyline = {};
   List<LatLng> listaRutas = List();
   List<LatLng> listaMarkers = List();
+  List<int> posicionesPreguntas = [];
+  List<String> preguntas = [];
 
 
   @override
@@ -162,15 +164,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         circulo.center.longitude);
       if (distancia < 15) {
         setState(() {
-          //_isVisible = true;
+          _isVisible = true;
           globals.colorMarker = true;
+          for(var markers in listaMarkers){
+
+          }
           print("HA LLEGADO");
         });
         break;
       } else {
         setState(() {
           _isVisible = false;
-       
 
         });
       }
@@ -337,6 +341,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   int contador = 0;
+  int contador2 = 0;
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -353,6 +358,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             devolverLista2(snapshot2);
             getPreguntas();
             _setMarkers();
+          
             contador++;
           }
           return FutureBuilder(
@@ -495,88 +501,88 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {
-                                    List<int> posicionesPreguntas = [];
-                                    List<String> preguntas = [];
-                                    for(int i =0;i<snapshot3.data.length; i++){
-                                      if(globals.idRuta == snapshot3.data[i].rutasId){
-                                        posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
-                                      }
-                                    }
-                                    posicionesPreguntas.sort(); 
-                                    for(int n=0; n<posicionesPreguntas.length; n++){
-                                      for(int m=0; m<snapshot3.data.length; m++){
-                                        if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                          preguntas.add(snapshot3.data[m].pregunta);
+                                      if(contador2 == 0){
+                                        for(int i =0;i<snapshot3.data.length; i++){
+                                          if(globals.idRuta == snapshot3.data[i].rutasId){
+                                            posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
+                                          }
                                         }
+                                        posicionesPreguntas.sort(); 
+                                        for(int n=0; n<posicionesPreguntas.length; n++){
+                                          for(int m=0; m<snapshot3.data.length; m++){
+                                              if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                                if(globals.idRuta == snapshot3.data[m].rutasId){
+                                                  preguntas.add(snapshot3.data[m].pregunta);
+                                                }
+                                              }
+                                          }
+                                        }
+                                        contador2++;
                                       }
-                                    }
-                                    for(int m=0; m<preguntas.length;m++){
-                                      
-                                    return Column(
-                                      children: <Widget>[
-                                        Container( //Pregunta
-                                          width: 300,
-                                          child: Center(child: Text('${preguntas[m]}',  style: TextStyle(fontSize: 24),)),
-                                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container( //Respuesta1
-                                          width: 250,
-                                          child: RaisedButton(
-                                            color: Colors.cyan,
-                                            child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            onPressed: (){
-                                              setState(() {
-                                                _isVisible = false;
-                                              });
-                                              
-                                              // Navigator.of(context).push(MaterialPageRoute(
-                                              //   builder: (context) => LoginPage(),
-                                              // ));
-                                            },
-                                          )
-                                        ),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Container( //Respuesta2
-                                          width: 250,
-                                          child: RaisedButton(
-                                            color: Colors.cyan,
-                                            child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
-                                            padding: EdgeInsets.only(left: 50, right: 50),
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            onPressed: (){
-                                              // Navigator.of(context).push(MaterialPageRoute(
-                                              //   builder: (context) => LoginPage(),
-                                              // ));
-                                            },
-                                          )
-                                        ),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Container( //Respuesta3
-                                          width: 250,
-                                          child: RaisedButton(
-                                            color: Colors.cyan,
-                                            child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
-                                            padding: EdgeInsets.only(left: 50, right: 50),
-                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                            onPressed: (){
-                                              // Navigator.of(context).push(MaterialPageRoute(
-                                              //   builder: (context) => LoginPage(),
-                                              // ));
-                                            },
-                                          )
-                                        ),
-                                      ],
-                                    );
-                                    }
-                                    }
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      );             
+                                    }      
                                   ),
                                 ),
                               ),
