@@ -11,6 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reto/models/rankingModelo.dart';
 import 'package:reto/models/rutasDataModelo.dart';
 import 'package:reto/models/usuarioModelo.dart';
+import 'package:reto/models/rutasLocalizacionModelo.dart';
+import 'package:reto/models/preguntasModelo.dart';
+import 'package:reto/models/preguntasRespuestasModelo.dart';
 import 'package:reto/theme/theme.dart';
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -50,6 +53,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   bool _isVisible = false;
   final Set<Polyline> _polyline = {};
   List<LatLng> listaRutas = List();
+  List<LatLng> listaMarkers = List();
 
 
   @override
@@ -57,7 +61,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
     _distanceFromCircle();
-    _setMarkers();
     // _loadMapStyles();
     super.initState();
   }
@@ -98,17 +101,38 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Future<List<rutasModelo>> getRutasData() async {
     var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);
-    // print(jsonData);
+    
     List<rutasModelo> datos = [];
     for (var e in jsonData) {
       rutasModelo rutas = new rutasModelo();
+      rutas.id = e["_id"];
       var list = e['rutas_data'] as List;
       rutas.rutas_data =  list.map((i) => rutasDataModelo.fromJson(i)).toList();
+      var list2 = e['rutas_loc'] as List;
+      rutas.rutas_loc =  list2.map((i) => rutasLocalizacionModelo.fromJson(i)).toList();
       datos.add(rutas);
     }
     return datos;
   }
 
+  Future<List<preguntasModelo>> getPreguntas() async {
+    var data = await http.get('${globals.ipLocal}/preguntas/all');
+    var jsonData = json.decode(data.body);
+
+    List<preguntasModelo> datos = [];
+    for (var e in jsonData) {
+      preguntasModelo preguntas = new preguntasModelo();
+      preguntas.id = e["_id"];
+      preguntas.numPregunta = e["numPregunta"];
+      preguntas.pregunta = e["pregunta"];
+      var list = e['respuestas'] as List;
+      preguntas.respuestas =  list.map((i) => preguntasRespuestasModelo.fromJson(i)).toList();
+      preguntas.rutasId = e["rutasId"];
+      preguntas.opcion = e["opcion"];
+      datos.add(preguntas);
+    }
+    return datos;
+  }
 
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -151,28 +175,27 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _distanceFromCircle();
   }
 
+  List<int> posiciones;
   Future<void> _setMarkers() async {
+     String _iconImage = 'images/marker.png';
+    final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
     setState(() {
+    for(int i=0; i<listaMarkers.length;i++)
       _circles.add(Circle(
         strokeWidth: 1,
         strokeColor: Colors.cyan,
-        circleId: CircleId("1"),
-        center: LatLng(43.34087208626177, -1.7961018398153477),
+        circleId: CircleId("${i}"),
+        center: listaMarkers[i],
         radius: 15,
       ));
-    });
-    String _iconImage = 'images/marker.png';
-    final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
-    setState(() {
+    for(int i=0; i<listaMarkers.length;i++)
       _markers.add(Marker(
           //icon: bitmapIcon,
-          markerId: MarkerId("1"),
-          position: LatLng(43.34087208626177, -1.7961018398153477),
+          markerId: MarkerId("${i}"),
+          position: listaMarkers[i],
           consumeTapEvents: false));
     });
   }
-
-  
 
 
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
@@ -190,7 +213,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _polyline.add(Polyline(
         polylineId: PolylineId('line1'),
         visible: true,
-        //latlng is List<LatLng>
         points: listaRutas,
         width: 2,
         color: Colors.blue,
@@ -272,21 +294,43 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Future<List<LatLng>> devolverLista(AsyncSnapshot snapshot2) async{
     List<double> rutasLat = [];
     List<double> rutasLng = [];
-    
-    print(snapshot2.data[0].rutas_data.length);
-    for(int n=0; n<snapshot2.data[0].rutas_data.length;n++){
-        rutasLat.add(snapshot2.data[0].rutas_data[n].lat);
-        rutasLng.add(snapshot2.data[0].rutas_data[n].lng);
+    for(int n=0; n<snapshot2.data.length;n++){
+      if(snapshot2.data[n].id == globals.idRuta){
+        for(int m=0; m<snapshot2.data[n].rutas_data.length;m++){
+          rutasLat.add(snapshot2.data[n].rutas_data[m].lat);
+          rutasLng.add(snapshot2.data[n].rutas_data[m].lng);
+        }
+        
+      }   
     }  
-    print(rutasLat);
-    print(rutasLng); 
     for(int m=0;m<rutasLat.length;m++){
         LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
         listaRutas.add(data$m);
     }
+    
     return listaRutas;
   }
 
+ Future<List<LatLng>> devolverLista2(AsyncSnapshot snapshot2) async{
+    List<double> rutasLat2 = [];
+    List<double> rutasLng2 = [];
+    for(int n=0; n<snapshot2.data.length;n++){
+      if(snapshot2.data[n].id == globals.idRuta){
+        for(int m=0; m<snapshot2.data[n].rutas_loc.length;m++){
+          rutasLat2.add(snapshot2.data[n].rutas_loc[m].lat);
+          rutasLng2.add(snapshot2.data[n].rutas_loc[m].lng);
+        }
+        
+      }   
+    }  
+    for(int m=0;m<rutasLat2.length;m++){
+        LatLng data$m = LatLng(rutasLat2[m], rutasLng2[m]);
+        listaMarkers.add(data$m);
+    }
+    return listaMarkers;
+  }
+
+  int contador = 0;
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -297,11 +341,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           future: getRutasData(),
           builder: (BuildContext context, AsyncSnapshot snapshot2) {
           if(!snapshot2.hasData){
-            print("KAKA MIERDA BAT DA HAU");
-          }else{
-
-          
-          devolverLista(snapshot2);
+          }else{ 
+          if(contador == 0){
+            devolverLista(snapshot2);
+            devolverLista2(snapshot2);
+            getPreguntas();
+            _setMarkers();
+            contador++;
+          }
           return FutureBuilder(
             future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -439,68 +486,86 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                 //padding: EdgeInsets.all(0),
                                 //color: Colors.white,
                                 child: Center(
-                                  child: Column(
-                                    children: <Widget>[
-                                      Container( //Pregunta
-                                        width: 300,
-                                        child: Center(child: Text('¿En qué año se abrió la biblioteca Carlos Blanco Aguinaga?',  style: TextStyle(fontSize: 24),)),
-                                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Container( //Respuesta1
-                                        width: 250,
-                                        child: RaisedButton(
-                                          color: Colors.cyan,
-                                          child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          onPressed: (){
-                                            setState(() {
-                                              _isVisible = false;
-                                            });
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {
+                                    List<int> posicionesPreguntas = [];
+                                    for(int i =0;i<snapshot3.data.length; i++){
+                                        if(globals.idRuta == snapshot3.data[i].rutasId){
+                                            posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
                                             
-                                            // Navigator.of(context).push(MaterialPageRoute(
-                                            //   builder: (context) => LoginPage(),
-                                            // ));
-                                          },
-                                        )
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Container( //Respuesta2
-                                        width: 250,
-                                        child: RaisedButton(
-                                          color: Colors.cyan,
-                                          child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
-                                          padding: EdgeInsets.only(left: 50, right: 50),
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          onPressed: (){
-                                            // Navigator.of(context).push(MaterialPageRoute(
-                                            //   builder: (context) => LoginPage(),
-                                            // ));
-                                          },
-                                        )
-                                      ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Container( //Respuesta3
-                                        width: 250,
-                                        child: RaisedButton(
-                                          color: Colors.cyan,
-                                          child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
-                                          padding: EdgeInsets.only(left: 50, right: 50),
-                                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                          onPressed: (){
-                                            // Navigator.of(context).push(MaterialPageRoute(
-                                            //   builder: (context) => LoginPage(),
-                                            // ));
-                                          },
-                                        )
-                                      ),
-                                    ],
+                     
+                                        }
+                                      }
+                                    posicionesPreguntas.sort(); 
+                                    for(int i =0;i<snapshot3.data.length; i++)
+                                       for(int j =0;j<posicionesPreguntas.length; j++)
+                                         if(snapshot3.data[i].numPregunta == posicionesPreguntas[j]) 
+                                          print("i: ${i} eta j: ${j}");                
+                                    return Column(
+                                      children: <Widget>[
+                                        Container( //Pregunta
+                                          width: 300,
+                                          child: Center(child: Text('',  style: TextStyle(fontSize: 24),)),
+                                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container( //Respuesta1
+                                          width: 250,
+                                          child: RaisedButton(
+                                            color: Colors.cyan,
+                                            child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            onPressed: (){
+                                              setState(() {
+                                                _isVisible = false;
+                                              });
+                                              
+                                              // Navigator.of(context).push(MaterialPageRoute(
+                                              //   builder: (context) => LoginPage(),
+                                              // ));
+                                            },
+                                          )
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Container( //Respuesta2
+                                          width: 250,
+                                          child: RaisedButton(
+                                            color: Colors.cyan,
+                                            child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                            padding: EdgeInsets.only(left: 50, right: 50),
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            onPressed: (){
+                                              // Navigator.of(context).push(MaterialPageRoute(
+                                              //   builder: (context) => LoginPage(),
+                                              // ));
+                                            },
+                                          )
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Container( //Respuesta3
+                                          width: 250,
+                                          child: RaisedButton(
+                                            color: Colors.cyan,
+                                            child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                            padding: EdgeInsets.only(left: 50, right: 50),
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                            onPressed: (){
+                                              // Navigator.of(context).push(MaterialPageRoute(
+                                              //   builder: (context) => LoginPage(),
+                                              // ));
+                                            },
+                                          )
+                                        ),
+                                      ],
+                                    );
+                                    }
                                   ),
                                 ),
                               ),
@@ -604,7 +669,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               }
             }
           }     
-          print(nombres);
           for(int k=0;k<nombres.length;k++){
             for(int j=0;j<puntuacionesOrdenadas.length;j++){
               if(nombres[k] == snapshot2.data[j].usuario){
@@ -612,7 +676,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               }
             }
           }
-          print(fotos);
           return Column(
             children: <Widget>[ 
               Divider(),

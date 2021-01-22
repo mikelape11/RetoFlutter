@@ -337,11 +337,9 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
               for(int i=0; i<snapshot.data.length; i++)
                 if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
                     globals.existeAvatar = true;
-                     print("TRUE");
                      break;
                 }else{
                     globals.existeAvatar = false;
-                    print("FALSE");
                 }
             return Form(
             autovalidate: true,

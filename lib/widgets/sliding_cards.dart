@@ -30,6 +30,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       rutas.id = n["_id"];
       rutas.nombre = n["nombre"];
       rutas.ciudad = n["ciudad"];
+      rutas.imagen = n["imagen"];
       rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
@@ -56,8 +57,9 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                     name: '${snapshot.data[i].ciudad}',
                     distancia: "${snapshot.data[i].distancia} KM" ,
                     tiempo: "${snapshot.data[i].tiempo}",
-                    assetName: 'donosti2.jpg',
+                    assetName: '${snapshot.data[i].imagen}',
                     length: snapshot.data.length,
+                    snapshot : snapshot,
                   ),
               ],
             ),

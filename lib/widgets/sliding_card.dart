@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reto/pages/home.dart';
+import 'package:reto/globals/globals.dart' as globals;
 
 
 class SlidingCard extends StatelessWidget {
@@ -9,6 +10,7 @@ class SlidingCard extends StatelessWidget {
   final String distancia;
   final String tiempo;
   final int length;
+  final AsyncSnapshot snapshot;
 
   const SlidingCard({
     Key key,
@@ -18,6 +20,7 @@ class SlidingCard extends StatelessWidget {
     @required this.distancia,
     @required this.tiempo,
     @required this.length,
+    @required this.snapshot,
   }) : super(key: key);
 
 
@@ -45,6 +48,7 @@ class SlidingCard extends StatelessWidget {
               distancia: distancia,
               tiempo: tiempo,
               length: length,
+              snapshot: snapshot,
             ),
           ),
         ],
@@ -59,8 +63,9 @@ class _CardContent extends StatelessWidget {
   final String distancia;
   final String tiempo;
   final int length;
+  final AsyncSnapshot snapshot;
 
-  const _CardContent({Key key, @required this.id, @required this.name, @required this.distancia,@required this.tiempo, @required this.length})
+  const _CardContent({Key key, @required this.id, @required this.name, @required this.distancia,@required this.tiempo, @required this.length,@required this.snapshot})
       : super(key: key);
 
   
@@ -115,12 +120,12 @@ class _CardContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 onPressed: () {
-                  for(int i=0; i<length; i++){
+                    for(int i=0; i<snapshot.data.length; i++){
                     if(id == i){
-                      
+                      globals.idRuta = snapshot.data[i].id;
                     }
                   }
-                  
+                  print(globals.idRuta);
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ));

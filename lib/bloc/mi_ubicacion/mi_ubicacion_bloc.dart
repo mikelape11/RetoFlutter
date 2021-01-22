@@ -30,9 +30,7 @@ class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
       //print(position);
       final nuevaUbicacion = new LatLng(position.latitude, position.longitude);
       globals.nuevaUbicacion = nuevaUbicacion;
-      print("KAKAKAKAKAKA");
-      print(globals.nuevaUbicacion.latitude);
-      print(globals.nuevaUbicacion.longitude);
+     
       add(OnUbicacionCambio( nuevaUbicacion ));
     });
 
