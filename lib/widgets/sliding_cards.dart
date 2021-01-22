@@ -27,14 +27,14 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
     for (var n in jsonData) {
       //print(jsonData2);
       rutasModelo rutas = new rutasModelo();
-      rutas.id = n["_id"];
+      rutas.id = n["id"];
       rutas.nombre = n["nombre"];
       rutas.ciudad = n["ciudad"];
       rutas.imagen = n["imagen"];
       rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
-      globals.id = n["_id"];
+      globals.id = n["id"];
       
     }
     return ruta;

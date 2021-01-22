@@ -105,7 +105,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     List<rutasModelo> datos = [];
     for (var e in jsonData) {
       rutasModelo rutas = new rutasModelo();
-      rutas.id = e["_id"];
+      rutas.id = e["id"];
       var list = e['rutas_data'] as List;
       rutas.rutas_data =  list.map((i) => rutasDataModelo.fromJson(i)).toList();
       var list2 = e['rutas_loc'] as List;
@@ -122,7 +122,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     List<preguntasModelo> datos = [];
     for (var e in jsonData) {
       preguntasModelo preguntas = new preguntasModelo();
-      preguntas.id = e["_id"];
+      preguntas.id = e["id"];
       preguntas.numPregunta = e["numPregunta"];
       preguntas.pregunta = e["pregunta"];
       var list = e['respuestas'] as List;
@@ -191,6 +191,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     for(int i=0; i<listaMarkers.length;i++)
       _markers.add(Marker(
           //icon: bitmapIcon,
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+           BitmapDescriptor.hueCyan
+          ),
           markerId: MarkerId("${i}"),
           position: listaMarkers[i],
           consumeTapEvents: false));
@@ -215,7 +218,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         visible: true,
         points: listaRutas,
         width: 2,
-        color: Colors.blue,
+        color: Colors.cyan,
       ));
 
 
@@ -243,7 +246,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Widget button(Function function){
     return Container(
       alignment: FractionalOffset.bottomRight,
-      margin: EdgeInsets.only(top: 330, right: 10),
+      margin: EdgeInsets.only(top: 400, right: 10),
       child: CircleAvatar(
         maxRadius: 28,
         backgroundColor: Colors.cyan,
@@ -578,7 +581,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 ),
                 button(_onMapTypeButtonPressed),
                 //BtnTipoMapa(),
-                BtnLineaRuta(),
+                // BtnLineaRuta(),
                 BtnSeguirUbicacion(),
                 BtnUbicacion(),
               ],
