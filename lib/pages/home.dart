@@ -162,13 +162,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         circulo.center.longitude);
       if (distancia < 15) {
         setState(() {
-          _isVisible = true;
+          //_isVisible = true;
+          globals.colorMarker = true;
           print("HA LLEGADO");
         });
         break;
       } else {
         setState(() {
           _isVisible = false;
+       
+
         });
       }
     }
@@ -177,7 +180,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   List<int> posiciones;
   Future<void> _setMarkers() async {
-     String _iconImage = 'images/marker.png';
+    String _iconImage = 'images/marker.png';
     final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
     setState(() {
     for(int i=0; i<listaMarkers.length;i++)
@@ -192,7 +195,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       _markers.add(Marker(
           //icon: bitmapIcon,
           icon: BitmapDescriptor.defaultMarkerWithHue(
-           BitmapDescriptor.hueCyan
+           globals.colorMarker ? BitmapDescriptor.hueRed : BitmapDescriptor.hueCyan
           ),
           markerId: MarkerId("${i}"),
           position: listaMarkers[i],
@@ -493,23 +496,27 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {
                                     List<int> posicionesPreguntas = [];
+                                    List<String> preguntas = [];
                                     for(int i =0;i<snapshot3.data.length; i++){
-                                        if(globals.idRuta == snapshot3.data[i].rutasId){
-                                            posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
-                                            
-                     
+                                      if(globals.idRuta == snapshot3.data[i].rutasId){
+                                        posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
+                                      }
+                                    }
+                                    posicionesPreguntas.sort(); 
+                                    for(int n=0; n<posicionesPreguntas.length; n++){
+                                      for(int m=0; m<snapshot3.data.length; m++){
+                                        if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                          preguntas.add(snapshot3.data[m].pregunta);
                                         }
                                       }
-                                    posicionesPreguntas.sort(); 
-                                    for(int i =0;i<snapshot3.data.length; i++)
-                                       for(int j =0;j<posicionesPreguntas.length; j++)
-                                         if(snapshot3.data[i].numPregunta == posicionesPreguntas[j]) 
-                                          print("i: ${i} eta j: ${j}");                
+                                    }
+                                    for(int m=0; m<preguntas.length;m++){
+                                      
                                     return Column(
                                       children: <Widget>[
                                         Container( //Pregunta
                                           width: 300,
-                                          child: Center(child: Text('',  style: TextStyle(fontSize: 24),)),
+                                          child: Center(child: Text('${preguntas[m]}',  style: TextStyle(fontSize: 24),)),
                                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                         ),
                                         SizedBox(
@@ -568,6 +575,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         ),
                                       ],
                                     );
+                                    }
                                     }
                                   ),
                                 ),

@@ -13,3 +13,4 @@ String ipBase = "http://137.135.163.214:8080/Reto";
 String ipLocal = "http://10.0.2.2:8080";
 String idRuta = "";
 int posicionPregunta = 0;
+bool colorMarker = false;
