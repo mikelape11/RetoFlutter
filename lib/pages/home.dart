@@ -50,7 +50,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<ChatMessage> mensajes = [];
   Set<Circle> _circles = HashSet<Circle>();
   Set<Marker> _markers = HashSet<Marker>();
-  bool _isVisible = false;
+  bool _isVisible1 = false;
+  bool _isVisible2 = false;
+  bool _isVisible3 = false;
+  bool _isVisible4 = false;
+  bool _isVisible5 = false;
+  bool _isVisible6 = false;
+  bool _isVisible7 = false;
   final Set<Polyline> _polyline = {};
   List<LatLng> listaRutas = List();
   List<LatLng> listaMarkers = List();
@@ -164,17 +170,40 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         circulo.center.longitude);
       if (distancia < 15) {
         setState(() {
-          _isVisible = true;
-          globals.colorMarker = true;
-          for(var markers in listaMarkers){
-
+          if(circulo.circleId == CircleId("0")){
+            _isVisible1 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("1")){
+            _isVisible2 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("2")){
+            _isVisible3 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("3")){
+            _isVisible4 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("4")){
+            _isVisible5 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("5")){
+            _isVisible6 = true;
+            print("HA LLEGADO");
+          }else if(circulo.circleId == CircleId("6")){
+            _isVisible7 = true;
+            print("HA LLEGADO");
           }
-          print("HA LLEGADO");
+          
         });
         break;
       } else {
         setState(() {
-          _isVisible = false;
+          _isVisible1 = false;
+          _isVisible2 = false;
+          _isVisible3 = false;
+          _isVisible4 = false;
+          _isVisible5 = false;
+          _isVisible6 = false;
+          _isVisible7 = false;
 
         });
       }
@@ -183,6 +212,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   List<int> posiciones;
+  var guardarIdMarker = '';
   Future<void> _setMarkers() async {
     String _iconImage = 'images/marker.png';
     final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
@@ -195,15 +225,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         center: listaMarkers[i],
         radius: 15,
       ));
-    for(int i=0; i<listaMarkers.length;i++)
+    for(int i=0; i<listaMarkers.length;i++){
+      guardarIdMarker = '${i}';
       _markers.add(Marker(
           //icon: bitmapIcon,
           icon: BitmapDescriptor.defaultMarkerWithHue(
-           globals.colorMarker ? BitmapDescriptor.hueRed : BitmapDescriptor.hueCyan
+           BitmapDescriptor.hueCyan
           ),
-          markerId: MarkerId("${i}"),
+          markerId: MarkerId(guardarIdMarker),
           position: listaMarkers[i],
           consumeTapEvents: false));
+    }
     });
   }
 
@@ -329,8 +361,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         for(int m=0; m<snapshot2.data[n].rutas_loc.length;m++){
           rutasLat2.add(snapshot2.data[n].rutas_loc[m].lat);
           rutasLng2.add(snapshot2.data[n].rutas_loc[m].lng);
-        }
-        
+        } 
       }   
     }  
     for(int m=0;m<rutasLat2.length;m++){
@@ -338,6 +369,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         listaMarkers.add(data$m);
     }
     return listaMarkers;
+  }
+  Future<List> devolverLista3(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(globals.idRuta == snapshot3.data[i].rutasId && posicionesPreguntas.length<7){
+        posicionesPreguntas.add(snapshot3.data[i].numPregunta);
+      }
+    }
+    //print(posicionesPreguntas.length);
+    //print(posicionesPreguntas.length); //7
+    return posicionesPreguntas;
   }
 
   int contador = 0;
@@ -350,13 +391,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       appBar: AppBar(
          leading: FutureBuilder(
           future: getRutasData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot2) {
+          builder: (BuildContext context, AsyncSnapshot snapshot2){
           if(!snapshot2.hasData){
           }else{ 
           if(contador == 0){
             devolverLista(snapshot2);
             devolverLista2(snapshot2);
-            getPreguntas();
             _setMarkers();
           
             contador++;
@@ -462,6 +502,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
   
   int _selectedIndex = 0;
+  int cont = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
   List<Widget> _widgetOptions() => [
     Column( //PANTALLA MAPA
@@ -477,7 +518,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             Column( //COLOCACION DE TODOS LOS BOTONES
               children: <Widget>[
                 Visibility(
-                  visible: _isVisible,
+                  visible: _isVisible1,
                   child: Stack(
                     children:[
                       Container(
@@ -500,30 +541,37 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                 child: Center(
                                   child: FutureBuilder(
                                     future: getPreguntas(),
-                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {
-                                      if(contador2 == 0){
-                                        for(int i =0;i<snapshot3.data.length; i++){
-                                          if(globals.idRuta == snapshot3.data[i].rutasId){
-                                            posicionesPreguntas.add(snapshot3.data[i].numPregunta);  
-                                          }
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
                                         }
-                                        posicionesPreguntas.sort(); 
-                                        for(int n=0; n<posicionesPreguntas.length; n++){
-                                          for(int m=0; m<snapshot3.data.length; m++){
-                                              if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                                if(globals.idRuta == snapshot3.data[m].rutasId){
-                                                  preguntas.add(snapshot3.data[m].pregunta);
-                                                }
-                                              }
-                                          }
-                                        }
-                                        contador2++;
-                                      }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
                                       return Column(
                                         children: <Widget>[
                                           Container( //Pregunta
                                             width: 300,
-                                            child: Center(child: Text('',  style: TextStyle(fontSize: 24),)),
+                                            child: Center(child: Text('${preguntas[0]}',  style: TextStyle(fontSize: 24),)),
                                             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                           ),
                                           SizedBox(
@@ -537,7 +585,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible = false;
+                                                  _isVisible1 = false;
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -581,8 +629,767 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             )
                                           ),
                                         ],
-                                      );             
-                                    }      
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible2,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[1]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible2 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible3,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[2]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible3 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible4,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[3]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible4 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible5,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[4]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible5 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible6,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[5]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible6 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible7,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){             
+                                      }else{
+                                        devolverLista3(snapshot3);
+                                        posicionesPreguntas.sort(); //LAS ORDENA
+                                        //print(snapshot3.data.numPregunta);
+                                        // for(int m=0; m<snapshot3.data.length; m++){
+                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
+                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
+                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
+                                        //         preguntas.add(snapshot3.data[n].pregunta);
+                                        //         print(n);
+                                        //         print(m);
+                                        //         print(preguntas[n]);
+                                        for(int j=0;j<snapshot3.data.length;j++){
+                                          if(globals.idRuta == snapshot3.data[j].rutasId){
+                                              for(int i=0;i<posicionesPreguntas.length;i++){
+                                                if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
+                                                  preguntas.add(snapshot3.data[i].pregunta);
+                                               }
+                                            }
+                                          }            
+                                        }
+                                      
+                                      for(int n=0;n<preguntas.length;n++){                                      
+                                      return Column(
+                                        children: <Widget>[
+                                          Container( //Pregunta
+                                            width: 300,
+                                            child: Center(child: Text('${preguntas[6]}',  style: TextStyle(fontSize: 24),)),
+                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container( //Respuesta1
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                setState(() {
+                                                  _isVisible7 = false;
+                                                });
+                                                
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta2
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container( //Respuesta3
+                                            width: 250,
+                                            child: RaisedButton(
+                                              color: Colors.cyan,
+                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              padding: EdgeInsets.only(left: 50, right: 50),
+                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                              onPressed: (){
+                                                // Navigator.of(context).push(MaterialPageRoute(
+                                                //   builder: (context) => LoginPage(),
+                                                // ));
+                                              },
+                                            )
+                                          ),
+                                        ],
+                                      ); 
+                                     
+                                      } 
+                                      }     
+                                      }
                                   ),
                                 ),
                               ),
