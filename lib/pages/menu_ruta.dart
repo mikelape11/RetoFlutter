@@ -1,13 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
-
 import 'package:reto/widgets/sliding_cards.dart';
-
 import '../theme/theme.dart';
-
 
 class MenuRuta extends StatelessWidget {
   
@@ -23,7 +19,6 @@ class MenuRuta extends StatelessWidget {
         return Icon(Icons.wb_sunny_outlined);
       }
     }
-
 
     return Scaffold( //EMPIEZA LA PANTALLA DEL MENU
       appBar: AppBar(
@@ -59,8 +54,7 @@ class MenuRuta extends StatelessWidget {
                       size: 35,
                     ),
                   ],
-                ),
-                
+                ),               
               ],
             )
           ),

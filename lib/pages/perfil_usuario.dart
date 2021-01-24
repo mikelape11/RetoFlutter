@@ -173,8 +173,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       );
     }
 
-  
-
     void informacion(BuildContext context) {
       showDialog(
       context: context,
@@ -359,9 +357,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                             _usuario = value;
                           },
                         decoration: InputDecoration(
-                          // enabledBorder: UnderlineInputBorder(      
-                          //   borderSide: BorderSide(color: Colors.cyan),   
-                          // ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                           ),  
@@ -384,7 +379,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                         obscureText: !_passwordVisible,
                         controller: lastController,
                         validator: validarPassword,
-                            onSaved: (String value){
+                          onSaved: (String value){
                             _password = value;
                           },
                         decoration: InputDecoration(
@@ -408,19 +403,16 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                 color: Colors.cyan,
                                 ),
                               ),
-                              onPressed: () {
-
-                                setState(() {
-                                    _passwordVisible = !_passwordVisible;
-                                });
-                              },
-                            ),
+                            onPressed: () {
+                              setState(() {
+                                  _passwordVisible = !_passwordVisible;
+                              });
+                            },
                           ),
                         ),
-                      
-                      ),
+                      ),                     
                     ),
-                    
+                  ),                   
                   Center(
                     child: Container(
                       margin: EdgeInsets.only(top: 25),

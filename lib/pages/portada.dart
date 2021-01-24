@@ -3,11 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
 
-//import 'package:provider/provider.dart';
-//import 'package:reto/pages/login.dart';
-
-//import '../theme/theme.dart';
-
 class PortadaPage extends StatefulWidget {
   //PANTALLA DE LA PORTADA
   @override
@@ -38,15 +33,15 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
   }
 
   String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
-      if(Theme.of(context).primaryColor == Colors.grey[900]) {
-        return "images/logo3.png";
-      } else {
-        return "images/logo4.png";
-      } 
-    }
+    if(Theme.of(context).primaryColor == Colors.grey[900]) {
+      return "images/logo3.png";
+    } else {
+      return "images/logo4.png";
+    } 
+  }
 
   void informacion(BuildContext context) {
-      showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return CustomAlertDialog(
@@ -104,12 +99,12 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
             ),
           ),
         );
-      });
-    }
+      }
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
-    //ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
 
     String _setImage() { //CAMBIO EL LOGO DEPENDIENDO DEL TEMA
       if(Theme.of(context).primaryColor == Colors.grey[900]) {

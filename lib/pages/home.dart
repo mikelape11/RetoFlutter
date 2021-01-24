@@ -33,8 +33,6 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
 
-//import 'package:flutter/services.dart' show rootBundle;
-
 class HomePage extends StatefulWidget {
 
   //PANTALLA HOME
@@ -62,7 +60,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<LatLng> listaMarkers = List();
   List<int> posicionesPreguntas = [];
   List<String> preguntas = [];
-
+  int puntuacionTotal = 0;
+  Position _currentPosition;
+  List<int> posiciones;
+  var guardarIdMarker = '';
+  List<String> respuestas1 = [];
+  List<String> respuestas2 = [];
+  List<String> respuestas3 = [];
+  List<String> respuestas4 = [];
+  List<String> respuestas5 = [];
+  List<String> respuestas6 = [];
+  List<String> respuestas7 = [];
+  int contador = 0;
+  int contador2 = 0;
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -142,7 +152,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
-
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
   // ignore: deprecated_member_use
@@ -158,8 +167,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       );
     });
   }
-
-  Position _currentPosition;
 
   Future<void> _distanceFromCircle() async {
     _currentPosition = await _localizacionUsuario();
@@ -212,34 +219,31 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _distanceFromCircle();
   }
 
-  List<int> posiciones;
-  var guardarIdMarker = '';
   Future<void> _setMarkers() async {
     String _iconImage = 'images/marker.png';
     final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
     setState(() {
-    for(int i=0; i<listaMarkers.length;i++)
-      _circles.add(Circle(
-        strokeWidth: 1,
-        strokeColor: Colors.cyan,
-        circleId: CircleId("${i}"),
-        center: listaMarkers[i],
-        radius: 15,
-      ));
-    for(int i=0; i<listaMarkers.length;i++){
-      guardarIdMarker = '${i}';
-      _markers.add(Marker(
-          //icon: bitmapIcon,
-          icon: BitmapDescriptor.defaultMarkerWithHue(
-           BitmapDescriptor.hueCyan
-          ),
-          markerId: MarkerId(guardarIdMarker),
-          position: listaMarkers[i],
-          consumeTapEvents: false));
-    }
+      for(int i=0; i<listaMarkers.length;i++)
+        _circles.add(Circle(
+          strokeWidth: 1,
+          strokeColor: Colors.cyan,
+          circleId: CircleId("${i}"),
+          center: listaMarkers[i],
+          radius: 15,
+        ));
+      for(int i=0; i<listaMarkers.length;i++){
+        guardarIdMarker = '${i}';
+        _markers.add(Marker(
+        //icon: bitmapIcon,
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueCyan
+        ),
+        markerId: MarkerId(guardarIdMarker),
+        position: listaMarkers[i],
+        consumeTapEvents: false));
+      }
     });
   }
-
 
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
     if( !state.existeUbicacion ) return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -254,13 +258,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     );
 
     _polyline.add(Polyline(
-        polylineId: PolylineId('line1'),
-        visible: true,
-        points: listaRutas,
-        width: 2,
-        color: Colors.cyan,
-      ));
-
+      polylineId: PolylineId('line1'),
+      visible: true,
+      points: listaRutas,
+      width: 2,
+      color: Colors.cyan,
+    ));
 
     return GoogleMap(
       initialCameraPosition: cameraPosition,
@@ -279,7 +282,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       },
       circles: _circles,
       markers: _markers,
-
     );
   }
 
@@ -333,7 +335,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     _controller.setMapStyle(mapStyle);
   }
 
-
   Future<List<LatLng>> devolverLista(AsyncSnapshot snapshot2) async{
     List<double> rutasLat = [];
     List<double> rutasLng = [];
@@ -342,15 +343,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         for(int m=0; m<snapshot2.data[n].rutas_data.length;m++){
           rutasLat.add(snapshot2.data[n].rutas_data[m].lat);
           rutasLng.add(snapshot2.data[n].rutas_data[m].lng);
-        }
-        
+        }      
       }   
     }  
     for(int m=0;m<rutasLat.length;m++){
         LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
         listaRutas.add(data$m);
     }
-    
     return listaRutas;
   }
 
@@ -366,8 +365,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       }   
     }  
     for(int m=0;m<rutasLat2.length;m++){
-        LatLng data$m = LatLng(rutasLat2[m], rutasLng2[m]);
-        listaMarkers.add(data$m);
+      LatLng data$m = LatLng(rutasLat2[m], rutasLng2[m]);
+      listaMarkers.add(data$m);
     }
     return listaMarkers;
   }
@@ -378,18 +377,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         posicionesPreguntas.add(snapshot3.data[i].numPregunta);
       }
     }
-    //print(posicionesPreguntas.length);
-    //print(posicionesPreguntas.length); //7
     return posicionesPreguntas;
   }
-
-  List<String> respuestas1 = [];
-  List<String> respuestas2 = [];
-  List<String> respuestas3 = [];
-  List<String> respuestas4 = [];
-  List<String> respuestas5 = [];
-  List<String> respuestas6 = [];
-  List<String> respuestas7 = [];
 
   Future<List> devolverRespuestas1(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
@@ -399,7 +388,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas1.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas1;   
@@ -413,7 +401,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas2.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas2;   
@@ -427,7 +414,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas3.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas3;   
@@ -441,7 +427,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas4.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas4;   
@@ -455,7 +440,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas5.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas5;   
@@ -469,7 +453,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas6.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas6;   
@@ -483,7 +466,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             respuestas7.add(snapshot3.data[i].respuestas[m].respuesta);
           } 
         }
-    
       }
     }
     return respuestas7;   
@@ -496,158 +478,147 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         if(snapshot3.data[i].numPregunta == 1){
             opcion1 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion1;   
   }
 
-   int opcion2 = 0;
+  int opcion2 = 0;
   Future<int> devolverOpcion2(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 2){
             opcion2 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion2;   
   }
 
-   int opcion3 = 0;
+  int opcion3 = 0;
   Future<int> devolverOpcion3(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 3){
             opcion3 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion3;   
   }
 
-   int opcion4 = 0;
+  int opcion4 = 0;
   Future<int> devolverOpcion4(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 4){
             opcion4 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion4;   
   }
 
-   int opcion5 = 0;
+  int opcion5 = 0;
   Future<int> devolverOpcion5(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 5){
             opcion5 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion5;   
   }
 
-   int opcion6 = 0;
+  int opcion6 = 0;
   Future<int> devolverOpcion6(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 6){
             opcion6 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion6;   
   }
 
-   int opcion7 = 0;
+  int opcion7 = 0;
   Future<int> devolverOpcion7(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(snapshot3.data[i].rutasId == globals.idRuta){
         if(snapshot3.data[i].numPregunta == 7){
             opcion7 = snapshot3.data[i].opcion; 
         }
-    
       }
     }
     return opcion7;   
   }
   
-
-  int contador = 0;
-  int contador2 = 0;
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
-         leading: FutureBuilder(
+        leading: FutureBuilder(
           future: getRutasData(),
           builder: (BuildContext context, AsyncSnapshot snapshot2){
-          if(!snapshot2.hasData){
-          }else{ 
-          if(contador == 0){
-            devolverLista(snapshot2);
-            devolverLista2(snapshot2);
-            _setMarkers();
-          
-            contador++;
-          }
-          return FutureBuilder(
-            future: getUsuarios(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(!snapshot.hasData){
-                return Container(
-                height: 600,
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-              );
-            }else{
-            for(int i=0; i<snapshot.data.length; i++)
-              if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                  globals.existeAvatar = true;
-                    break;
-              }else{
-                  globals.existeAvatar = false;
+            if(!snapshot2.hasData){
+              print("sin datos");
+            }else{ 
+              if(contador == 0){
+                devolverLista(snapshot2);
+                devolverLista2(snapshot2);
+                _setMarkers();
+                contador++;
               }
-            return Center(
-              child: Container(
-                child: Stack(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22.0,
-                      backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                      child: CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage: globals.existeAvatar
-                        ? AssetImage("images/perfil.png") 
-                        : FileImage(File(globals.avatar))
-                      )            
-                    ),
-                  ],
-                )
-              ),
-        );
-        }
-            });
+              return FutureBuilder(
+                future: getUsuarios(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(!snapshot.hasData){
+                    return Container(
+                    height: 600,
+                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                  );
+                  }else{
+                    for(int i=0; i<snapshot.data.length; i++)
+                      if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                          globals.existeAvatar = true;
+                            break;
+                      }else{
+                          globals.existeAvatar = false;
+                      }
+                    return Center(
+                      child: Container(
+                        child: Stack(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 22.0,
+                              backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                              child: CircleAvatar(
+                                radius: 20.0,
+                                backgroundImage: globals.existeAvatar
+                                ? AssetImage("images/perfil.png") 
+                                : FileImage(File(globals.avatar))
+                              )            
+                            ),
+                          ],
+                        )
+                      ),
+                    );
+                  }
+                }
+              );
+            }
           }
-        }
-          ),
-          
+        ),       
         automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
         actions: [
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
-            // onPressed: () => Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark()),
             onPressed: () { 
               changeMapMode();
               Theme.of(context).primaryColor == Colors.grey[900] ? _themeChanger.setTheme(ThemeData.light()) : _themeChanger.setTheme(ThemeData.dark());
@@ -671,7 +642,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget> [ 
                 Container(
-                  //child: _widgetOptions.elementAt(_selectedIndex),
                   child: children[_selectedIndex], //SE VERA EN PANTALLA LA OPCION SELECCIONADA DEL BOTTOMNAVIGATIONBAR
                 )
               ],
@@ -717,6 +687,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             ),
             Column( //COLOCACION DE TODOS LOS BOTONES
               children: <Widget>[
+                for(int x=0; x<7; x++)
                 Visibility(
                   visible: _isVisible1,
                   child: Stack(
@@ -748,15 +719,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverRespuestas1(snapshot3);
                                         devolverOpcion1(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -766,88 +728,90 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             }
                                           }            
                                         }
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[0]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion1 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible1 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas1[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                 setState(() {
-                                                  if(opcion1 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible1 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas1[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                               setState(() {
-                                                  if(opcion1 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible1 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                      } 
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[0]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion1 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible1 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });                                                                                               
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas1[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion1 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible1 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas1[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                  setState(() {
+                                                      if(opcion1 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible1 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          ); 
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -888,16 +852,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas2(snapshot3);
-                                        devolverOpcion2(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion2(snapshot3);                                        
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -906,93 +861,97 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[1]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                   setState(() {
-                                                  if(opcion2 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible2 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                                });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas2[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                 setState(() {
-                                                  if(opcion2 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible2 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas2[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion2 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible2 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                     
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[1]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      setState(() {
+                                                      if(opcion2 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible2 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                    });
+                                                    
+                                                    // Navigator.of(context).push(MaterialPageRoute(
+                                                    //   builder: (context) => LoginPage(),
+                                                    // ));
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas2[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion2 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible2 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas2[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion2 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible2 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                     
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1033,16 +992,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas3(snapshot3);
-                                        devolverOpcion3(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion3(snapshot3);                                       
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -1051,91 +1001,95 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[2]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas3[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion3 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible3 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas3[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                               setState(() {
-                                                  if(opcion3 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible3 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas3[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion3 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible3 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                     
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[2]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas3[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion3 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible3 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                    
+                                                    // Navigator.of(context).push(MaterialPageRoute(
+                                                    //   builder: (context) => LoginPage(),
+                                                    // ));
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas3[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                  setState(() {
+                                                      if(opcion3 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible3 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas3[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion3 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible3 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1176,16 +1130,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas4(snapshot3);
-                                        devolverOpcion4(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion4(snapshot3);                                    
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -1194,87 +1139,91 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[3]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas4[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion4 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible4 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas4[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion4 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible4 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas4[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                               setState(() {
-                                                  if(opcion4 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible4 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                      
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[3]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas4[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion4 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible4 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas4[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion4 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible4 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas4[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                  setState(() {
+                                                      if(opcion4 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible4 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1315,16 +1264,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas5(snapshot3);
-                                        devolverOpcion5(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion5(snapshot3);                                      
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -1333,91 +1273,91 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[4]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas5[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion5 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible5 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas5[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion5 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible5 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas5[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion5 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible5 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                     
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[4]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas5[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion5 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible5 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });                                                  
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas5[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion5 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible5 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas5[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion5 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible5 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1458,16 +1398,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas6(snapshot3);
-                                        devolverOpcion6(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion6(snapshot3);                                      
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -1476,91 +1407,91 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[5]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas6[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion6 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible6 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas6[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion6 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible6 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas6[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion6 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible6 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                     
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[5]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas6[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion6 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible6 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas6[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion6 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible6 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas6[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion6 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible6 = false;
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                     
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1601,16 +1532,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas7(snapshot3);
-                                        devolverOpcion7(snapshot3);
-                                        //print(snapshot3.data.numPregunta);
-                                        // for(int m=0; m<snapshot3.data.length; m++){
-                                        //   for(int n=0; n<posicionesPreguntas.length; n++){
-                                        //     if(posicionesPreguntas[n] == snapshot3.data[m].numPregunta){
-                                        //       if(globals.idRuta == snapshot3.data[n].rutasId){
-                                        //         preguntas.add(snapshot3.data[n].pregunta);
-                                        //         print(n);
-                                        //         print(m);
-                                        //         print(preguntas[n]);
+                                        devolverOpcion7(snapshot3);                                       
                                         for(int j=0;j<snapshot3.data.length;j++){
                                           if(globals.idRuta == snapshot3.data[j].rutasId){
                                               for(int i=0;i<posicionesPreguntas.length;i++){
@@ -1619,87 +1541,97 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                }
                                             }
                                           }            
-                                        }
-                                      
-                                      for(int n=0;n<preguntas.length;n++){                                      
-                                      return Column(
-                                        children: <Widget>[
-                                          Container( //Pregunta
-                                            width: 300,
-                                            child: Center(child: Text('${preguntas[6]}',  style: TextStyle(fontSize: 24),)),
-                                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container( //Respuesta1
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas7[0]}', style: TextStyle(fontSize: 16),),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion7 == 1){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible7 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta2
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas7[1]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion7 == 2){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible7 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Container( //Respuesta3
-                                            width: 250,
-                                            child: RaisedButton(
-                                              color: Colors.cyan,
-                                              child: Text('${respuestas7[2]}', style: TextStyle(fontSize: 16),),
-                                              padding: EdgeInsets.only(left: 50, right: 50),
-                                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                              onPressed: (){
-                                                setState(() {
-                                                  if(opcion7 == 3){
-                                                    print("RESPUESTA CORRECTA");
-                                                    _isVisible7 = false;
-                                                  }else{
-                                                    print("RESPUESTA INCORRECTA");
-                                                  }
-                                                });
-                                              },
-                                            )
-                                          ),
-                                        ],
-                                      ); 
-                                     
-                                      } 
+                                        }                                    
+                                        for(int n=0;n<preguntas.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${preguntas[6]}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container( //Respuesta1
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas7[0]}', style: TextStyle(fontSize: 16),),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion7 == 1){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible7 = false;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta2
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas7[1]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion7 == 2){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible7 = false;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Container( //Respuesta3
+                                                width: 250,
+                                                child: RaisedButton(
+                                                  color: Colors.cyan,
+                                                  child: Text('${respuestas7[2]}', style: TextStyle(fontSize: 16),),
+                                                  padding: EdgeInsets.only(left: 50, right: 50),
+                                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  onPressed: (){
+                                                    setState(() {
+                                                      if(opcion7 == 3){
+                                                        print("RESPUESTA CORRECTA");
+                                                        puntuacionTotal = puntuacionTotal + 50;
+                                                        _isVisible7 = false;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }else{
+                                                        print("RESPUESTA INCORRECTA");
+                                                        puntuacionTotal = puntuacionTotal - 25;
+                                                        //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
+                                                      }
+                                                    });
+                                                  },
+                                                )
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
                                       }     
-                                      }
+                                    }
                                   ),
                                 ),
                               ),
@@ -1710,9 +1642,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                     ]
                   ),
                 ),
-                button(_onMapTypeButtonPressed),
-                //BtnTipoMapa(),
-                // BtnLineaRuta(),
+                button(_onMapTypeButtonPressed),                
                 BtnSeguirUbicacion(),
                 BtnUbicacion(),
               ],
@@ -1775,345 +1705,344 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     FutureBuilder(
       future: getUsuarios(),
       builder: (BuildContext context, AsyncSnapshot snapshot2) {
-      return Container(
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-        child: FutureBuilder(
-          future: getRanking(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if(!snapshot2.hasData){
-            return Container(
-              height: 600,
-              child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-            );
-          }else{
-          List<int> puntuaciones = [];
-          List<int> puntuacionesOrdenadas = [];
-          List<String> nombres = [];
-          List<String> fotos = [];
-          for(int i=0; i<snapshot.data.length; i++){
-            puntuaciones.add(snapshot.data[i].puntos);
-          }  
-          puntuaciones.sort(); 
-          puntuaciones.reversed;
-          puntuacionesOrdenadas.addAll(puntuaciones.reversed);
-          for(int n=0; n<puntuacionesOrdenadas.length; n++){
-            for(int m=0; m<snapshot.data.length; m++){
-              if(puntuacionesOrdenadas[n] == snapshot.data[m].puntos){
-                nombres.add(snapshot.data[m].nombre);
-              }
-            }
-          }     
-          for(int k=0;k<nombres.length;k++){
-            for(int j=0;j<puntuacionesOrdenadas.length;j++){
-              if(nombres[k] == snapshot2.data[j].usuario){
-                fotos.add(snapshot2.data[j].avatar);
-              }
-            }
-          }
-          return Column(
-            children: <Widget>[ 
-              Divider(),
-              Text( //TEXTO DEL TITULO DE LA PANTALLA
-                'CLASIFICACIÓN',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Divider(),
-              Container( //CONTAINER DEL PODIO
-                padding: EdgeInsets.only(bottom: 5),
-                margin: EdgeInsets.only(top: 0),
-                child: Row( //LAS 3 POSICIONES IRAN EN UNA FILA
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Stack( //PARA PODER COLOCAR LOS CONTAINERS DENTRO DE LA FILA
-                    children: [
-                      Container( //ESTRELLA 1
-                        margin: EdgeInsets.symmetric(horizontal: 137),
-                        child: Stack(
-                          alignment: Alignment.center,
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+          child: FutureBuilder(
+            future: getRanking(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if(!snapshot2.hasData){
+                return Container(
+                  height: 600,
+                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                );
+              }else{
+                List<int> puntuaciones = [];
+                List<int> puntuacionesOrdenadas = [];
+                List<String> nombres = [];
+                List<String> fotos = [];
+                for(int i=0; i<snapshot.data.length; i++){
+                  puntuaciones.add(snapshot.data[i].puntos);
+                }  
+                puntuaciones.sort(); 
+                puntuaciones.reversed;
+                puntuacionesOrdenadas.addAll(puntuaciones.reversed);
+                for(int n=0; n<puntuacionesOrdenadas.length; n++){
+                  for(int m=0; m<snapshot.data.length; m++){
+                    if(puntuacionesOrdenadas[n] == snapshot.data[m].puntos){
+                      nombres.add(snapshot.data[m].nombre);
+                    }
+                  }
+                }     
+                for(int k=0;k<nombres.length;k++){
+                  for(int j=0;j<puntuacionesOrdenadas.length;j++){
+                    if(nombres[k] == snapshot2.data[j].usuario){
+                      fotos.add(snapshot2.data[j].avatar);
+                    }
+                  }
+                }
+                return Column(
+                  children: <Widget>[ 
+                    Divider(),
+                    Text( //TEXTO DEL TITULO DE LA PANTALLA
+                      'CLASIFICACIÓN',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    Divider(),
+                    Container( //CONTAINER DEL PODIO
+                      padding: EdgeInsets.only(bottom: 5),
+                      margin: EdgeInsets.only(top: 0),
+                      child: Row( //LAS 3 POSICIONES IRAN EN UNA FILA
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Stack( //PARA PODER COLOCAR LOS CONTAINERS DENTRO DE LA FILA
                           children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.amberAccent[400],
-                              size: 60.0,
-                            ),
-                            Text(
-                              '1', 
-                              style: TextStyle(
-                                fontFamily: 'arial',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0,
-                                color: Colors.grey[900],
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-                      Container( //ESTRELLA 2
-                        margin: EdgeInsets.only(left: 30, top: 70),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.blueGrey[300],
-                              size: 60.0,
-                            ),
-                            Text(
-                              '2', 
-                              style: TextStyle(
-                                fontFamily: 'arial',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0,
-                                color: Colors.grey[900],
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-                      Container( //ESTRELLA 3
-                        margin: EdgeInsets.only(left: 245, top: 80),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.brown,
-                              size: 60.0,
-                            ),
-                            Text(
-                              '3', 
-                              style: TextStyle(
-                                fontFamily: 'arial',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0,
-                                color: Colors.grey[900],
-                              )
-                            )
-                          ],
-                        ),
-                      ),  
-                     Container( //FOTO SEGUNDA POSICION
-                        margin: EdgeInsets.only(left: 0, top: 110),
-                        child: GestureDetector(
-                          child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundColor: Colors.blueGrey[300],
-                            child: CircleAvatar(
-                              radius: 56.0,
-                              backgroundImage: fotos[1] == "images/perfil.png"
-                                ? AssetImage("images/perfil.png") 
-                                : FileImage(File(fotos[1]))
-                            )            
-                          ),
-                        ),
-                      ),
-                      Container( //FOTO TERCERA POSICION
-                        margin: EdgeInsets.only(left: 214, top: 120),
-                        child: GestureDetector(
-                          child: CircleAvatar(
-                            radius: 60.0,
-                            backgroundColor: Colors.brown,
-                            child: CircleAvatar(
-                              radius: 56.0,
-                              backgroundImage: fotos[2] == "images/perfil.png"
-                                ? AssetImage("images/perfil.png") 
-                                : FileImage(File(fotos[2]))
-                            )            
-                          ),
-                        ),
-                      ),
-                      Container( //FOTO PRIMERA POSICION
-                        margin: EdgeInsets.symmetric(vertical: 40, horizontal: 84),
-                        child:  GestureDetector(
-                           child: CircleAvatar(
-                            radius: 83,
-                            backgroundColor: Colors.amberAccent[400],
-                            child: CircleAvatar(
-                              radius:  79,
-                              backgroundImage: fotos[0] == "images/perfil.png"
-                                ? AssetImage("images/perfil.png") 
-                                : FileImage(File(fotos[0]))
-                            )            
-                          ),
-                        ),
-                      ),
-                      Container( //NOMBRE SEGUNDA POSICION
-                        color:  Colors.blueGrey[300],
-                        padding: EdgeInsets.symmetric(vertical: 11),
-                        width: 110,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 239, left: 5),
-                        child: Column(
-                          children: [
-                            for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                              if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
-                            GestureDetector(
-                                onTap: () {
-                                  detalles(context, snapshot.data[n].nombre, snapshot);
-                                },
-                               child: Text(
-                                '${snapshot.data[n].nombre}',
-                                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                            Container( //ESTRELLA 1
+                              margin: EdgeInsets.symmetric(horizontal: 137),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.amberAccent[400],
+                                    size: 60.0,
+                                  ),
+                                  Text(
+                                    '1', 
+                                    style: TextStyle(
+                                      fontFamily: 'arial',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.0,
+                                      color: Colors.grey[900],
+                                    )
+                                  )
+                                ],
                               ),
                             ),
-                            for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                              if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].puntos}',
-                              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container( //NOMBRE TERCERA POSICION
-                        color: Colors.brown,
-                        padding: EdgeInsets.symmetric(vertical: 7),
-                        width: 110,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 249, left: 220),
-                        child: Column(
-                          children: [
-                            for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                              if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
-                            GestureDetector(
-                              onTap: () {
-                                  detalles(context, snapshot.data[n].nombre, snapshot);
-                                },
-                              child: Text(
-                                '${snapshot.data[n].nombre}',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            Container( //ESTRELLA 2
+                              margin: EdgeInsets.only(left: 30, top: 70),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.blueGrey[300],
+                                    size: 60.0,
+                                  ),
+                                  Text(
+                                    '2', 
+                                    style: TextStyle(
+                                      fontFamily: 'arial',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.0,
+                                      color: Colors.grey[900],
+                                    )
+                                  )
+                                ],
                               ),
                             ),
-                             for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                              if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].puntos}',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      Container( //NOMBRE PRIMERA POSICION
-                        color: Colors.amberAccent[400],
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        width: 120,
-                        alignment: Alignment.center,
-                        margin: EdgeInsets.only(top: 219, left: 108),
-                        child: Column(
-                          children: [
-                          for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                            if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
-                            GestureDetector(
-                               onTap: () {
-                                  detalles(context, snapshot.data[n].nombre, snapshot);
-                                },
-                              child: Text(
-                                '${snapshot.data[n].nombre}',
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            Container( //ESTRELLA 3
+                              margin: EdgeInsets.only(left: 245, top: 80),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.brown,
+                                    size: 60.0,
+                                  ),
+                                  Text(
+                                    '3', 
+                                    style: TextStyle(
+                                      fontFamily: 'arial',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24.0,
+                                      color: Colors.grey[900],
+                                    )
+                                  )
+                                ],
                               ),
-                            ),
-                            for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                              if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
-                            Text(
-                              '${snapshot.data[n].puntos}',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),         
-                    ],
-                  ), 
-                ])
-              ),
-              Divider(),
-             
-              Container( //CONTENEDOR PARA LOS OTROS PUESTOS
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    for(int n=3; n<puntuacionesOrdenadas.length;n++)//HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
-                    GestureDetector(
-                      onTap: () {
-                        detalles(context, nombres[n], snapshot);
-                      },
-                      child: Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
-                        width: MediaQuery.of(context).size.width,
-                        margin: EdgeInsets.only(top: 10),
-                        child: Row( //CREO UNA FILA PARA MOSTRARLOS
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container( //NUMERO POSICION
-                              width: 40,
-                              height: 40,
-                              color: Colors.cyan,
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${n+1}', 
-                                style: TextStyle(
-                                  fontFamily: 'arial',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24.0,
-                                  color: Colors.grey[900],
-                                )
-                              )
-                            ),
-                            Container( //FOTO 
-                              margin: EdgeInsets.only(left: 14),
-                              width: 70,
-                              height: 40,
-                              child: CircleAvatar(
-                                radius: 20.0,
-                                backgroundColor: Colors.cyan,
+                            ),  
+                            Container( //FOTO SEGUNDA POSICION
+                              margin: EdgeInsets.only(left: 0, top: 110),
+                              child: GestureDetector(
                                 child: CircleAvatar(
-                                  radius: 19.0,
-                                  backgroundImage: fotos[n] == "images/perfil.png"
-                                ? AssetImage("images/perfil.png") 
-                                : FileImage(File(fotos[n]))
-                                )            
+                                  radius: 60.0,
+                                  backgroundColor: Colors.blueGrey[300],
+                                  child: CircleAvatar(
+                                    radius: 56.0,
+                                    backgroundImage: fotos[1] == "images/perfil.png"
+                                      ? AssetImage("images/perfil.png") 
+                                      : FileImage(File(fotos[1]))
+                                  )            
+                                ),
                               ),
                             ),
-                            Container( //NOMBRE DEL USUARIO
-                              margin: EdgeInsets.only(left: 13),
-                              width: 132,
-                              height: 40,
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${nombres[n]}', 
-                                style: TextStyle(
-                                  fontFamily: 'arial',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0,
-                                )
-                              )
+                            Container( //FOTO TERCERA POSICION
+                              margin: EdgeInsets.only(left: 214, top: 120),
+                              child: GestureDetector(
+                                child: CircleAvatar(
+                                  radius: 60.0,
+                                  backgroundColor: Colors.brown,
+                                  child: CircleAvatar(
+                                    radius: 56.0,
+                                    backgroundImage: fotos[2] == "images/perfil.png"
+                                      ? AssetImage("images/perfil.png") 
+                                      : FileImage(File(fotos[2]))
+                                  )            
+                                ),
+                              ),
                             ),
-                            Container( //PUNTUACION
-                              margin: EdgeInsets.only(left: 15),
-                              width: 50,
-                              height: 40, 
-                              alignment: Alignment.center,
-                              child: Text(
-                                '${puntuacionesOrdenadas[n]}', 
-                                style: TextStyle(
-                                  fontFamily: 'arial',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18.0,
-                                )
-                              )
+                            Container( //FOTO PRIMERA POSICION
+                              margin: EdgeInsets.symmetric(vertical: 40, horizontal: 84),
+                              child:  GestureDetector(
+                                child: CircleAvatar(
+                                  radius: 83,
+                                  backgroundColor: Colors.amberAccent[400],
+                                  child: CircleAvatar(
+                                    radius:  79,
+                                    backgroundImage: fotos[0] == "images/perfil.png"
+                                      ? AssetImage("images/perfil.png") 
+                                      : FileImage(File(fotos[0]))
+                                  )            
+                                ),
+                              ),
                             ),
-                          ]
-                        ),
+                            Container( //NOMBRE SEGUNDA POSICION
+                              color:  Colors.blueGrey[300],
+                              padding: EdgeInsets.symmetric(vertical: 11),
+                              width: 110,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 239, left: 5),
+                              child: Column(
+                                children: [
+                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                    if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
+                                      GestureDetector(
+                                          onTap: () {
+                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                          },
+                                        child: Text(
+                                          '${snapshot.data[n].nombre}',
+                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                    if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
+                                      Text(
+                                        '${snapshot.data[n].puntos}',
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                      ),
+                                ],
+                              ),
+                            ),
+                            Container( //NOMBRE TERCERA POSICION
+                              color: Colors.brown,
+                              padding: EdgeInsets.symmetric(vertical: 7),
+                              width: 110,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 249, left: 220),
+                              child: Column(
+                                children: [
+                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                    if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
+                                      GestureDetector(
+                                        onTap: () {
+                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                          },
+                                        child: Text(
+                                          '${snapshot.data[n].nombre}',
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                    if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
+                                      Text(
+                                        '${snapshot.data[n].puntos}',
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                ],
+                              ),
+                            ),
+                            
+                            Container( //NOMBRE PRIMERA POSICION
+                              color: Colors.amberAccent[400],
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              width: 120,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.only(top: 219, left: 108),
+                              child: Column(
+                                children: [
+                                for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                  if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
+                                      GestureDetector(
+                                        onTap: () {
+                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                          },
+                                        child: Text(
+                                          '${snapshot.data[n].nombre}',
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
+                                    if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
+                                      Text(
+                                        '${snapshot.data[n].puntos}',
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                      ),
+                                ],
+                              ),
+                            ),         
+                          ],
+                        ), 
+                      ])
+                    ),
+                    Divider(),           
+                    Container( //CONTENEDOR PARA LOS OTROS PUESTOS
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          for(int n=3; n<puntuacionesOrdenadas.length;n++)//HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
+                          GestureDetector(
+                            onTap: () {
+                              detalles(context, nombres[n], snapshot);
+                            },
+                            child: Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Row( //CREO UNA FILA PARA MOSTRARLOS
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container( //NUMERO POSICION
+                                    width: 40,
+                                    height: 40,
+                                    color: Colors.cyan,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${n+1}', 
+                                      style: TextStyle(
+                                        fontFamily: 'arial',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24.0,
+                                        color: Colors.grey[900],
+                                      )
+                                    )
+                                  ),
+                                  Container( //FOTO 
+                                    margin: EdgeInsets.only(left: 14),
+                                    width: 70,
+                                    height: 40,
+                                    child: CircleAvatar(
+                                      radius: 20.0,
+                                      backgroundColor: Colors.cyan,
+                                      child: CircleAvatar(
+                                        radius: 19.0,
+                                        backgroundImage: fotos[n] == "images/perfil.png"
+                                      ? AssetImage("images/perfil.png") 
+                                      : FileImage(File(fotos[n]))
+                                      )            
+                                    ),
+                                  ),
+                                  Container( //NOMBRE DEL USUARIO
+                                    margin: EdgeInsets.only(left: 13),
+                                    width: 132,
+                                    height: 40,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${nombres[n]}', 
+                                      style: TextStyle(
+                                        fontFamily: 'arial',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      )
+                                    )
+                                  ),
+                                  Container( //PUNTUACION
+                                    margin: EdgeInsets.only(left: 15),
+                                    width: 50,
+                                    height: 40, 
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${puntuacionesOrdenadas[n]}', 
+                                      style: TextStyle(
+                                        fontFamily: 'arial',
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.0,
+                                      )
+                                    )
+                                  ),
+                                ]
+                              ),
+                            ),
+                          ), 
+                        ],
                       ),
-                    ), 
+                    ),
                   ],
-                ),
-              ),
-            ],
-          );
-          }
-          }
-        )
-      );
+                );
+              }
+            }
+          )
+        );
       }
     )
   ];
@@ -2125,86 +2054,82 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   void detalles(BuildContext context, String usuario, AsyncSnapshot snapshot) {
-
-      showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomAlertDialog(
-          contentPadding: EdgeInsets.all(5),
-          content: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.cyan, width: 4),
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 2.6,
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 30,
+    showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CustomAlertDialog(
+        contentPadding: EdgeInsets.all(5),
+        content: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.cyan, width: 4),
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height / 2.6,
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 30,
+                ),
+                Container( //Respuesta1
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Text(
+                    'DETALLES',
+                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
                   ),
-                  Container( //Respuesta1
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                      'DETALLES',
-                      style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.cyan),
-                    ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container( 
+                  padding: EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Column(
+                        children: <Widget>[
+                          Text('Nombre', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('Puntuacion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('Duracion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('Aciertos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('Fallos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        ],
+                      ),
+                      SizedBox(width: 35,),
+                      for(int i=0;i<snapshot.data.length;i++)
+                        if(snapshot.data[i].nombre == usuario)
+                      Column(
+                        children: <Widget>[
+                          Text('${usuario}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('${snapshot.data[i].puntos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('${snapshot.data[i].tiempo}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('${snapshot.data[i].aciertos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Divider(height: 10),
+                          Text('${snapshot.data[i].fallos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container( 
-                    padding: EdgeInsets.symmetric(horizontal: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: <Widget>[
-                            Text('Nombre', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('Puntuacion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('Duracion', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('Aciertos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('Fallos', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                          ],
-                        ),
-                        SizedBox(width: 35,),
-                        for(int i=0;i<snapshot.data.length;i++)
-                          if(snapshot.data[i].nombre == usuario)
-                        Column(
-                          children: <Widget>[
-                            Text('${usuario}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('${snapshot.data[i].puntos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('${snapshot.data[i].tiempo}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('${snapshot.data[i].aciertos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                            Divider(height: 10),
-                            Text('${snapshot.data[i].fallos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                          ],
-                        ),
-                      ],
-                    ),
-                    // child: Text(
-                    //   'Route Quest trata sobre un juego de preguntas sobre localizaciones especificas de nuestras rutas personalizadas para aquellos que desean conocer o visitar ciertos lugares del mundo. \n\nAparte de conocer lugares nuevos, podrás competir contra otros usuarios e incluso chatear con ellos.',
-                    //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-                    // ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           ),
-        );
-      });
-    }
+        ),
+      );
+    });
+  }
+
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;

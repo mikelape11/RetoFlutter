@@ -6,9 +6,7 @@ import 'package:reto/widgets/sliding_card.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
 
-
 class SlidingCardsView extends StatefulWidget {
-
 
   @override
   _SlidingCardsViewState createState() => _SlidingCardsViewState();
@@ -18,8 +16,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   PageController pageController;
   double pageOffset = 0;
 
-
- Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
+  Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
     var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);
 
@@ -34,8 +31,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
-      globals.id = n["id"];
-      
+      globals.id = n["id"]; 
     }
     return ruta;
   });

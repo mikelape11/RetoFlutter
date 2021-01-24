@@ -64,8 +64,6 @@ class _SlidingCardState extends State<SlidingCard> {
   }
 }
 
-
-
 class _CardContent extends StatefulWidget {
   
   final int id;
@@ -112,29 +110,28 @@ class __CardContentState extends State<_CardContent> {
           ),
           SizedBox(height: 18),
           Center(
-            child: Container(
-             
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                        SizedBox(width: 10),
-                        Text(widget.distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
-                      ],
-                    ), 
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("DURACIÓN: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
-                        SizedBox(width: 10),
-                        Text(widget.tiempo, style: TextStyle(color: Colors.grey, fontSize: 22)),
-                      ],
-                    ),
-                  ],
-                ),
+            child: Container(            
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
+                      SizedBox(width: 10),
+                      Text(widget.distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                    ],
+                  ), 
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("DURACIÓN: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
+                      SizedBox(width: 10),
+                      Text(widget.tiempo, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           Spacer(),
@@ -157,8 +154,7 @@ class __CardContentState extends State<_CardContent> {
                   rankingModelo rankings = await registrarPuntuacion(0, globals.usuario, 0, 0, 0, globals.idRuta);
                   setState(() {
                     ranking = rankings;
-                  });
-     
+                  });    
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ));

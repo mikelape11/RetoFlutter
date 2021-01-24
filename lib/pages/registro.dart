@@ -20,7 +20,6 @@ class RegistroPage extends StatefulWidget {
     Registro createState()=> Registro();
   }
 
-
 Future<usuarioModelo> registrarUsuario(String usuario, String password, String rol, String avatar) async{
   var Url = "${globals.ipLocal}/usuarios/nuevo";
   var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
@@ -30,12 +29,10 @@ Future<usuarioModelo> registrarUsuario(String usuario, String password, String r
     "rol": rol,
     "avatar": avatar
   }));
-
 }
 
 class Registro extends State<RegistroPage>{
 
-  //var employess = List<usuarioModelo>.generate(200, (index) => null);
   String _usuario;
 
   Future<List<usuarioModelo>> getUsuarios() async {
@@ -76,7 +73,6 @@ class Registro extends State<RegistroPage>{
   String guardarRuta = "";
   bool _passwordVisible = false;
 
-  
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -345,7 +341,7 @@ class Registro extends State<RegistroPage>{
                 ],
               )
             )
-        )
+          )
         ),
       ),
     );
@@ -394,12 +390,10 @@ class CurvePainter extends CustomPainter{
      }
     canvas.drawPath(path, paint);
 
-    
   }
 
   @override
-
   bool shouldRepaint(CustomPainter oldDelegate) {
     return oldDelegate != this;
   }
- }
+}

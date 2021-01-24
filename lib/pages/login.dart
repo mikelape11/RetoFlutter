@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import 'package:reto/pages/menu_ruta.dart';
 import 'package:reto/pages/registro.dart';
-//import 'package:reto/pages/home.dart';
 
 import 'package:reto/theme/theme.dart';
 import 'package:reto/theme/colors.dart';
@@ -40,16 +39,16 @@ class LoginPage extends StatelessWidget {
       }
     }
 
-  TextEditingController firstController = TextEditingController();
-  TextEditingController secondController = TextEditingController();
-  String _usuario;
-  String _password;
-   List<GlobalKey<FormState>> _formKeysList= [
-    GlobalKey<FormState>(),
-    GlobalKey<FormState>(),
-  ];
+    TextEditingController firstController = TextEditingController();
+    TextEditingController secondController = TextEditingController();
+    String _usuario;
+    String _password;
+    List<GlobalKey<FormState>> _formKeysList= [
+      GlobalKey<FormState>(),
+      GlobalKey<FormState>(),
+    ];
 
-  String validarUsuario(String value) {
+    String validarUsuario(String value) {
       if (value.isEmpty) {
         return "Rellena el campo";
       } else if (value.length < 3) {
@@ -77,20 +76,20 @@ class LoginPage extends StatelessWidget {
         return null;
     }
 
-  Future<List<usuarioModelo>> getUsuarios() async {
-    var data = await http.get('${globals.ipLocal}/usuarios/todos');
-    var jsonData = json.decode(data.body);
-    
-    List<usuarioModelo> usuario = [];
-    for (var e in jsonData) {
-      usuarioModelo usuarios = new usuarioModelo();
-      usuarios.usuario = e["usuario"];
-      usuarios.password = e["password"];
-      usuarios.avatar = e["avatar"];
-      usuario.add(usuarios);
+    Future<List<usuarioModelo>> getUsuarios() async {
+      var data = await http.get('${globals.ipLocal}/usuarios/todos');
+      var jsonData = json.decode(data.body);
+      
+      List<usuarioModelo> usuario = [];
+      for (var e in jsonData) {
+        usuarioModelo usuarios = new usuarioModelo();
+        usuarios.usuario = e["usuario"];
+        usuarios.password = e["password"];
+        usuarios.avatar = e["avatar"];
+        usuario.add(usuarios);
+      }
+      return usuario;
     }
-    return usuario;
-  }
 
     return Scaffold( //EMPIEZA LA PANTALLA DE LOGIN
       appBar: AppBar(
@@ -134,9 +133,6 @@ class LoginPage extends StatelessWidget {
                           _usuario = value;
                         },
                         decoration: InputDecoration(
-                          // enabledBorder: UnderlineInputBorder(      
-                          //   borderSide: BorderSide(color: Colors.cyan),   
-                          // ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.cyan, width: 2.0),
                           ),  
@@ -204,20 +200,19 @@ class LoginPage extends StatelessWidget {
                               if(snapshot.data[i].usuario != usuario){
                                  cont ++; 
                               }
-                            if(cont == snapshot.data.length){
-                                if (_formKeysList[0].currentState.validate()) { 
-                                    _formKeysList[0].currentState.save();
-                                  }
-                            }
-                            if(snapshot.data[i].password != password && snapshot.data[i].usuario == usuario){
-                              if (_formKeysList[1].currentState.validate()) { 
-                                _formKeysList[1].currentState.save();
-                              } 
+                              if(cont == snapshot.data.length){
+                                  if (_formKeysList[0].currentState.validate()) { 
+                                      _formKeysList[0].currentState.save();
+                                    }
+                              }
+                              if(snapshot.data[i].password != password && snapshot.data[i].usuario == usuario){
+                                if (_formKeysList[1].currentState.validate()) { 
+                                  _formKeysList[1].currentState.save();
+                                } 
                               }  
                             }       
                           }  
-                        },
-                      
+                        },                     
                       );
                       }
                     )
@@ -331,10 +326,8 @@ class CurvePainter extends CustomPainter{
   }
 
   @override
-
   bool shouldRepaint(CustomPainter oldDelegate) {
     return oldDelegate != this;
   }
-
- }
+}
 
