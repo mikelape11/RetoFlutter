@@ -6,11 +6,10 @@ import 'package:reto/pages/home.dart';
 import 'package:reto/globals/globals.dart' as globals;
 import 'package:http/http.dart' as http;
 
-
-class SlidingCard extends StatelessWidget {
+class SlidingCard extends StatefulWidget {
   final int id;
-  final String name; //<-- title of the event
-  final String assetName; //<-- name of the image to be displayed
+  final String name; 
+  final String assetName; 
   final String distancia;
   final String tiempo;
   final int length;
@@ -28,6 +27,11 @@ class SlidingCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _SlidingCardState createState() => _SlidingCardState();
+}
+
+class _SlidingCardState extends State<SlidingCard> {
+  @override
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.only(left: 8, right: 8, bottom: 24),
@@ -38,7 +42,7 @@ class SlidingCard extends StatelessWidget {
           ClipRRect(  //<--clipping image
             borderRadius: BorderRadius.vertical(top: Radius.circular(32)), 
             child: Image.asset( //<-- main image
-              'images/Rutas/$assetName',
+              'images/Rutas/${widget.assetName}',
               height: MediaQuery.of(context).size.height * 0.3,
               fit: BoxFit.cover,
             ),
@@ -46,18 +50,36 @@ class SlidingCard extends StatelessWidget {
           SizedBox(height: 8),
           Expanded(
             child: _CardContent( //<--replace the Container with CardContent
-              id: id,
-              name: name,
-              distancia: distancia,
-              tiempo: tiempo,
-              length: length,
-              snapshot: snapshot,
+              id: widget.id,
+              name: widget.name,
+              distancia: widget.distancia,
+              tiempo: widget.tiempo,
+              length: widget.length,
+              snapshot: widget.snapshot,
             ),
           ),
         ],
       ),
     );
   }
+}
+
+
+
+class _CardContent extends StatefulWidget {
+  
+  final int id;
+  final String name;
+  final String distancia;
+  final String tiempo;
+  final int length;
+  final AsyncSnapshot snapshot;
+
+  const _CardContent({Key key, @required this.id, @required this.name, @required this.distancia,@required this.tiempo, @required this.length,@required this.snapshot})
+      : super(key: key);
+
+  @override
+  __CardContentState createState() => __CardContentState();
 }
 
  Future<rankingModelo> registrarPuntuacion(int puntos, String nombre, int aciertos, int fallos, int tiempo, String rutas_id) async{
@@ -75,19 +97,7 @@ class SlidingCard extends StatelessWidget {
 }
   rankingModelo ranking;
 
-class _CardContent extends StatelessWidget {
-  
-  final int id;
-  final String name;
-  final String distancia;
-  final String tiempo;
-  final int length;
-  final AsyncSnapshot snapshot;
-
-  const _CardContent({Key key, @required this.id, @required this.name, @required this.distancia,@required this.tiempo, @required this.length,@required this.snapshot})
-      : super(key: key);
-
-  
+class __CardContentState extends State<_CardContent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -97,7 +107,7 @@ class _CardContent extends StatelessWidget {
         children: <Widget>[
           Center(
             child: Container(
-              child: Text(name, style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold))
+              child: Text(widget.name, style: TextStyle(fontSize: 44, fontWeight: FontWeight.bold))
             ),
           ),
           SizedBox(height: 18),
@@ -111,7 +121,7 @@ class _CardContent extends StatelessWidget {
                       children: [
                         Text("DISTANCIA: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
                         SizedBox(width: 10),
-                        Text(distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                        Text(widget.distancia, style: TextStyle(color: Colors.grey, fontSize: 22)),
                       ],
                     ), 
                     SizedBox(height: 10),
@@ -120,7 +130,7 @@ class _CardContent extends StatelessWidget {
                       children: [
                         Text("DURACIÓN: ", style: TextStyle(color: Colors.grey, fontSize: 22)),
                         SizedBox(width: 10),
-                        Text(tiempo, style: TextStyle(color: Colors.grey, fontSize: 22)),
+                        Text(widget.tiempo, style: TextStyle(color: Colors.grey, fontSize: 22)),
                       ],
                     ),
                   ],
@@ -139,13 +149,15 @@ class _CardContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(32),
                 ),
                 onPressed: () async{
-                    for(int i=0; i<snapshot.data.length; i++){
-                    if(id == i){
-                      globals.idRuta = snapshot.data[i].id;
+                    for(int i=0; i<widget.snapshot.data.length; i++){
+                    if(widget.id == i){
+                      globals.idRuta = widget.snapshot.data[i].id;
                     }
                   }
                   rankingModelo rankings = await registrarPuntuacion(0, globals.usuario, 0, 0, 0, globals.idRuta);
-                  ranking = rankings;
+                  setState(() {
+                    ranking = rankings;
+                  });
      
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
