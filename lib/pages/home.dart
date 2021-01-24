@@ -687,7 +687,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             ),
             Column( //COLOCACION DE TODOS LOS BOTONES
               children: <Widget>[
-                for(int x=0; x<7; x++)
                 Visibility(
                   visible: _isVisible1,
                   child: Stack(
@@ -1572,6 +1571,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
+                                                    print(puntuacionTotal);
                                                   },
                                                 )
                                               ),
@@ -1598,6 +1598,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
+                                                    print(puntuacionTotal);
                                                   },
                                                 )
                                               ),
@@ -1624,6 +1625,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
+                                                    print(puntuacionTotal);
                                                   },
                                                 )
                                               ),
