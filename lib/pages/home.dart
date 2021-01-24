@@ -142,6 +142,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
+
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
   // ignore: deprecated_member_use
@@ -168,7 +169,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         _currentPosition.longitude,
         circulo.center.latitude,
         circulo.center.longitude);
-      if (distancia < 15) {
+      if (distancia < 50) {
         setState(() {
           if(circulo.circleId == CircleId("0")){
             _isVisible1 = true;
@@ -370,6 +371,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     }
     return listaMarkers;
   }
+
   Future<List> devolverLista3(AsyncSnapshot snapshot3) async{
     for(int i =0;i<snapshot3.data.length; i++){
       if(globals.idRuta == snapshot3.data[i].rutasId && posicionesPreguntas.length<7){
@@ -380,6 +382,113 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     //print(posicionesPreguntas.length); //7
     return posicionesPreguntas;
   }
+
+  List<String> respuestas1 = [];
+  List<String> respuestas2 = [];
+  List<String> respuestas3 = [];
+  List<String> respuestas4 = [];
+  List<String> respuestas5 = [];
+  List<String> respuestas6 = [];
+  List<String> respuestas7 = [];
+
+  Future<List> devolverRespuestas1(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 1){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas1.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas1;   
+  }
+
+  Future<List> devolverRespuestas2(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 2){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas2.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas2;   
+  }
+
+  Future<List> devolverRespuestas3(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 3){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas3.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas3;   
+  }
+
+  Future<List> devolverRespuestas4(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 4){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas4.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas4;   
+  }
+
+  Future<List> devolverRespuestas5(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 5){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas5.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas5;   
+  }
+
+  Future<List> devolverRespuestas6(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 6){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas6.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas6;   
+  }
+
+  Future<List> devolverRespuestas7(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 7){
+          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
+            respuestas7.add(snapshot3.data[i].respuestas[m].respuesta);
+          } 
+        }
+    
+      }
+    }
+    return respuestas7;   
+  }
+  
 
   int contador = 0;
   int contador2 = 0;
@@ -543,9 +652,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                       if(!snapshot3.hasData){             
-                                      }else{
-
+                                      }else{ 
                                         devolverLista3(snapshot3);
+                                        devolverRespuestas1(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
@@ -565,7 +674,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             }
                                           }            
                                         }
-                                      
                                       for(int n=0;n<preguntas.length;n++){                                      
                                       return Column(
                                         children: <Widget>[
@@ -581,7 +689,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -601,7 +709,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas1[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -618,7 +726,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas1[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -630,7 +738,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                           ),
                                         ],
                                       ); 
-                                     
                                       } 
                                       }     
                                       }
@@ -673,6 +780,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas2(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -707,7 +815,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -727,7 +835,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas2[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -744,7 +852,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas2[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -799,6 +907,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas3(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -833,7 +942,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas3[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -853,7 +962,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas3[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -870,7 +979,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas3[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -925,6 +1034,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas4(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -959,7 +1069,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas4[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -979,7 +1089,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas4[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -996,7 +1106,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas4[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1051,6 +1161,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas5(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1085,7 +1196,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas5[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -1105,7 +1216,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas5[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1122,7 +1233,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas5[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1177,6 +1288,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas6(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1211,7 +1323,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas6[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -1231,7 +1343,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas6[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1248,7 +1360,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas6[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1303,6 +1415,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
+                                        devolverRespuestas7(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1337,7 +1450,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BAT', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas7[0]}', style: TextStyle(fontSize: 16),),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
@@ -1357,7 +1470,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA BI', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas7[1]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
@@ -1374,7 +1487,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                             width: 250,
                                             child: RaisedButton(
                                               color: Colors.cyan,
-                                              child: Text('RESPUESTA HIRU', style: TextStyle(fontSize: 16),),
+                                              child: Text('${respuestas7[2]}', style: TextStyle(fontSize: 16),),
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){

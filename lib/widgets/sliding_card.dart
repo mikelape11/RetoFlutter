@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:reto/models/rankingModelo.dart';
 import 'package:reto/pages/home.dart';
 import 'package:reto/globals/globals.dart' as globals;
+import 'package:http/http.dart' as http;
 
 
 class SlidingCard extends StatelessWidget {
@@ -22,7 +26,6 @@ class SlidingCard extends StatelessWidget {
     @required this.length,
     @required this.snapshot,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,23 @@ class SlidingCard extends StatelessWidget {
   }
 }
 
+ Future<rankingModelo> registrarPuntuacion(int puntos, String nombre, int aciertos, int fallos, int tiempo, String rutas_id) async{
+  var Url = "${globals.ipLocal}/ranking/nuevo";
+  var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
+  body:jsonEncode(<String , String>{
+    "puntos" : puntos.toString(),
+    "nombre": nombre,
+    "aciertos": aciertos.toString(),
+    "fallos": fallos.toString(),
+    "tiempo": tiempo.toString(),
+    "rutas_id": rutas_id
+  }));
+
+}
+  rankingModelo ranking;
+
 class _CardContent extends StatelessWidget {
+  
   final int id;
   final String name;
   final String distancia;
@@ -119,13 +138,15 @@ class _CardContent extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(32),
                 ),
-                onPressed: () {
+                onPressed: () async{
                     for(int i=0; i<snapshot.data.length; i++){
                     if(id == i){
                       globals.idRuta = snapshot.data[i].id;
                     }
                   }
-                  print(globals.idRuta);
+                  rankingModelo rankings = await registrarPuntuacion(0, globals.usuario, 0, 0, 0, globals.idRuta);
+                  ranking = rankings;
+     
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => HomePage(),
                   ));
