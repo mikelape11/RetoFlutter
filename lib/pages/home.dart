@@ -488,6 +488,97 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     }
     return respuestas7;   
   }
+
+  int opcion1 = 0;
+  Future<int> devolverOpcion1(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 1){
+            opcion1 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion1;   
+  }
+
+   int opcion2 = 0;
+  Future<int> devolverOpcion2(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 2){
+            opcion2 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion2;   
+  }
+
+   int opcion3 = 0;
+  Future<int> devolverOpcion3(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 3){
+            opcion3 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion3;   
+  }
+
+   int opcion4 = 0;
+  Future<int> devolverOpcion4(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 4){
+            opcion4 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion4;   
+  }
+
+   int opcion5 = 0;
+  Future<int> devolverOpcion5(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 5){
+            opcion5 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion5;   
+  }
+
+   int opcion6 = 0;
+  Future<int> devolverOpcion6(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 6){
+            opcion6 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion6;   
+  }
+
+   int opcion7 = 0;
+  Future<int> devolverOpcion7(AsyncSnapshot snapshot3) async{
+    for(int i =0;i<snapshot3.data.length; i++){
+      if(snapshot3.data[i].rutasId == globals.idRuta){
+        if(snapshot3.data[i].numPregunta == 7){
+            opcion7 = snapshot3.data[i].opcion; 
+        }
+    
+      }
+    }
+    return opcion7;   
+  }
   
 
   int contador = 0;
@@ -655,6 +746,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                       }else{ 
                                         devolverLista3(snapshot3);
                                         devolverRespuestas1(snapshot3);
+                                        devolverOpcion1(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
@@ -693,7 +785,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible1 = false;
+                                                  if(opcion1 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible1 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -713,9 +810,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                 setState(() {
+                                                  if(opcion1 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible1 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -730,9 +832,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                               setState(() {
+                                                  if(opcion1 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible1 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -781,6 +888,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas2(snapshot3);
+                                        devolverOpcion2(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -819,7 +927,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible2 = false;
+                                                   setState(() {
+                                                  if(opcion2 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible2 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -839,9 +954,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                 setState(() {
+                                                  if(opcion2 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible2 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -856,9 +976,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion2 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible2 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -908,6 +1033,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas3(snapshot3);
+                                        devolverOpcion3(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -946,7 +1072,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible3 = false;
+                                                  if(opcion3 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible3 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -966,9 +1097,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                               setState(() {
+                                                  if(opcion3 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible3 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -983,9 +1119,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion3 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible3 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1035,6 +1176,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas4(snapshot3);
+                                        devolverOpcion4(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1073,12 +1215,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible4 = false;
+                                                  if(opcion4 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible4 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
                                               },
                                             )
                                           ),
@@ -1093,9 +1236,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion4 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible4 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1110,9 +1258,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                               setState(() {
+                                                  if(opcion4 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible4 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1162,6 +1315,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas5(snapshot3);
+                                        devolverOpcion5(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1200,7 +1354,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible5 = false;
+                                                  if(opcion5 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible5 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -1220,9 +1379,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion5 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible5 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1237,9 +1401,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion5 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible5 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1289,6 +1458,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas6(snapshot3);
+                                        devolverOpcion6(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1327,7 +1497,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible6 = false;
+                                                  if(opcion6 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible6 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
                                                 
                                                 // Navigator.of(context).push(MaterialPageRoute(
@@ -1347,9 +1522,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion6 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible6 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1364,9 +1544,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion6 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible6 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1416,6 +1601,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
                                         devolverRespuestas7(snapshot3);
+                                        devolverOpcion7(snapshot3);
                                         //print(snapshot3.data.numPregunta);
                                         // for(int m=0; m<snapshot3.data.length; m++){
                                         //   for(int n=0; n<posicionesPreguntas.length; n++){
@@ -1454,12 +1640,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
                                                 setState(() {
-                                                  _isVisible7 = false;
+                                                  if(opcion7 == 1){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible7 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
                                                 });
-                                                
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
                                               },
                                             )
                                           ),
@@ -1474,9 +1661,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion7 == 2){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible7 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
@@ -1491,9 +1683,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                               padding: EdgeInsets.only(left: 50, right: 50),
                                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                               onPressed: (){
-                                                // Navigator.of(context).push(MaterialPageRoute(
-                                                //   builder: (context) => LoginPage(),
-                                                // ));
+                                                setState(() {
+                                                  if(opcion7 == 3){
+                                                    print("RESPUESTA CORRECTA");
+                                                    _isVisible7 = false;
+                                                  }else{
+                                                    print("RESPUESTA INCORRECTA");
+                                                  }
+                                                });
                                               },
                                             )
                                           ),
