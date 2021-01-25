@@ -27,6 +27,8 @@ import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
 import '../models/rankingModelo.dart';
+import '../models/rankingModelo.dart';
+import '../models/rankingModelo.dart';
 import '../models/rutasModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
 import 'package:dash_chat/dash_chat.dart';
@@ -75,6 +77,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<String> respuestas7 = [];
   int contador = 0;
   int contador2 = 0;
+  List<rankingModelo> ranking = [];
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -754,16 +757,32 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
                                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                   onPressed: (){
-                                                    setState(() {
+                                                    setState(() async {
                                                       if(opcion1 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
                                                         aciertos++;
                                                         _isVisible1 = false;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
                                                         fallos++;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }
                                                     });                                                                                               
                                                   },
@@ -861,7 +880,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){   
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));          
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
@@ -894,24 +914,40 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
                                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                   onPressed: (){
-                                                    setState(() {
-                                                      setState(() {
+                                                    setState(() async {
                                                       if(opcion2 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
                                                         aciertos++;
                                                         _isVisible2 = false;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          print(aciertos);
+                                                          print(fallos);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
                                                         fallos++;
-                                                      }
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          print(aciertos);
+                                                          print(fallos);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
+                                                      }                                                   
                                                     });
-                                                    });
-                                                    
-                                                    // Navigator.of(context).push(MaterialPageRoute(
-                                                    //   builder: (context) => LoginPage(),
-                                                    // ));
                                                   },
                                                 )
                                               ),
@@ -926,16 +962,36 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   padding: EdgeInsets.only(left: 50, right: 50),
                                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                   onPressed: (){
-                                                    setState(() {
+                                                    setState(() async {
                                                       if(opcion2 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
                                                         aciertos++;
                                                         _isVisible2 = false;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
                                                         fallos++;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          print(aciertos);
+                                                          print(fallos);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }
                                                     });
                                                   },
@@ -952,16 +1008,40 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   padding: EdgeInsets.only(left: 50, right: 50),
                                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                   onPressed: (){
-                                                    setState(() {
+                                                    setState(() async {
                                                       if(opcion2 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
                                                         aciertos++;
                                                         _isVisible2 = false;
+                                                        rankingModelo rank = new rankingModelo();                                                       
+                                                        rank.id = globals.id;
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        print("${rank.puntos}, ${rank.aciertos}, ${rank.fallos}");
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          print(aciertos);
+                                                          print(fallos);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
                                                         fallos++;
+                                                        rankingModelo rank = new rankingModelo();
+                                                        rank.puntos = puntuacionTotal;
+                                                        rank.aciertos = aciertos;
+                                                        rank.fallos = fallos;
+                                                        rankingModelo rankings = await actualizarRanking(rank);
+                                                        setState(() {
+                                                          print(puntuacionTotal);
+                                                          print(aciertos);
+                                                          print(fallos);
+                                                          ranking = rankings as List<rankingModelo>;
+                                                        });
                                                       }
                                                     });
                                                   },
@@ -1007,7 +1087,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){ 
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));            
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
@@ -1151,7 +1232,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){      
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));       
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
@@ -1291,7 +1373,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){  
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));           
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
@@ -1431,7 +1514,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));             
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA
@@ -1571,7 +1655,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){   
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));          
                                       }else{
                                         devolverLista3(snapshot3);
                                         posicionesPreguntas.sort(); //LAS ORDENA

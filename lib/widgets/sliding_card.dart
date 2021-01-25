@@ -80,11 +80,12 @@ class _CardContent extends StatefulWidget {
   __CardContentState createState() => __CardContentState();
 }
 
- Future<rankingModelo> registrarPuntuacion(int puntos, String nombre, int aciertos, int fallos, int tiempo, String rutas_id) async{
+ Future<rankingModelo> registrarPuntuacion(int puntos,String usuario_id, String nombre, int aciertos, int fallos, int tiempo, String rutas_id) async{
   var Url = "${globals.ipLocal}/ranking/nuevo";
   var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
   body:jsonEncode(<String , String>{
     "puntos" : puntos.toString(),
+    "usuario_id" : usuario_id,
     "nombre": nombre,
     "aciertos": aciertos.toString(),
     "fallos": fallos.toString(),
@@ -93,6 +94,21 @@ class _CardContent extends StatefulWidget {
   }));
 
 }
+
+Future<List<rankingModelo>> getRanking() async {
+      var data = await http.get('${globals.ipLocal}/ranking/all');
+      var jsonData = json.decode(data.body);
+      
+      List<rankingModelo> rankings = [];
+      for (var e in jsonData) {
+        rankingModelo ranking = new rankingModelo();
+        ranking.usuario_id = e["usuario_id"];
+        ranking.nombre = e["nombre"];
+        rankings.add(ranking);
+      }
+      return rankings;
+    }
+
   rankingModelo ranking;
 
 class __CardContentState extends State<_CardContent> {
@@ -138,27 +154,48 @@ class __CardContentState extends State<_CardContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
-                padding: EdgeInsets.all(10),
-                color: Colors.cyan,
-                child: Text('Vamo a Jugar', style: TextStyle(fontSize: 25),),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                ),
-                onPressed: () async{
+              FutureBuilder(
+                future: getRanking(),
+                builder: (BuildContext context, AsyncSnapshot snapshot2) {
+                  bool noExiste = true;
+                if(!snapshot2.hasData){
+                    return Center(child: CircularProgressIndicator(strokeWidth: 2));    
+                }else{
+                return RaisedButton(
+                  padding: EdgeInsets.all(10),
+                  color: Colors.cyan,
+                  child: Text('Vamo a Jugar', style: TextStyle(fontSize: 25),),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  onPressed: () async{
                     for(int i=0; i<widget.snapshot.data.length; i++){
-                    if(widget.id == i){
-                      globals.idRuta = widget.snapshot.data[i].id;
+                      if(widget.id == i){
+                        globals.idRuta = widget.snapshot.data[i].id;
+                      }
                     }
-                  }
-                  rankingModelo rankings = await registrarPuntuacion(0, globals.usuario, 0, 0, 0, globals.idRuta);
-                  setState(() {
-                    ranking = rankings;
-                  });    
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => HomePage(),
-                  ));
-                },
+                    for(int i=0; i<snapshot2.data.length; i++){
+                      if(snapshot2.data[i].nombre == globals.usuario && snapshot2.data[i].usuario_id == "1"){   
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => HomePage(),
+                          ));
+                          noExiste = false;
+                          break;
+                      }
+                    }
+                    if(noExiste){
+                      rankingModelo rankings = await registrarPuntuacion(0, "1", globals.usuario, 0, 0, 0, globals.idRuta);
+                      setState(() {
+                        ranking = rankings;
+                      });
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ));  
+                    }        
+                  },
+                );
+                }
+                }
               ),
             ],
           ),
