@@ -14,6 +14,7 @@ import 'package:reto/models/usuarioModelo.dart';
 import 'package:reto/models/rutasLocalizacionModelo.dart';
 import 'package:reto/models/preguntasModelo.dart';
 import 'package:reto/models/preguntasRespuestasModelo.dart';
+import 'package:reto/pages/finalizar.dart';
 import 'package:reto/theme/theme.dart';
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -78,6 +79,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   int contador = 0;
   int contador2 = 0;
   List<rankingModelo> ranking = [];
+  List<String> nombres = [];
+  List<String> fotos = [];
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -578,7 +581,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           future: getRutasData(),
           builder: (BuildContext context, AsyncSnapshot snapshot2){
             if(!snapshot2.hasData){
-              print("sin datos");
+              return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
               if(contador == 0){
                 devolverLista(snapshot2);
@@ -2364,6 +2367,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }else{
                                                           print("RESPUESTA INCORRECTA");
                                                           puntuacionTotal = puntuacionTotal - 25;
@@ -2381,6 +2387,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }
                                                       });
                                                     },
@@ -2430,6 +2439,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }else{
                                                           print("RESPUESTA INCORRECTA");
                                                           puntuacionTotal = puntuacionTotal - 25;
@@ -2447,6 +2459,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }
                                                       });
                                                     },
@@ -2496,6 +2511,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }else{
                                                           print("RESPUESTA INCORRECTA");
                                                           puntuacionTotal = puntuacionTotal - 25;
@@ -2513,6 +2531,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
                                                           });
+                                                          Navigator.of(context).push(MaterialPageRoute(
+                                                            builder: (context) => FinalizarPage(),
+                                                          ));
                                                         }
                                                       });
                                                     },
@@ -2612,28 +2633,30 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               }else{
                 List<int> puntuaciones = [];
                 List<int> puntuacionesOrdenadas = [];
-                List<String> nombres = [];
-                List<String> fotos = [];
                 for(int i=0; i<snapshot.data.length; i++){
                   puntuaciones.add(snapshot.data[i].puntos);
                 }  
                 puntuaciones.sort(); 
                 puntuaciones.reversed;
                 puntuacionesOrdenadas.addAll(puntuaciones.reversed);
-                for(int n=0; n<puntuacionesOrdenadas.length; n++){
-                  for(int m=0; m<snapshot.data.length; m++){
-                    if(puntuacionesOrdenadas[n] == snapshot.data[m].puntos){
-                      nombres.add(snapshot.data[m].nombre);
+                 for(int m=0; m<snapshot.data.length; m++){
+                  for(int n=0; n<puntuacionesOrdenadas.length; n++){
+                    if(puntuacionesOrdenadas[m] == snapshot.data[n].puntos){
+                      nombres.add(snapshot.data[n].nombre);
+                    
                     }
                   }
-                }     
+                }  
+                print(nombres);   
                 for(int k=0;k<nombres.length;k++){
                   for(int j=0;j<puntuacionesOrdenadas.length;j++){
                     if(nombres[k] == snapshot2.data[j].usuario){
                       fotos.add(snapshot2.data[j].avatar);
+                      
                     }
                   }
                 }
+                //print(fotos);
                 return Column(
                   children: <Widget>[ 
                     Divider(),

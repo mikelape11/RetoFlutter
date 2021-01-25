@@ -40,6 +40,7 @@ dependencies:
   form_field_validator: ^1.0.1
   path: ^1.7.0
   flutter_signin_button: ^1.1.0
+  confetti: ^0.5.4+1
   
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,9 @@ flutter:
     - images/fondo.png
     - images/fondo2.png
     - images/perfil.png
+    - images/javi.png
+    - images/mel.png
+    - images/mik.png
     - images/Rutas/irun.jpg
     - images/Rutas/hendaia.jpg
     - images/Rutas/donosti1.jpg
