@@ -61,6 +61,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<int> posicionesPreguntas = [];
   List<String> preguntas = [];
   int puntuacionTotal = 0;
+  int aciertos = 0;
+  int fallos = 0;
   Position _currentPosition;
   List<int> posiciones;
   var guardarIdMarker = '';
@@ -101,6 +103,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       ranking.add(rankings);
     }
     return ranking;
+  }
+
+  Future<rankingModelo> actualizarRanking(rankingModelo ranking) async{
+    var Url = "${globals.ipLocal}/ranking/actualizar";
+    var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body: jsonEncode(ranking));
   }
 
   Future<List<usuarioModelo>> getAvatar() async {
@@ -712,7 +720,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   child: FutureBuilder(
                                     future: getPreguntas(),
                                     builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                      if(!snapshot3.hasData){             
+                                      if(!snapshot3.hasData){    
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));
                                       }else{ 
                                         devolverLista3(snapshot3);
                                         devolverRespuestas1(snapshot3);
@@ -749,10 +758,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion1 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible1 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });                                                                                               
                                                   },
@@ -773,10 +784,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion1 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible1 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -797,10 +810,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion1 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible1 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -884,10 +899,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion2 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible2 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                     });
@@ -913,10 +930,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion2 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible2 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -937,10 +956,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion2 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible2 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1023,10 +1044,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion3 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible3 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                     
@@ -1051,10 +1074,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion3 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible3 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1075,10 +1100,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion3 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible3 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1161,10 +1188,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion4 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible4 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1185,10 +1214,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion4 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible4 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1209,10 +1240,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion4 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible4 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1295,10 +1328,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion5 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible5 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });                                                  
                                                   },
@@ -1319,10 +1354,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion5 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible5 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1343,10 +1380,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion5 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible5 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1429,10 +1468,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion6 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible6 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1453,10 +1494,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion6 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible6 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1477,10 +1520,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion6 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible6 = false;
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                       }
                                                     });
                                                   },
@@ -1563,11 +1608,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion7 == 1){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible7 = false;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
@@ -1590,11 +1637,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion7 == 2){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible7 = false;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
@@ -1617,11 +1666,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       if(opcion7 == 3){
                                                         print("RESPUESTA CORRECTA");
                                                         puntuacionTotal = puntuacionTotal + 50;
+                                                        aciertos++;
                                                         _isVisible7 = false;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }else{
                                                         print("RESPUESTA INCORRECTA");
                                                         puntuacionTotal = puntuacionTotal - 25;
+                                                        fallos++;
                                                         //AQUI HAY QUE ACTUALIZAR LA PUNTUACION
                                                       }
                                                     });
