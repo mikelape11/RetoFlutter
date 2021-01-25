@@ -563,18 +563,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                     width: 350,
                     child: RaisedButton(
                       color: Colors.cyan,
-                      child: Text('POPUP', style: TextStyle(fontSize: 16),),
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onPressed: (){
-                        pregunta(context);
-                      },
-                    )
-                  ),
-                  Container( //BOTON DE CERRAR SESION
-                    margin: EdgeInsets.only(top: 25),
-                    width: 350,
-                    child: RaisedButton(
-                      color: Colors.cyan,
                       child: Text('VOLVER AL MENÚ', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){

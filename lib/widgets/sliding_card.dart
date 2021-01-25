@@ -80,7 +80,7 @@ class _CardContent extends StatefulWidget {
   __CardContentState createState() => __CardContentState();
 }
 
- Future<rankingModelo> registrarPuntuacion(int puntos,String usuario_id, String nombre, int aciertos, int fallos, int tiempo, String rutas_id) async{
+ Future<rankingModelo> registrarPuntuacion(int puntos,String usuario_id, String nombre, int aciertos, int fallos, int tiempo, String rutasId) async{
   var Url = "${globals.ipLocal}/ranking/nuevo";
   var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
   body:jsonEncode(<String , String>{
@@ -90,7 +90,7 @@ class _CardContent extends StatefulWidget {
     "aciertos": aciertos.toString(),
     "fallos": fallos.toString(),
     "tiempo": tiempo.toString(),
-    "rutas_id": rutas_id
+    "rutasId": rutasId
   }));
 
 }

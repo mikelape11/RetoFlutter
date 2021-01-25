@@ -12,9 +12,9 @@ class rankingModelo{
   int aciertos;
   int fallos;
   int tiempo;
-  String rutas_id;
+  String rutasId;
 
-  rankingModelo({this.id,this.puntos,this.usuario_id,this.nombre,this.aciertos,this.fallos,this.tiempo,this.rutas_id});
+  rankingModelo({this.id,this.puntos,this.usuario_id,this.nombre,this.aciertos,this.fallos,this.tiempo,this.rutasId});
 
   factory rankingModelo.fromJson(Map<String,dynamic> json) => rankingModelo(
     id: json["_id"],
@@ -24,7 +24,7 @@ class rankingModelo{
     aciertos: json["aciertos"],
     fallos: json["fallos"],
     tiempo: json["tiempo"],
-    rutas_id: json["rutas_id"]
+    rutasId: json["rutasId"]
 
   );
 
@@ -36,7 +36,7 @@ class rankingModelo{
     "aciertos": aciertos,
     "fallos": fallos,
     "tiempo": tiempo,
-    "rutas_id": rutas_id,
+    "rutasId": rutasId,
   };
 
   String get idRanking => id;
@@ -53,6 +53,6 @@ class rankingModelo{
 
   int get tiempoRanking => tiempo;
 
-  String get rutas_idRanking => rutas_id;
+  String get rutas_idRanking => rutasId;
 
 }
