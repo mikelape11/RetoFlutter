@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reto/pages/ranking.dart';
 import 'package:reto/theme/theme.dart';
 import 'package:confetti/confetti.dart';
+
+import 'ranking.dart';
 
 class FinalizarPage extends StatefulWidget {
   //PANTALLA DE REGISTRO
@@ -17,6 +18,7 @@ class Finalizar extends State<FinalizarPage>{
   @override
   void initState() {
     _controllerCenter = ConfettiController(duration: const Duration(seconds: 3));
+    _controllerCenter.play();
     super.initState();
   }
 
@@ -65,26 +67,22 @@ class Finalizar extends State<FinalizarPage>{
                           alignment: Alignment.center,
                           child: ConfettiWidget(
                             confettiController: _controllerCenter,
+                            emissionFrequency: 0.03, // how often it should emit
+                            numberOfParticles: 20,
                             blastDirectionality: BlastDirectionality
                                 .explosive, // don't specify a direction, blast randomly
                             shouldLoop:
                                 true, // start again as soon as the animation is finished
-                            colors: const [
+                            colors: [
                               Colors.green,
+                              Colors.yellow,
                               Colors.blue,
                               Colors.pink,
                               Colors.orange,
-                              Colors.purple
+                              Colors.purple,
+                              Colors.red
                             ], // manually specify the colors to be used
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: FlatButton(
-                              onPressed: () {
-                                _controllerCenter.play();
-                              },
-                              child: _display('blast')),
                         ),
                       ]
                     ),
@@ -165,8 +163,9 @@ class Finalizar extends State<FinalizarPage>{
                       ),
                       onPressed: () async{
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => rankingPage(),
-                        ));
+                                  builder: (context) => rankingPage(),
+                                ));
+                        
                       },
                     ),
                   ],
@@ -176,12 +175,6 @@ class Finalizar extends State<FinalizarPage>{
           )
         ),
       ),
-    );
-  }
-  Text _display(String text) {
-    return Text(
-      text,
-      style: const TextStyle(color: Colors.white, fontSize: 20),
     );
   }
 }
