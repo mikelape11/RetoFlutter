@@ -78,9 +78,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<String> respuestas7 = [];
   int contador = 0;
   int contador2 = 0;
+  int cont = 0;
   List<rankingModelo> ranking = [];
-  List<String> nombres = [];
-  List<String> fotos = [];
+
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
@@ -92,7 +92,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<List<rankingModelo>> getRanking() async {
-    var data = await http.get('${globals.ipLocal}/ranking/all');
+    var data = await http.get('${globals.ipLocal}/ranking/ordenado');
     var jsonData = json.decode(data.body);
 
     List<rankingModelo> ranking = [];
@@ -688,7 +688,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
   
   int _selectedIndex = 0;
-  int cont = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
   List<Widget> _widgetOptions() => [
     Column( //PANTALLA MAPA
@@ -2624,39 +2623,35 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
           child: FutureBuilder(
             future: getRanking(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(!snapshot2.hasData){
+            builder: (BuildContext context, AsyncSnapshot snapshot5) {
+              if(!snapshot2.hasData && !snapshot5.hasData){
                 return Container(
                   height: 600,
                   child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                 );
               }else{
-                List<int> puntuaciones = [];
-                List<int> puntuacionesOrdenadas = [];
-                for(int i=0; i<snapshot.data.length; i++){
-                  puntuaciones.add(snapshot.data[i].puntos);
-                }  
-                puntuaciones.sort(); 
-                puntuaciones.reversed;
-                puntuacionesOrdenadas.addAll(puntuaciones.reversed);
-                 for(int m=0; m<snapshot.data.length; m++){
-                  for(int n=0; n<puntuacionesOrdenadas.length; n++){
-                    if(puntuacionesOrdenadas[m] == snapshot.data[n].puntos){
-                      nombres.add(snapshot.data[n].nombre);
-                    
-                    }
-                  }
-                }  
-                print(nombres);   
-                for(int k=0;k<nombres.length;k++){
-                  for(int j=0;j<puntuacionesOrdenadas.length;j++){
-                    if(nombres[k] == snapshot2.data[j].usuario){
+                List<String> fotos = [];
+                List<int> listaRankingPuntos = [];
+                List<String> listaRankingNombres = [];
+
+              //guardar los puntos
+                for(int i=0; i<snapshot5.data.length;i++){
+                  listaRankingPuntos.add(snapshot5.data[i].puntos);
+                }
+              //guardar los nombres
+                for(int i=0; i<snapshot5.data.length;i++){
+                  listaRankingNombres.add(snapshot5.data[i].nombre);
+                }
+              
+              //guardar los avatars
+                for(int k=0;k<listaRankingNombres.length;k++){
+                  for(int j=0;j<listaRankingPuntos.length;j++){
+                    if(listaRankingNombres[k] == snapshot2.data[j].usuario){
                       fotos.add(snapshot2.data[j].avatar);
-                      
                     }
                   }
                 }
-                //print(fotos);
+
                 return Column(
                   children: <Widget>[ 
                     Divider(),
@@ -2792,21 +2787,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 239, left: 5),
                               child: Column(
                                 children: [
-                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                    if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
                                       GestureDetector(
                                           onTap: () {
-                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                            detalles(context, listaRankingNombres[1], snapshot5);
                                           },
                                         child: Text(
-                                          '${snapshot.data[n].nombre}',
+                                          '${listaRankingNombres[1]}',
                                           style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                    if(puntuacionesOrdenadas[1] == snapshot.data[n].puntos)
                                       Text(
-                                        '${snapshot.data[n].puntos}',
+                                        '${listaRankingPuntos[1]}',
                                         style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                       ),
                                 ],
@@ -2820,21 +2811,18 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 249, left: 220),
                               child: Column(
                                 children: [
-                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                    if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
                                       GestureDetector(
                                         onTap: () {
-                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                            detalles(context, listaRankingNombres[2], snapshot5);
                                           },
                                         child: Text(
-                                          '${snapshot.data[n].nombre}',
+                                          '${listaRankingNombres[2]}',
                                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                    if(puntuacionesOrdenadas[2] == snapshot.data[n].puntos)
+
                                       Text(
-                                        '${snapshot.data[n].puntos}',
+                                        '${listaRankingPuntos[2]}',
                                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                 ],
@@ -2849,21 +2837,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 219, left: 108),
                               child: Column(
                                 children: [
-                                for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                  if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
                                       GestureDetector(
                                         onTap: () {
-                                            detalles(context, snapshot.data[n].nombre, snapshot);
+                                            detalles(context, listaRankingNombres[0], snapshot5);
                                           },
                                         child: Text(
-                                          '${snapshot.data[n].nombre}',
+                                          '${listaRankingNombres[0]}',
                                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                  for(int n=0; n<puntuacionesOrdenadas.length;n++)
-                                    if(puntuacionesOrdenadas[0] == snapshot.data[n].puntos)
                                       Text(
-                                        '${snapshot.data[n].puntos}',
+                                        '${listaRankingPuntos[0]}',
                                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                       ),
                                 ],
@@ -2878,10 +2862,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          for(int n=3; n<puntuacionesOrdenadas.length;n++)//HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
+                          for(int n=3; n<listaRankingPuntos.length;n++)//HACE FALTA HACER UN FOR PARA TODOS LOS JUGADORES
                           GestureDetector(
                             onTap: () {
-                              detalles(context, nombres[n], snapshot);
+                              detalles(context, listaRankingNombres[n], snapshot5);
                             },
                             child: Container( //CONTAINER PARA LOS DATOS DEL JUGADOR
                               width: MediaQuery.of(context).size.width,
@@ -2925,7 +2909,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                     height: 40,
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${nombres[n]}', 
+                                      '${listaRankingNombres[n]}', 
                                       style: TextStyle(
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
@@ -2939,7 +2923,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                     height: 40, 
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '${puntuacionesOrdenadas[n]}', 
+                                      '${listaRankingPuntos[n]}', 
                                       style: TextStyle(
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
