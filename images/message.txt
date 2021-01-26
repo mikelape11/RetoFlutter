@@ -651,9 +651,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 future: getUsuarios(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   cogerUbicacion(snapshot);  
-                   //Timer.periodic(new Duration(seconds: 5), (timer) {
-                      //actualizarUbicacionUsuario(snapshot);
-                   //});
+                   Timer.periodic(new Duration(seconds: 5), (timer) {
+                      actualizarUbicacionUsuario(snapshot);
+                   });
                   if(!snapshot.hasData){
                     return Container(
                     height: 600,
