@@ -177,7 +177,7 @@ class _rankingPageState extends State<rankingPage> {
                     }
                   }
                 }
-return Column(
+                return Column(
                   children: <Widget>[ 
                     Divider(),
                     Text( //TEXTO DEL TITULO DE LA PANTALLA
@@ -318,12 +318,13 @@ return Column(
                                           },
                                         child: Text(
                                           '${listaRankingNombres[1]}',
-                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[1]}',
-                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
                                       ),
                                 ],
                               ),
@@ -342,13 +343,13 @@ return Column(
                                           },
                                         child: Text(
                                           '${listaRankingNombres[2]}',
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
                                         ),
                                       ),
 
                                       Text(
                                         '${listaRankingPuntos[2]}',
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
                                       ),
                                 ],
                               ),
@@ -368,12 +369,12 @@ return Column(
                                           },
                                         child: Text(
                                           '${listaRankingNombres[0]}',
-                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900]),
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[0]}',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
                                       ),
                                 ],
                               ),
@@ -409,7 +410,7 @@ return Column(
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24.0,
-                                        color: Colors.grey[900],
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
                                       )
                                     )
                                   ),
@@ -439,6 +440,7 @@ return Column(
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
                                       )
                                     )
                                   ),
@@ -453,6 +455,7 @@ return Column(
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
                                       )
                                     )
                                   ),
