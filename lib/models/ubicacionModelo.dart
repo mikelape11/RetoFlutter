@@ -6,14 +6,16 @@ String ubicacionModeloToJson(ubicacionModelo data) => json.encode(data.toJson())
 
 class ubicacionModelo{
   String id;
+  String nombreUsuario;
   double lat;
   double lng;
   String rutaId;
 
- ubicacionModelo({this.id,this.lat,this.lng,this.rutaId});
+ ubicacionModelo({this.id,this.nombreUsuario,this.lat,this.lng,this.rutaId});
 
   factory ubicacionModelo.fromJson(Map<String,dynamic> json) => ubicacionModelo(
     id: json["_id"],
+    nombreUsuario: json["nombreUsuario"],
     lat: json["lat"],
     lng: json["lng"],
     rutaId: json["rutaId"],
@@ -21,6 +23,7 @@ class ubicacionModelo{
 
   Map<String,dynamic> toJson()=>{
     "_id": id,
+    "nombreUsuario": nombreUsuario,
     "lat": lat,
     "lng": lng,
     "rutaId": rutaId,
@@ -28,6 +31,8 @@ class ubicacionModelo{
   };
 
   String get idubicacionModelo => id;
+
+  String get nombreUsuarioUbicacionModelo => nombreUsuario;
 
   double get latubicacionModelo => lat;
 

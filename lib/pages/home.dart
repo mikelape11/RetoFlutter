@@ -168,15 +168,31 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
-  Future<ubicacionModelo> registrarUbicacion(String id, double lat, double lng, String rutaId) async{
+  Future<List<ubicacionModelo>> getUbicaciones() async {
+    var data = await http.get('${globals.ipLocal}/ubicacion/all');
+    var jsonData = json.decode(data.body);
+
+    List<ubicacionModelo> datos = [];
+    for (var e in jsonData) {
+      ubicacionModelo ubicacion = new ubicacionModelo();
+      ubicacion.id = e["_id"];
+      ubicacion.nombreUsuario = e["nombreUsuario"];
+      ubicacion.lat = e["lat"];
+      ubicacion.lng =  e["lng"];
+      ubicacion.rutaId = e["rutaId"];
+      datos.add(ubicacion);
+    }
+    return datos;
+  }
+
+  Future<ubicacionModelo> registrarUbicacion(String nombreUsuario, double lat, double lng, String rutaId) async{
     var Url = "${globals.ipLocal}/ubicacion/nuevo";
     var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
     body:jsonEncode(<String , String>{
-      "_id" : id,
+      "nombreUsuario" : nombreUsuario,
       "lat" : lat.toString(),
       "lng": lng.toString(),
       "rutaId" : rutaId,
-
     }));
   }
 
@@ -208,6 +224,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     ubicacionUsuario = await _localizacionUsuario();
     double latitude = ubicacionUsuario.latitude;
     double longitud = ubicacionUsuario.longitude;
+    String nombreUsuario = globals.usuario;
 
     for(int i=0;i<snapshot.data.length;i++){
       if(snapshot.data[i].usuario == globals.usuario){
@@ -215,7 +232,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       }
     }
 
-    ubicacionModelo ubicaciones = await registrarUbicacion(globals.idUsuario, latitude, longitud, globals.idRuta);
+    ubicacionModelo ubicaciones = await registrarUbicacion(nombreUsuario, latitude, longitud, globals.idRuta);
     setState(() {
         ubicacion = ubicaciones;
     });
@@ -232,6 +249,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       }
     }
     ubi.id =  globals.idUsuario;
+    ubi.nombreUsuario = globals.usuario;
     ubi.lat = ubicacionUsuario.latitude;
     ubi.lng = ubicacionUsuario.longitude;
     ubi.rutaId = globals.idRuta;
@@ -316,6 +334,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         position: listaMarkers[i],
         consumeTapEvents: false));
       }
+      _markers.add(Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueGreen
+        ),
+        markerId: MarkerId("8"),
+        position: LatLng(43.34375199175272, -1.7966263267918796),
+        consumeTapEvents: false));
     });
   }
 
