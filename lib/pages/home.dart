@@ -2,6 +2,7 @@
 
 import 'dart:collection';
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reto/models/rankingModelo.dart';
 import 'package:reto/models/rutasDataModelo.dart';
 import 'package:reto/models/usuarioModelo.dart';
+import 'package:reto/models/ubicacionModelo.dart';
 import 'package:reto/models/rutasLocalizacionModelo.dart';
 import 'package:reto/models/preguntasModelo.dart';
 import 'package:reto/models/preguntasRespuestasModelo.dart';
@@ -27,8 +29,6 @@ import 'package:reto/widgets/widgets.dart';
 import 'package:reto/pages/perfil_usuario.dart';
 
 import '../bloc/mapa/mapa_bloc.dart';
-import '../models/rankingModelo.dart';
-import '../models/rankingModelo.dart';
 import '../models/rankingModelo.dart';
 import '../models/rutasModelo.dart';
 import '../widgets/custom_alert_dialog.dart';
@@ -78,16 +78,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<String> respuestas7 = [];
   int contador = 0;
   int contador2 = 0;
+  int contador3 = 0;
   int cont = 0;
   List<rankingModelo> ranking = [];
-
+  Position ubicacionUsuario;
 
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
     _distanceFromCircle();
-    // _loadMapStyles();
     super.initState();
   }
 
@@ -168,6 +168,25 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
+  Future<ubicacionModelo> registrarUbicacion(String id, double lat, double lng, String rutaId) async{
+    var Url = "${globals.ipLocal}/ubicacion/nuevo";
+    var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body:jsonEncode(<String , String>{
+      "_id" : id,
+      "lat" : lat.toString(),
+      "lng": lng.toString(),
+      "rutaId" : rutaId,
+
+    }));
+  }
+
+  Future<ubicacionModelo> actualizarUbicacion(ubicacionModelo ubicacion) async{
+    var Url = "${globals.ipLocal}/ubicacion/actualizar";
+    var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body: jsonEncode(ubicacion));
+  }
+
+
   @override
   void dispose() { //LLAMO A LA FUNCION DE CANCELAR SEGUIMIENTO DEL USUARIO DEL MAPA
   // ignore: deprecated_member_use
@@ -182,6 +201,45 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         desiredAccuracy: LocationAccuracy.high,
       );
     });
+  }
+
+  ubicacionModelo ubicacion = new ubicacionModelo();
+  void cogerUbicacion(AsyncSnapshot snapshot) async{
+    ubicacionUsuario = await _localizacionUsuario();
+    double latitude = ubicacionUsuario.latitude;
+    double longitud = ubicacionUsuario.longitude;
+
+    for(int i=0;i<snapshot.data.length;i++){
+      if(snapshot.data[i].usuario == globals.usuario){
+        globals.idUsuario = snapshot.data[i].id;
+      }
+    }
+
+    ubicacionModelo ubicaciones = await registrarUbicacion(globals.idUsuario, latitude, longitud, globals.idRuta);
+    setState(() {
+        ubicacion = ubicaciones;
+    });
+  }
+
+  ubicacionModelo ubicacion2 = new ubicacionModelo();
+  void actualizarUbicacionUsuario(AsyncSnapshot snapshot) async{
+    ubicacionModelo ubi = new ubicacionModelo();
+    ubicacionUsuario = await _localizacionUsuario();
+
+    for(int i=0;i<snapshot.data.length;i++){
+      if(snapshot.data[i].usuario == globals.usuario){
+        globals.idUsuario = snapshot.data[i].id;
+      }
+    }
+    ubi.id =  globals.idUsuario;
+    ubi.lat = ubicacionUsuario.latitude;
+    ubi.lng = ubicacionUsuario.longitude;
+    ubi.rutaId = globals.idRuta;
+    ubicacionModelo ubicaciones = await actualizarUbicacion(ubi);
+    setState(() {
+      ubicacion2 = ubicaciones;
+    });  
+    actualizarUbicacionUsuario(snapshot);
   }
 
   Future<void> _distanceFromCircle() async {
@@ -592,6 +650,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               return FutureBuilder(
                 future: getUsuarios(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  cogerUbicacion(snapshot);  
+                   Timer.periodic(new Duration(seconds: 5), (timer) {
+                      actualizarUbicacionUsuario(snapshot);
+                   });
                   if(!snapshot.hasData){
                     return Container(
                     height: 600,
@@ -2793,12 +2855,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                           },
                                         child: Text(
                                           '${listaRankingNombres[1]}',
-                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold,color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[1]}',
-                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold,color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -2817,13 +2879,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                           },
                                         child: Text(
                                           '${listaRankingNombres[2]}',
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
                                       ),
 
                                       Text(
                                         '${listaRankingPuntos[2]}',
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -2843,12 +2905,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                           },
                                         child: Text(
                                           '${listaRankingNombres[0]}',
-                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[0]}',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -2914,7 +2976,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
-                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white : Colors.black,
                                       )
                                     )
                                   ),
@@ -2929,7 +2991,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
-                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white : Colors.black,
                                       )
                                     )
                                   ),

@@ -15,3 +15,4 @@ String idRuta = "";
 int posicionPregunta = 0;
 bool colorMarker = false;
 String idRanking = "";
+String idUsuario = "";

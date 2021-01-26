@@ -24,7 +24,7 @@ class rankingPage extends StatefulWidget {
 class _rankingPageState extends State<rankingPage> {
 
   Future<List<rankingModelo>> getRanking() async {
-    var data = await http.get('${globals.ipLocal}/ranking/all');
+    var data = await http.get('${globals.ipLocal}/ranking/ordenado');
     var jsonData = json.decode(data.body);
 
     List<rankingModelo> ranking = [];
@@ -318,13 +318,13 @@ class _rankingPageState extends State<rankingPage> {
                                           },
                                         child: Text(
                                           '${listaRankingNombres[1]}',
-                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                           
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[1]}',
-                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: listaRankingNombres[1] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -343,13 +343,13 @@ class _rankingPageState extends State<rankingPage> {
                                           },
                                         child: Text(
                                           '${listaRankingNombres[2]}',
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                         ),
                                       ),
 
                                       Text(
                                         '${listaRankingPuntos[2]}',
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: listaRankingNombres[2] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -369,12 +369,12 @@ class _rankingPageState extends State<rankingPage> {
                                           },
                                         child: Text(
                                           '${listaRankingNombres[0]}',
-                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900]),
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                       Text(
                                         '${listaRankingPuntos[0]}',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: listaRankingNombres[0] == globals.usuario ? Colors.red [900] : Colors.grey[900],),
+                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                       ),
                                 ],
                               ),
@@ -440,7 +440,7 @@ class _rankingPageState extends State<rankingPage> {
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
-                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white : Colors.black,
                                       )
                                     )
                                   ),
@@ -455,7 +455,7 @@ class _rankingPageState extends State<rankingPage> {
                                         fontFamily: 'arial',
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18.0,
-                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Colors.grey[900],
+                                        color: listaRankingNombres[n] == globals.usuario ? Colors.red [900] : Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white : Colors.black,
                                       )
                                     )
                                   ),
