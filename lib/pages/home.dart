@@ -185,10 +185,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
-  Future<ubicacionModelo> registrarUbicacion(String nombreUsuario, double lat, double lng, String rutaId) async{
+  Future<ubicacionModelo> registrarUbicacion(String id, String nombreUsuario, double lat, double lng, String rutaId) async{
     var Url = "${globals.ipLocal}/ubicacion/nuevo";
     var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
     body:jsonEncode(<String , String>{
+      "_id" : id,
       "nombreUsuario" : nombreUsuario,
       "lat" : lat.toString(),
       "lng": lng.toString(),
@@ -220,28 +221,35 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   ubicacionModelo ubicacion = new ubicacionModelo();
-  void cogerUbicacion() async{
+  void cogerUbicacion(AsyncSnapshot snapshot) async{
     ubicacionUsuario = await _localizacionUsuario();
     double latitude = ubicacionUsuario.latitude;
     double longitud = ubicacionUsuario.longitude;
     String nombreUsuario = globals.usuario;
 
-    ubicacionModelo ubicaciones = await registrarUbicacion(nombreUsuario, latitude, longitud, globals.idRuta);
+    for(int i=0;i<snapshot.data.length;i++){
+      if(snapshot.data[i].usuario == globals.usuario){
+        globals.idUsuario = snapshot.data[i].id;
+      }
+    }
+    ubicacionModelo ubicaciones = await registrarUbicacion(globals.idUsuario, nombreUsuario, latitude, longitud, globals.idRuta);
     setState(() {
         ubicacion = ubicaciones;
     });
   }
 
-   void devovlerUbicacionId(AsyncSnapshot snapshot){
-   
-  }
 
   ubicacionModelo ubicacion2 = new ubicacionModelo();
   void actualizarUbicacionUsuario(AsyncSnapshot snapshot) async{
     ubicacionModelo ubi = new ubicacionModelo();
     ubicacionUsuario = await _localizacionUsuario();
 
-    ubi.id =  globals.idUbicacion;
+    for(int i=0;i<snapshot.data.length;i++){
+      if(snapshot.data[i].usuario == globals.usuario){
+        globals.idUsuario = snapshot.data[i].id;
+      }
+    }
+    ubi.id =  globals.idUsuario;
     ubi.nombreUsuario = globals.usuario;
     ubi.lat = ubicacionUsuario.latitude;
     ubi.lng = ubicacionUsuario.longitude;
@@ -656,40 +664,60 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
       leading: FutureBuilder(
-        future: getUsuarios(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if(!snapshot.hasData){
-            return Center(child: CircularProgressIndicator(strokeWidth: 2),
-          );
-          }else{
-            for(int i=0; i<snapshot.data.length; i++)
-              if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                  globals.existeAvatar = true;
-                    break;
-              }else{
-                  globals.existeAvatar = false;
-              }
-            return Center(
-              child: Container(
-                child: Stack(
-                  children: <Widget>[
-                    CircleAvatar(
-                      radius: 22.0,
-                      backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                      child: CircleAvatar(
-                        radius: 20.0,
-                        backgroundImage: globals.existeAvatar
-                        ? AssetImage("images/perfil.png") 
-                        : FileImage(File(globals.avatar))
-                      )            
-                    ),
-                  ],
-                )
-              ),
+         future: getRutasData(),
+          builder: (BuildContext context, AsyncSnapshot snapshot2){
+            if(!snapshot2.hasData){
+              return Center(child: CircularProgressIndicator(strokeWidth: 2));             
+            }else{ 
+              
+          return FutureBuilder(
+          future: getUsuarios(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if(!snapshot.hasData){
+              return Center(child: CircularProgressIndicator(strokeWidth: 2),
             );
+            }else{
+               if(contador == 0){
+                devolverLista(snapshot2);
+                devolverLista2(snapshot2);
+                _setMarkers();
+                cogerUbicacion(snapshot);  
+                contador++;
+              }
+              Timer.periodic(new Duration(seconds: 5), (timer) {
+                actualizarUbicacionUsuario(snapshot);
+              });
+              for(int i=0; i<snapshot.data.length; i++)
+                if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                    globals.existeAvatar = true;
+                      break;
+                }else{
+                    globals.existeAvatar = false;
+                }
+              return Center(
+                child: Container(
+                  child: Stack(
+                    children: <Widget>[
+                      CircleAvatar(
+                        radius: 22.0,
+                        backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                        child: CircleAvatar(
+                          radius: 20.0,
+                          backgroundImage: globals.existeAvatar
+                          ? AssetImage("images/perfil.png") 
+                          : FileImage(File(globals.avatar))
+                        )            
+                      ),
+                    ],
+                  )
+                ),
+              );
+            }
+            }
+          );
+            }
           }
-          }
-        ),       
+      ),       
         automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
@@ -761,40 +789,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 builder: ( _ , state) => crearMapa(state) //LLAMO A LA FUNCION DEL MAPA
               ),
             ),
-            FutureBuilder(
-                future: getRutasData(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                   if(!snapshot.hasData){
-                return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-                  }else{ 
-                    if(contador == 0){
-                      devolverLista(snapshot);
-                      devolverLista2(snapshot);
-                      _setMarkers();
-                      cogerUbicacion(); 
-                      contador++;
-                    }
-                  FutureBuilder(
-                    future: getUbicaciones(),
-                    // ignore: missing_return
-                    builder: (BuildContext context, AsyncSnapshot snapshot7) {
-                      if(!snapshot7.hasData){
-                      return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-                        }else{ 
-                          print("EEEE");
-                           for(int i=0;i<snapshot7.data.length; i++){
-                              if(snapshot7.data[i].rutaId == globals.idRuta && snapshot7.data[i].nombreUsuario == globals.usuario){
-                                
-                                globals.idUbicacion = snapshot7.data[i].id;
-                              }
-                            }
-                          }
-                    }
-                  );
-                  // Timer.periodic(new Duration(seconds: 5), (timer) {
-                  //   actualizarUbicacionUsuario(snapshot);
-                  // });
-              return Column( //COLOCACION DE TODOS LOS BOTONES
+            Column( //COLOCACION DE TODOS LOS BOTONES
                 children: <Widget>[
                   Visibility(
                     visible: _isVisible1,
@@ -2654,10 +2649,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                   BtnSeguirUbicacion(),
                   BtnUbicacion(),
                 ],
-              );
-              }
-              },
-            ),
+              ) 
           ]
         ),
       ],

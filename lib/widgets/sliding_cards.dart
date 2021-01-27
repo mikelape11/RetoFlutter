@@ -31,7 +31,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
       rutas.distancia = n["distancia"];
       rutas.tiempo = n["tiempo"];
       ruta.add(rutas);
-      globals.id = n["id"]; 
+      globals.id = n["_id"]; 
     }
     return ruta;
   });
