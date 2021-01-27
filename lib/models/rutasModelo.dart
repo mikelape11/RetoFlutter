@@ -28,7 +28,7 @@ class rutasModelo{
       List<rutasLocalizacionModelo> lista2 = list2.map((i) => rutasLocalizacionModelo.fromJson(i)).toList();
 
    return rutasModelo(
-    id: json["id"],
+    id: json["_id"],
     nombre: json["nombre"],
     ciudad: json["ciudad"],
     imagen: json["imagen"],
@@ -41,7 +41,7 @@ class rutasModelo{
   }
 
   Map<String,dynamic> toJson()=>{
-    "id": id,
+    "_id": id,
     "nombre": nombre,
     "ciudad": ciudad,
     "imagen": imagen,
