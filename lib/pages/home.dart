@@ -61,6 +61,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   final Set<Polyline> _polyline = {};
   List<LatLng> listaRutas = List();
   List<LatLng> listaMarkers = List();
+  List<LatLng> listaUbicaciones = List();
   List<int> posicionesPreguntas = [];
   List<String> preguntas = [];
   int puntuacionTotal = 0;
@@ -238,6 +239,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     });
   }
 
+  
+
 
   ubicacionModelo ubicacion2 = new ubicacionModelo();
   void actualizarUbicacionUsuario(AsyncSnapshot snapshot) async{
@@ -260,7 +263,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     });  
   }
 
-
+  Future<List<LatLng>> devolverUbicacionesUsuarios(AsyncSnapshot snapshot) async{
+    List<double> rutasLat = [];
+    List<double> rutasLng = [];
+    for(int n=0; n<snapshot.data.length;n++){
+      if(snapshot.data[n].rutaId == globals.idRuta && snapshot.data[n].nombreUsuario != globals.usuario){
+          rutasLat.add(snapshot.data[n].lat);
+          rutasLng.add(snapshot.data[n].lng);
+      }   
+    }  
+    for(int m=0;m<rutasLat.length;m++){
+      LatLng data$m = LatLng(rutasLat[m], rutasLng[m]);
+      listaUbicaciones.add(data$m);
+    }
+    return listaUbicaciones;
+  }
  
   
   Future<void> _distanceFromCircle() async {
@@ -337,13 +354,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         position: listaMarkers[i],
         consumeTapEvents: false));
       }
+      for(int i=0; i<listaUbicaciones.length;i++){
       _markers.add(Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueGreen
         ),
-        markerId: MarkerId("8"),
-        position: LatLng(43.34375199175272, -1.7966263267918796),
+        markerId: MarkerId("e${i}"),
+        position: listaUbicaciones[i],
         consumeTapEvents: false));
+      }
     });
   }
 
@@ -665,55 +684,65 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       appBar: AppBar(
       leading: FutureBuilder(
          future: getRutasData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot2){
+        builder: (BuildContext context, AsyncSnapshot snapshot2){
             if(!snapshot2.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
               
           return FutureBuilder(
-          future: getUsuarios(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(!snapshot.hasData){
-              return Center(child: CircularProgressIndicator(strokeWidth: 2),
-            );
-            }else{
-               if(contador == 0){
-                devolverLista(snapshot2);
-                devolverLista2(snapshot2);
-                _setMarkers();
-                cogerUbicacion(snapshot);  
-                contador++;
-              }
-              Timer.periodic(new Duration(seconds: 5), (timer) {
-                actualizarUbicacionUsuario(snapshot);
-              });
-              for(int i=0; i<snapshot.data.length; i++)
-                if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                    globals.existeAvatar = true;
-                      break;
-                }else{
-                    globals.existeAvatar = false;
-                }
-              return Center(
-                child: Container(
-                  child: Stack(
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 22.0,
-                        backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                        child: CircleAvatar(
-                          radius: 20.0,
-                          backgroundImage: globals.existeAvatar
-                          ? AssetImage("images/perfil.png") 
-                          : FileImage(File(globals.avatar))
-                        )            
-                      ),
-                    ],
-                  )
-                ),
+          future: getUbicaciones(),
+          builder: (BuildContext context, AsyncSnapshot snapshot3){
+             if(!snapshot3.hasData){
+              return Center(child: CircularProgressIndicator(strokeWidth: 2));             
+            }else{ 
+            return FutureBuilder(
+            future: getUsuarios(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if(!snapshot.hasData){
+                return Center(child: CircularProgressIndicator(strokeWidth: 2),
               );
+              }else{
+                 if(contador == 0){
+                  devolverLista(snapshot2);
+                  devolverLista2(snapshot2);
+                  devolverUbicacionesUsuarios(snapshot3);
+                  _setMarkers();
+                  cogerUbicacion(snapshot);  
+                  contador++;
+                }
+                Timer.periodic(new Duration(seconds: 5), (timer) {
+                  actualizarUbicacionUsuario(snapshot);
+                });
+                for(int i=0; i<snapshot.data.length; i++)
+                  if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                      globals.existeAvatar = true;
+                        break;
+                  }else{
+                      globals.existeAvatar = false;
+                  }
+                return Center(
+                  child: Container(
+                    child: Stack(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 22.0,
+                          backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                          child: CircleAvatar(
+                            radius: 20.0,
+                            backgroundImage: globals.existeAvatar
+                            ? AssetImage("images/perfil.png") 
+                            : FileImage(File(globals.avatar))
+                          )            
+                        ),
+                      ],
+                    )
+                  ),
+                );
+              }
+              }
+            );
             }
-            }
+          }
           );
             }
           }
