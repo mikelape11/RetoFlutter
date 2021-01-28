@@ -49,6 +49,17 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
     body: jsonEncode(usuario));
   }
 
+  Future<http.Response> deleteUbicacion(String nombreUsuario) async {
+   final http.Response response = await http.delete(
+    "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+    return response;
+  }
+
   usuarioModelo usuario;
   Future<List<usuarioModelo>> usuarios;
   TextEditingController firstController = TextEditingController(text: "${globals.usuario}");
@@ -566,7 +577,8 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       child: Text('VOLVER AL MENÚ', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
-                         Navigator.of(context).push(MaterialPageRoute(
+                        deleteUbicacion(globals.usuario);
+                        Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MenuRuta(),
                         ));
                       },
@@ -580,6 +592,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
+                        deleteUbicacion(globals.usuario);
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LoginPage(),
                         ));

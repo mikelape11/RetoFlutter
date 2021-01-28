@@ -140,8 +140,9 @@ class _PortadaPageState extends State<PortadaPage> with WidgetsBindingObserver{
               Container( //BOTON EMPEZAR
                 margin: EdgeInsets.only(right: 10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.cyanAccent, width: 4),
+                    border: Border.all(color: Colors.grey[200], width: 4),
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    color: Colors.cyan[700],
                   ),
                 child: MaterialButton(                
                   child: Text('EMPEZAR', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
