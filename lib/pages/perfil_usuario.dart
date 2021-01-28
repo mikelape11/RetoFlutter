@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reto/models/usuarioModelo.dart';
-
 import 'package:reto/pages/home.dart';
 import 'package:reto/pages/login.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
