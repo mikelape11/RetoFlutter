@@ -13,6 +13,7 @@ import 'package:reto/theme/theme.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
+import 'package:reto/pages/login.dart';
 
 class rankingPage extends StatefulWidget {
   rankingPage({Key key}) : super(key: key);
@@ -74,52 +75,14 @@ class _rankingPageState extends State<rankingPage> {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     return new Scaffold(
       appBar: AppBar(
-        leading: FutureBuilder(
-          future: getRutasData(),
-          builder: (BuildContext context, AsyncSnapshot snapshot2){
-            if(!snapshot2.hasData){
-              return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-            }else{ 
-              return FutureBuilder(
-                future: getUsuarios(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if(!snapshot.hasData){
-                    return Container(
-                    height: 600,
-                    child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                  );
-                  }else{
-                    for(int i=0; i<snapshot.data.length; i++)
-                      if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                          globals.existeAvatar = true;
-                            break;
-                      }else{
-                          globals.existeAvatar = false;
-                      }
-                    return Center(
-                      child: Container(
-                        child: Stack(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 22.0,
-                              backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                              child: CircleAvatar(
-                                radius: 20.0,
-                                backgroundImage: globals.existeAvatar
-                                ? AssetImage("images/perfil.png") 
-                                : FileImage(File(globals.avatar))
-                              )            
-                            ),
-                          ],
-                        )
-                      ),
-                    );
-                  }
-                }
-              );
+        leading:  IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => MenuRuta(),
+              ));
             }
-          }
-        ),       
+          ),
         automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
@@ -131,11 +94,12 @@ class _rankingPageState extends State<rankingPage> {
               setState(() {});
             },
           ),
+         
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.login_outlined),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => MenuRuta(),
+                builder: (context) => LoginPage(),
               ));
             }
           ),

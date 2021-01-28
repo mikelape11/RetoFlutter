@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:reto/models/usuarioModelo.dart';
-
 import 'package:reto/pages/home.dart';
 import 'package:reto/pages/login.dart';
 import 'package:reto/widgets/custom_alert_dialog.dart';
@@ -47,6 +46,17 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
     var Url = "${globals.ipLocal}/usuarios/actualizar";
     var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
     body: jsonEncode(usuario));
+  }
+
+   Future<http.Response> deleteUbicacion1(String nombreUsuario) async {
+   final http.Response response = await http.delete(
+    "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+    return response;
   }
 
   usuarioModelo usuario;
@@ -565,7 +575,8 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       color: Colors.cyan,
                       child: Text('VOLVER AL MENÚ', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onPressed: (){
+                      onPressed: () async{
+                        deleteUbicacion1(globals.usuario);
                          Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => MenuRuta(),
                         ));
@@ -580,6 +591,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                       child: Text('CERRAR SESIÓN', style: TextStyle(fontSize: 16),),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       onPressed: (){
+                        deleteUbicacion1(globals.usuario);
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => LoginPage(),
                         ));
