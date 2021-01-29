@@ -18,10 +18,3 @@ String idRanking = "";
 String idUsuario = "";
 String idUbicacion = "";
 
-bool isVisible1 = false;
-bool isVisible2 = false;
-bool isVisible3 = false;
-bool isVisible4 = false;
-bool isVisible5 = false;
-bool isVisible6 = false;
-bool isVisible7 = false;

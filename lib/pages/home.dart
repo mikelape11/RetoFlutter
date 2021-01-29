@@ -93,6 +93,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Future<List<usuarioModelo>> _usuarios;
   Future<List<rankingModelo>> _ranking;
 
+  bool markerVisible1 = false;
+  bool markerVisible2 = false;
+  bool markerVisible3 = false;
+  bool markerVisible4 = false;
+  bool markerVisible5 = false;
+  bool markerVisible6 = false;
+  bool markerVisible7 = false;
+
   @override
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
@@ -315,37 +323,36 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       // if ((distancia < 50) && (_isVisible1 == false) && (_isVisible2 == false) && (_isVisible3 == false) && (_isVisible4 == false) && (_isVisible5 == false) && (_isVisible6 == false) && (_isVisible7 == false)){
       if (distancia < 50) {
         if(circulo.circleId == CircleId("0")){
-          variableGlobal.isVisible1 = true;
-          _isVisible1 = true;
-          //print("HA LLEGADO");
+          markerVisible1 = true;
+          print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("1")){
-          _isVisible2 = true;
+          markerVisible2 = true;
           //print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("2")){
-          _isVisible3 = true;
+          markerVisible3 = true;
           //print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("3")){
-          _isVisible4 = true;
+          markerVisible4 = true;
           //print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("4")){
-          _isVisible5 = true;
+          markerVisible5 = true;
           //print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("5")){
-          _isVisible6 = true;
+          markerVisible6 = true;
           //print("HA LLEGADO");
         }else if(circulo.circleId == CircleId("6")){
-          _isVisible7 = true;
+          markerVisible7 = true;
           //print("HA LLEGADO");
         }       
         break;
       } else {
-          _isVisible1 = false;
-          _isVisible2 = false;
-          _isVisible3 = false;
-          _isVisible4 = false;
-          _isVisible5 = false;
-          _isVisible6 = false;
-          _isVisible7 = false;
+          markerVisible1 = false;
+          markerVisible2 = false;
+          markerVisible3 = false;
+          markerVisible4 = false;
+          markerVisible5 = false;
+          markerVisible6 = false;
+          markerVisible7 = false;
       }
     }
     //Timer.periodic(new Duration(seconds: 5), (timer) {
@@ -354,20 +361,61 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<void> _setMarkers() async {
-    String _iconImage = 'images/marker.png';
-    final bitmapIcon = await BitmapDescriptor.fromAsset(_iconImage);
+    // String _iconImage = 'images/interrogacion2.png';
+    // final bitmapIcon = await BitmapDescriptor.fromAssetImage(
+    //       ImageConfiguration(devicePixelRatio: 5), _iconImage);
+    
       for(int i=0; i<listaMarkers.length;i++){
         _circles.add(Circle(
           strokeWidth: 1,
           strokeColor: Colors.cyan,
           circleId: CircleId("${i}"),
           center: listaMarkers[i],
-          radius: 15,
+          radius: 15,       
         ));
       }  
       for(int i=0; i<listaMarkers.length;i++){
         guardarIdMarker = '${i}';
         _markers.add(Marker(
+        onTap: () {
+          if(markerVisible1){
+          setState(() {  
+            _isVisible1 = true;
+            });
+            print("kaka");
+          }else if(markerVisible2){
+          setState(() {  
+            _isVisible2 = true;
+            });
+            print("kaka");
+          }else if(markerVisible3){
+          setState(() {  
+            _isVisible3 = true;
+            });
+            print("kaka");
+          }else if(markerVisible4){
+          setState(() {  
+            _isVisible4 = true;
+            });
+            print("kaka");
+          }else if(markerVisible5){
+          setState(() {  
+            _isVisible5 = true;
+            });
+            print("kaka");
+          }else if(markerVisible6){
+          setState(() {  
+            _isVisible6 = true;
+            });
+            print("kaka");
+          }else if(markerVisible7){
+          setState(() {  
+            _isVisible7 = true;
+            });
+            print("kaka");
+          }
+        },
+        //visible: markerVisible1,
         //icon: bitmapIcon,
         icon: BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueCyan
@@ -923,7 +971,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       onPressed: () async {
                                                       
                                                           if(opcion1 == 1){
-                                                            _isVisible1 = false;
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
                                                             aciertos++;  
@@ -936,10 +983,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                               
-                                                              ranking = rankings as List<rankingModelo>;
-                                                     
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                              
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });                                                                                                              
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -953,10 +1001,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                          
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
                                                             ranking = rankings as List<rankingModelo>;
-                                                         
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });                                                        
                                                           }
                                                                                                                                                    
                                                       },
@@ -993,7 +1042,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
                                                             aciertos++;
-                                                            _isVisible1 = false; 
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
                                                             rank.puntos = puntuacionTotal;
@@ -1003,9 +1051,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1020,9 +1070,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                          
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });
                                                         
                                                           }
                                                   
@@ -1060,7 +1112,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
                                                             aciertos++;
-                                                            _isVisible1 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
                                                             rank.puntos = puntuacionTotal;
@@ -1070,9 +1121,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                     
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                   
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1087,9 +1140,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                    
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });
                                                         
                                                           }
                                                        
@@ -1199,9 +1254,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                         
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                           
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1216,9 +1273,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                         
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                          
                                                           }
                                                       
@@ -1264,9 +1323,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                          
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
@@ -1281,9 +1342,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                        
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                         
                                                           }
                                                      
@@ -1329,9 +1392,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                    
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1346,9 +1411,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible2 = false;
+                                                            });
                                                           
                                                           }
                                                      
@@ -1459,10 +1526,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                              ranking = rankings as List<rankingModelo>;
-                                                          
+                                                            ranking = rankings as List<rankingModelo>;                                                         
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });
                                                           }else{
-                                                           print("RESPUESTA INCORRECTA");
+                                                            print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
                                                             fallos++;
                                                             rankingModelo rank = new rankingModelo();
@@ -1474,10 +1543,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                            
-                                                              ranking = rankings as List<rankingModelo>;
-                                                        
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                          
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });                                                      
                                                           }
                                                       
                                                       },
@@ -1522,9 +1592,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                      
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                 
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1539,9 +1611,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                           
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                          
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });
                                                        
                                                           }
                                                      
@@ -1588,9 +1662,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1605,9 +1681,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible3 = false;
+                                                            });
                                                         
                                                           }
                                                       
@@ -1717,9 +1795,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                      
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1734,9 +1814,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                    
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                   
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                          
                                                           }
                                                        
@@ -1782,9 +1864,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                          
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                        
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
@@ -1799,9 +1883,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                        
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                        
                                                           }
                                                   
@@ -1848,9 +1934,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                         
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1865,9 +1953,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                     
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible4 = false;
+                                                            });
                                                       
                                                           }
                                                    
@@ -1978,9 +2068,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                      
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
@@ -1995,9 +2087,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                         
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                       
                                                           }
                                                  
@@ -2043,9 +2137,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                 
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -2060,9 +2156,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                        
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                          
                                                           }
                                                       
@@ -2108,9 +2206,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                      
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                    
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -2125,9 +2225,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                        
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible5 = false;
+                                                            });
                                                         
                                                           }
                                                       
@@ -2228,7 +2330,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
                                                             aciertos++;
-                                                            _isVisible6 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
                                                             rank.puntos = puntuacionTotal;
@@ -2239,7 +2340,10 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible6 = false;
+                                                            });
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -2254,9 +2358,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                        
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible6 = false;
+                                                            });
                                                           
                                                           }
                                                       
@@ -2303,9 +2409,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                  
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                 
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible6 = false;
+                                                            });
                                                            
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
@@ -2320,9 +2428,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible6 = false;
+                                                            });
                                                        
                                                           }
                                                     
@@ -2369,9 +2479,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                    
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                    
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible6 = false;
+                                                            });
                                                         
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -2386,9 +2498,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                       
-                                                              ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                              _isVisible1 = false;
+                                                            });
                                                       
                                                           }
                                                     
@@ -2505,6 +2619,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2524,6 +2641,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }
                                                       
                                                       },
@@ -2575,6 +2695,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2594,6 +2717,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }
                                                        
                                                       },
@@ -2645,6 +2771,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2664,6 +2793,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
+                                                            setState(() {
+                                                              _isVisible7 = false;
+                                                            });
                                                           }
                                                        
                                                       },
