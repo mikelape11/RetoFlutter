@@ -37,6 +37,8 @@ import 'package:dash_chat/dash_chat.dart';
 import 'package:http/http.dart' as http;
 import 'package:reto/globals/globals.dart' as globals;
 
+import 'perfil_usuario.dart';
+
 class HomePage extends StatefulWidget {
 
   //PANTALLA HOME
@@ -86,12 +88,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Position ubicacionUsuario;
   var variableGlobal;
 
-  Future<List<usuarioModelo>> _avatar;
-  Future<List<rutasModelo>> _rutasData;
-  Future<List<preguntasModelo>> _preguntas;
-  Future<List<ubicacionModelo>> _ubicaciones;
-  Future<List<usuarioModelo>> _usuarios;
-  Future<List<rankingModelo>> _ranking;
 
   bool markerVisible1 = false;
   bool markerVisible2 = false;
@@ -105,12 +101,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-    _avatar = getAvatar();
-    _rutasData= getRutasData();
-    _preguntas = getPreguntas();
-    _ubicaciones = getUbicaciones();
-    _usuarios = getUsuarios();
-    _ranking = getRanking();
+  
     _distanceFromCircle();
     super.initState();
   }
@@ -754,21 +745,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
       leading: FutureBuilder(
-        future: _rutasData,
+        future: getRutasData(),
         builder: (BuildContext context, AsyncSnapshot snapshot2){
             if(!snapshot2.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
               print("HOLA 1");
           return FutureBuilder(
-          future: _ubicaciones,
+          future: getUbicaciones(),
           builder: (BuildContext context, AsyncSnapshot snapshot3){
              if(!snapshot3.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
                print("HOLA 2");
             return FutureBuilder(
-            future: _usuarios,
+            future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if(!snapshot.hasData){
                 return Center(child: CircularProgressIndicator(strokeWidth: 2),
@@ -880,8 +871,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  // Future<List<preguntasModelo>> _preguntas;
-  // Future<List<rankingModelo>> _ranking;
+  // Future<List<preguntasModelo>> getPreguntas();
+  // Future<List<rankingModelo>> getRanking();
 
   List<Widget> _widgetOptions() => [
     Column( //PANTALLA MAPA
@@ -920,7 +911,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){    
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -951,7 +942,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) {  
                                                   if(!snapshot4.hasData){    
                                                     return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -961,15 +952,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         globals.idRanking = snapshot4.data[i].id;
                                                       }
                                                     } 
-                                                  
                                                   return Container( //Respuesta1
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                      
+                                                      onPressed: () {
+                                                      setState(() async {
                                                           if(opcion1 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -984,10 +974,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                              
-                                                            ranking = rankings as List<rankingModelo>;
-                                                            setState(() {
+                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible1 = false;
-                                                            });                                                                                                              
+                                                            }); 
+                                                                                                                                                                         
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -1002,14 +993,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                           setState(() {
                                                             ranking = rankings as List<rankingModelo>;
-                                                            setState(() {
-                                                              _isVisible1 = false;
-                                                            });                                                        
+                                                          });
+                                                            _isVisible1 = false;
+                                                                                                                  
                                                           }
                                                                                                                                                    
                                                       },
-                                                    )
+                                                    );
+                                                      })
                                                   );
                                                 }
                                                 }
@@ -1018,7 +1011,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1036,8 +1029,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas1[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                        
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion1 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1051,11 +1044,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                            rankingModelo rankings = await actualizarRanking(rank);  
+                                                            setState(() {                                                     
                                                             ranking = rankings as List<rankingModelo>;
-                                                            setState(() {
                                                               _isVisible1 = false;
                                                             });
+                                                           
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
@@ -1071,13 +1065,13 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible1 = false;
                                                             });
                                                         
                                                           }
-                                                  
+                                                        });
                                                       },
                                                     )
                                                   );
@@ -1089,7 +1083,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1106,8 +1100,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas1[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                   
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion1 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1122,8 +1116,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                   
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible1 = false;
                                                             });
                                                        
@@ -1141,14 +1135,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible1 = false;
                                                             });
                                                         
                                                           }
-                                                       
+                                                        });
                                                       },
+                                                        
                                                     )
                                                   );
                                                    }
@@ -1192,7 +1187,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){   
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));          
@@ -1222,7 +1217,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1239,7 +1234,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion2 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1274,15 +1270,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible2 = false;
                                                             });
                                                          
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -1291,7 +1288,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                               FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1308,7 +1305,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas2[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion2 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1324,8 +1322,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                       
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible2 = false;
                                                             });
                                                          
@@ -1343,15 +1341,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible2 = false;
                                                             });
                                                         
                                                           }
                                                      
                                                       },
-                                                    )
+                                                    );
+                                                      })
                                                   );
                                                    }
                                                   }
@@ -1360,7 +1359,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1377,7 +1376,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas2[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion2 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1393,8 +1393,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible2 = false;
                                                             });
                                                        
@@ -1412,15 +1412,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                            ranking = rankings as List<rankingModelo>;
                                                               _isVisible2 = false;
                                                             });
                                                           
                                                           }
                                                      
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -1463,7 +1464,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){ 
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));            
@@ -1493,7 +1494,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1510,7 +1511,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas3[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion3 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1526,8 +1528,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                            ranking = rankings as List<rankingModelo>;                                                         
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;                                                         
                                                               _isVisible3 = false;
                                                             });
                                                           }else{
@@ -1544,14 +1546,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                          
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible3 = false;
                                                             });                                                      
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                      })
                                                   );
                                                    }
                                                   }
@@ -1560,7 +1563,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1577,7 +1580,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas3[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion3 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1593,8 +1597,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                 
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible3 = false;
                                                             });
                                                       
@@ -1612,15 +1616,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                          
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible3 = false;
                                                             });
                                                        
                                                           }
                                                      
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -1629,7 +1634,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                  FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1647,7 +1652,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () async {
-                                                    
+                                                        setState(() async {
                                                           if(opcion3 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1663,8 +1668,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible3 = false;
                                                             });
                                                       
@@ -1682,15 +1687,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible3 = false;
                                                             });
                                                         
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -1733,7 +1739,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){      
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));       
@@ -1763,7 +1769,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1780,7 +1786,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas4[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion4 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1796,8 +1803,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                          
@@ -1815,15 +1822,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                   
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                          
                                                           }
                                                        
                                                       },
-                                                    )
+                                                    );
+                                                      })
                                                   );
                                                    }
                                                   }
@@ -1832,7 +1840,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1849,7 +1857,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas4[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion4 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1865,8 +1874,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                        
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                          
@@ -1884,15 +1893,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                        
                                                           }
                                                   
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -1901,7 +1911,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -1918,8 +1928,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas4[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                   
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion4 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -1935,8 +1945,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                       
@@ -1954,15 +1964,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible4 = false;
                                                             });
                                                       
                                                           }
                                                    
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2005,7 +2016,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){  
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));           
@@ -2035,7 +2046,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2052,8 +2063,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas5[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                   
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion5 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2069,8 +2080,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                          
@@ -2088,15 +2099,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                       
                                                           }
                                                  
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2105,7 +2117,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2122,7 +2134,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas5[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion5 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2138,8 +2151,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                          
@@ -2157,15 +2170,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                          
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2174,7 +2188,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2191,7 +2205,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas5[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion5 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2207,8 +2222,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                    
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                          
@@ -2226,15 +2241,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible5 = false;
                                                             });
                                                         
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2277,7 +2293,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));             
@@ -2307,7 +2323,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2324,8 +2340,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas6[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                    
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion6 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2340,8 +2356,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible6 = false;
                                                             });
                                                        
@@ -2359,15 +2375,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible6 = false;
                                                             });
                                                           
                                                           }
                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2376,7 +2393,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2393,8 +2410,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas6[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                    
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion6 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2410,8 +2427,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                 
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible6 = false;
                                                             });
                                                            
@@ -2429,15 +2446,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible6 = false;
                                                             });
-                                                       
                                                           }
-                                                    
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2446,7 +2462,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                               FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2463,8 +2479,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas6[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                    
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion6 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2480,8 +2496,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                    
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible6 = false;
                                                             });
                                                         
@@ -2499,15 +2515,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
                                                               _isVisible1 = false;
                                                             });
                                                       
                                                           }
                                                     
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2550,7 +2567,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: _preguntas,
+                                      future: getPreguntas(),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){   
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));          
@@ -2580,7 +2597,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 10,
                                                 ),
                                                FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2597,8 +2614,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas7[0]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                 
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion7 == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2614,14 +2631,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                            ranking = rankings as List<rankingModelo>;
+                                                            setState(() {
+                                                               ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });
+                                                           
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
+                                                            
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2635,19 +2654,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);   
+                                                            setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });                                                  
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
-                                                            ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
-                                                          }
-                                                      
+                                                            ));   
+                                                          }                                                    
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2656,7 +2675,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                                 FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2673,8 +2692,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas7[1]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                               
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion7 == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2689,15 +2708,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);   
+                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });                                                   
+                                                           
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
+                                                           
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2711,19 +2732,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                    
-                                                            ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);   
+                                                             setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });                                                 
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
-                                                            ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
+                                                            ));                                                        
                                                           }
-                                                       
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2732,7 +2753,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                   height: 15,
                                                 ),
                                               FutureBuilder(
-                                                  future: _ranking,
+                                                  future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) { 
                                                     if(!snapshot4.hasData){    
                                                       return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -2749,8 +2770,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       child: Text('${respuestas7[2]}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                   
+                                                      onPressed: () {
+                                                        setState(() async {
                                                           if(opcion7 == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             puntuacionTotal = puntuacionTotal + 50;
@@ -2765,15 +2786,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.fallos = fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            ranking = rankings as List<rankingModelo>;
+                                                            rankingModelo rankings = await actualizarRanking(rank);  
+                                                              setState(() {
+                                                              ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });                                                
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
                                                             puntuacionTotal = puntuacionTotal - 25;
@@ -2788,18 +2809,20 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
-                                                            ranking = rankings as List<rankingModelo>;
+                                                             setState(() {
+                                                               ranking = rankings as List<rankingModelo>;
+                                                              _isVisible7 = false;
+                                                            });
                                                             deleteUbicacion(globals.usuario);
                                                             Navigator.of(context).push(MaterialPageRoute(
                                                               builder: (context) => FinalizarPage(),
                                                             ));
-                                                            setState(() {
-                                                              _isVisible7 = false;
-                                                            });
+                                                           
                                                           }
                                                        
                                                       },
-                                                    )
+                                                    );
+                                                    })
                                                   );
                                                    }
                                                   }
@@ -2885,7 +2908,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
           child: FutureBuilder(
-            future: _ranking,
+            future: getRanking(),
             builder: (BuildContext context, AsyncSnapshot snapshot5) {
               if(!snapshot2.hasData || !snapshot5.hasData){
                 return Center(child: CircularProgressIndicator(strokeWidth: 2),
