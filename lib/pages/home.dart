@@ -101,10 +101,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-  
+    globals.socket.listen((data) => escucharServer(utf8.decode(data)));
     _distanceFromCircle();
     super.initState();
   }
+
+  void escucharServer(json){
+    var datos = jsonDecode(json);
+    print(datos);
+    globals.mensajes.insert(0,datos["value"]);
+    print(globals.mensajes);
+  }
+
+  
 
   Future<List<rankingModelo>> getRanking() async {
     var data = await http.get('${globals.ipLocal}/ranking/ordenado');
@@ -738,6 +747,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   @override
   Widget build(BuildContext context) {
+    
     variableGlobal = Provider.of<DatosGlobales>(context);
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
     final List<Widget> children = _widgetOptions(); //LA FUNCION PARA LA NAVEGACION DE LA PANTALLA HOME(CHAT, MAPA, RANKING)
@@ -750,14 +760,14 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             if(!snapshot2.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
-              print("HOLA 1");
+              //print("HOLA 1");
           return FutureBuilder(
           future: getUbicaciones(),
           builder: (BuildContext context, AsyncSnapshot snapshot3){
              if(!snapshot3.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
-               print("HOLA 2");
+               //print("HOLA 2");
             return FutureBuilder(
             future: getUsuarios(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -765,7 +775,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 return Center(child: CircularProgressIndicator(strokeWidth: 2),
               );
               }else{
-                 print("HOLA 3");
+                 //print("HOLA 3");
                  if(contador == 0){
                   devolverLista(snapshot2);
                   devolverLista2(snapshot2);
@@ -2859,11 +2869,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           children: <Widget>[
             Container( 
               child: DashChat(
-                // messageDecorationBuilder: (ChatMessage msg, bool isUser) {
-                //   return BoxDecoration(
-                //     color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.white70 : Colors.black87
-                //   );
-                // },
                 messageContainerDecoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
@@ -2880,19 +2885,25 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                   // avatar:
                   //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
                 ),
-                messages: mensajes,
-                // messages: [ ChatMessage(
-                //   text: "Hello",
-                //   user: ChatUser(
-                //     containerColor: Colors.cyan,
-                //     name: "Fayeed",
-                //     uid: "123456789",
-                //     avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                //   ),
-                //   createdAt: DateTime.now(),
-                // )],
+                // messages: mensajes,
+                messages: [ ChatMessage(
+                  text: "Hello",
+                  user: ChatUser(
+                    containerColor: Colors.cyan,
+                    name: "Fayeed",
+                    uid: "123456789",
+                    avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+                  ),
+                  createdAt: DateTime.now(),
+                )],
                 onSend: (ChatMessage) {
+                  var mensajeUsuario = Map();
+                  mensajeUsuario["action"] = "login";
+                  mensajeUsuario["from"] = globals.usuario;
+                  mensajeUsuario["route"] = globals.idRuta;
+                  mensajeUsuario["value"] = ChatMessage.text;
                   mensajes.add(ChatMessage);
+                  globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
                 },
               ),
             ),

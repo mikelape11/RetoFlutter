@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:reto/globals/globals.dart';
 import 'package:reto/models/rankingModelo.dart';
 import 'package:reto/pages/home.dart';
 import 'package:reto/globals/globals.dart' as globals;
@@ -169,6 +171,15 @@ class __CardContentState extends State<_CardContent> {
                     borderRadius: BorderRadius.circular(32),
                   ),
                   onPressed: () async{
+                    Socket.connect(globals.ipChat, globals.puerto).then((miSocket){
+                      globals.socket = miSocket;
+                      print(miSocket.remoteAddress.address);
+                      var login = Map();
+                      login["action"] = "login";
+                      login["user"] = globals.usuario;
+                      login["route"] = globals.idRuta;
+                      globals.socket?.write("${jsonEncode(login)}\n");
+                    });
                     for(int i=0; i<widget.snapshot.data.length; i++){
                       if(widget.id == i){
                         globals.idRuta = widget.snapshot.data[i].id;

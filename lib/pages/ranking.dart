@@ -70,6 +70,18 @@ class _rankingPageState extends State<rankingPage> {
   }
 
   
+  Future<http.Response> deleteUbicacion(String nombreUsuario) async {
+   final http.Response response = await http.delete(
+    "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+
+    return response;
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context); //PARA CAMBIAR EL TEMA
@@ -78,6 +90,7 @@ class _rankingPageState extends State<rankingPage> {
         leading:  IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
             icon: Icon(Icons.arrow_back),
             onPressed: () {
+              deleteUbicacion(globals.usuario);
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => MenuRuta(),
               ));
@@ -98,6 +111,7 @@ class _rankingPageState extends State<rankingPage> {
           IconButton( //ICONO PARA IR AL PERFIL DE USUARIO
             icon: Icon(Icons.login_outlined),
             onPressed: () {
+              deleteUbicacion(globals.usuario);
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => LoginPage(),
               ));

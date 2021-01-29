@@ -1,5 +1,7 @@
 library my_prj.globals;
 
+import 'dart:io';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 String id = "";
@@ -17,4 +19,9 @@ bool colorMarker = false;
 String idRanking = "";
 String idUsuario = "";
 String idUbicacion = "";
+
+String ipChat = "10.0.2.2";
+Socket socket;
+int puerto = 1234;
+var mensajes = List<String>();
 
