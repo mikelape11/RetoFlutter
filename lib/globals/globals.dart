@@ -2,6 +2,7 @@ library my_prj.globals;
 
 import 'dart:io';
 
+import 'package:dash_chat/dash_chat.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 String id = "";
@@ -20,8 +21,10 @@ String idRanking = "";
 String idUsuario = "";
 String idUbicacion = "";
 
+bool conectado = false;
 String ipChat = "10.0.2.2";
 Socket socket;
 int puerto = 1234;
-var mensajes = List<String>();
+var mensajes = List<ChatMessage>();
+
 

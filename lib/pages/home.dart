@@ -101,16 +101,35 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-    globals.socket.listen((data) => escucharServer(utf8.decode(data)));
+    print(globals.conectado);
+    if(!globals.conectado){
+      globals.socket.listen((data) => escucharServer(utf8.decode(data)));
+      globals.conectado = true;
+      print(globals.conectado);
+    }
     _distanceFromCircle();
     super.initState();
   }
 
+
+
   void escucharServer(json){
     var datos = jsonDecode(json);
     print(datos);
-    globals.mensajes.insert(0,datos["value"]);
+    setState(() {
+      globals.mensajes.add(ChatMessage(
+        buttons: [Text(datos["from"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
+        text: datos["value"], 
+        user: ChatUser(
+          //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
+          color: Colors.cyan,
+          name: datos["from"],
+          uid: datos["from"],
+        ) 
+      ));
+    });
     print(globals.mensajes);
+   
   }
 
   
@@ -2868,7 +2887,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container( 
-              child: DashChat(
+              child: DashChat(                
                 messageContainerDecoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
@@ -2878,31 +2897,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                   border: Border.all(color: Colors.cyan, width: 2),
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
-                height: MediaQuery.of(context).size.height/1.4,
+                height: MediaQuery.of(context).size.height/1.4,               
                 user: ChatUser( 
-                  name: "Jhon Doe",
-                  uid: "xxxxxxxxx",
+                  name: globals.usuario,
+                  uid: globals.idUsuario,
                   // avatar:
                   //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
                 ),
-                // messages: mensajes,
-                messages: [ ChatMessage(
-                  text: "Hello",
-                  user: ChatUser(
-                    containerColor: Colors.cyan,
-                    name: "Fayeed",
-                    uid: "123456789",
-                    avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                  ),
-                  createdAt: DateTime.now(),
-                )],
+                messages: globals.mensajes,      
                 onSend: (ChatMessage) {
                   var mensajeUsuario = Map();
                   mensajeUsuario["action"] = "login";
                   mensajeUsuario["from"] = globals.usuario;
                   mensajeUsuario["route"] = globals.idRuta;
                   mensajeUsuario["value"] = ChatMessage.text;
-                  mensajes.add(ChatMessage);
+                  globals.mensajes.add(ChatMessage);
                   globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
                 },
               ),
