@@ -317,7 +317,7 @@ class Registro extends State<RegistroPage>{
                                 }else{
                                   guardarRuta = savedImage.path;
                                 }
-                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "0", guardarRuta);
+                                usuarioModelo usuarios = await registrarUsuario(usuario, password, "1", guardarRuta);
                                 firstController.text = '';
                                 secondController.text = '';
                                 setState(() {

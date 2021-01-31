@@ -88,7 +88,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   Position ubicacionUsuario;
   var variableGlobal;
 
-
   bool markerVisible1 = false;
   bool markerVisible2 = false;
   bool markerVisible3 = false;
@@ -98,7 +97,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   bool markerVisible7 = false;
 
   @override
-  void initState() { //LLAMO A LA FUNCION DE INICIAR SEGUIMIENTO DEL USUARIO DEL MAPA
+  void initState() { 
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
     print(globals.conectado);
@@ -117,22 +116,21 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     var datos = jsonDecode(json);
     print(datos);
     setState(() {
-      globals.mensajes.add(ChatMessage(
-        buttons: [Text(datos["from"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
-        text: datos["value"], 
-        user: ChatUser(
-          //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
-          color: Colors.cyan,
-          name: datos["from"],
-          uid: datos["from"],
-        ) 
-      ));
+      //if(datos["route"] == globals.idRuta){
+        globals.mensajes.add(ChatMessage(
+          buttons: [Text(datos["from"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
+          text: datos["value"], 
+          user: ChatUser(
+            //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
+            color: Colors.cyan,
+            name: datos["from"],
+            uid: datos["from"],
+          ) 
+        ));
+      //}
     });
     print(globals.mensajes);
-   
   }
-
-  
 
   Future<List<rankingModelo>> getRanking() async {
     var data = await http.get('${globals.ipLocal}/ranking/ordenado');
@@ -383,7 +381,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     // String _iconImage = 'images/interrogacion2.png';
     // final bitmapIcon = await BitmapDescriptor.fromAssetImage(
     //       ImageConfiguration(devicePixelRatio: 5), _iconImage);
-    
+    setState(() {
       for(int i=0; i<listaMarkers.length;i++){
         _circles.add(Circle(
           strokeWidth: 1,
@@ -393,6 +391,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           radius: 15,       
         ));
       }  
+    
       for(int i=0; i<listaMarkers.length;i++){
         guardarIdMarker = '${i}';
         _markers.add(Marker(
@@ -443,6 +442,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         position: listaMarkers[i],
         consumeTapEvents: false));
       }
+    
       for(int i=0; i<listaUbicaciones.length;i++){
       _markers.add(Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(
@@ -452,6 +452,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         position: listaUbicaciones[i],
         consumeTapEvents: false));
       } 
+    });
   }
 
   Widget crearMapa(MiUbicacionState state){ //FUNCION DONDE CREO EL MAPA
@@ -798,8 +799,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                  if(contador == 0){
                   devolverLista(snapshot2);
                   devolverLista2(snapshot2);
-                  devolverUbicacionesUsuarios(snapshot3);
-                  _setMarkers();
+                  devolverUbicacionesUsuarios(snapshot3);  
+                  _setMarkers();                               
                   cogerUbicacion(snapshot);  
                   contador++;
                 }
@@ -2907,7 +2908,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 messages: globals.mensajes,      
                 onSend: (ChatMessage) {
                   var mensajeUsuario = Map();
-                  mensajeUsuario["action"] = "login";
+                  mensajeUsuario["action"] = "msg";
                   mensajeUsuario["from"] = globals.usuario;
                   mensajeUsuario["route"] = globals.idRuta;
                   mensajeUsuario["value"] = ChatMessage.text;

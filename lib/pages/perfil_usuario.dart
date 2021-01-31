@@ -490,7 +490,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                 usu.id = globals.id;
                                 usu.usuario = firstController.text;
                                 usu.password = lastController.text;
-                                usu.rol = "0";
+                                usu.rol = "1";
                                 if(savedImage == null){
                                     guardarRuta = "images/perfil.png";
                                 }else{
@@ -531,7 +531,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                       usu.id = globals.id;
                                       usu.usuario = firstController.text;
                                       usu.password = lastController.text;
-                                      usu.rol = "0";
+                                      usu.rol = "1";
                                       if(savedImage == null){
                                           guardarRuta = "images/perfil.png";
                                       }else{
