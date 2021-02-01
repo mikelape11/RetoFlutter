@@ -3101,19 +3101,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 239, left: 5),
                               child: Column(
                                 children: [
-                                      GestureDetector(
-                                          onTap: () {
-                                            detalles(context, listaRankingNombres[1], snapshot5);
-                                          },
-                                        child: Text(
-                                          '${listaRankingNombres[1]}',
-                                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Text(
-                                        '${listaRankingPuntos[1]}',
-                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      detalles(context, listaRankingNombres[1], snapshot5);
+                                    },
+                                    child: Text(
+                                      '${listaRankingNombres[1]}',
+                                      style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${listaRankingPuntos[1]}',
+                                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
                             ),
@@ -3125,20 +3125,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 249, left: 220),
                               child: Column(
                                 children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                            detalles(context, listaRankingNombres[2], snapshot5);
-                                          },
-                                        child: Text(
-                                          '${listaRankingNombres[2]}',
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-
-                                      Text(
-                                        '${listaRankingPuntos[2]}',
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                        detalles(context, listaRankingNombres[2], snapshot5);
+                                      },
+                                    child: Text(
+                                      '${listaRankingNombres[2]}',
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${listaRankingPuntos[2]}',
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
                             ),
@@ -3151,19 +3150,19 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                               margin: EdgeInsets.only(top: 219, left: 108),
                               child: Column(
                                 children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                            detalles(context, listaRankingNombres[0], snapshot5);
-                                          },
-                                        child: Text(
-                                          '${listaRankingNombres[0]}',
-                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Text(
-                                        '${listaRankingPuntos[0]}',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      detalles(context, listaRankingNombres[0], snapshot5);
+                                    },
+                                    child: Text(
+                                      '${listaRankingNombres[0]}',
+                                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${listaRankingPuntos[0]}',
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
                             ),         
