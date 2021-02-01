@@ -20,6 +20,9 @@ bool colorMarker = false;
 String idRanking = "";
 String idUsuario = "";
 String idUbicacion = "";
+int puntuacionTotal = 0;
+int aciertos = 0;
+int fallos = 0;
 
 bool conectado = false;
 String ipChat = "10.0.2.2";

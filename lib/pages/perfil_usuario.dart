@@ -14,6 +14,8 @@ import 'package:reto/globals/globals.dart' as globals;
 import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 
+import '../models/rankingModelo.dart';
+import '../models/rankingModelo.dart';
 import '../theme/theme.dart';
 import 'menu_ruta.dart';
 
@@ -48,6 +50,14 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
     body: jsonEncode(usuario));
   }
 
+
+  Future<rankingModelo> actualizarNombreRanking(rankingModelo ranking) async{
+    var Url = "${globals.ipLocal}/ranking/actualizar";
+    var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body: jsonEncode(ranking));
+  }
+
+
   Future<http.Response> deleteUbicacion(String nombreUsuario) async {
    final http.Response response = await http.delete(
     "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
@@ -60,6 +70,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
   }
 
   usuarioModelo usuario;
+  rankingModelo ranking;
   Future<List<usuarioModelo>> usuarios;
   TextEditingController firstController = TextEditingController(text: "${globals.usuario}");
   TextEditingController lastController = TextEditingController(text: "${globals.password}");
@@ -498,8 +509,20 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                 }
                                 usu.avatar = guardarRuta;
                                 usuarioModelo usuarios = await actualizarUsuario(usu);
+                                rankingModelo rank = new rankingModelo();
+                                print(globals.idRanking);
+                                rank.id = globals.idRanking;
+                                rank.puntos = globals.puntuacionTotal;
+                                rank.usuario_id = "1";
+                                rank.nombre = firstController.text;
+                                rank.aciertos = globals.aciertos;
+                                rank.fallos = globals.fallos;
+                                rank.tiempo = 0;
+                                rank.rutasId = globals.idRuta;
+                                rankingModelo rankings = await actualizarNombreRanking(rank);   
                                 setState(() {
                                   usuario = usuarios as String;
+                                  ranking = rankings;
                                 });
                                 Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => HomePage(),
@@ -539,8 +562,20 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                       }
                                       usu.avatar = guardarRuta;
                                       usuarioModelo usuarios = await actualizarUsuario(usu);
+                                      rankingModelo rank = new rankingModelo();
+                                      print(globals.idRanking);
+                                      rank.id = globals.idRanking;
+                                      rank.puntos = globals.puntuacionTotal;
+                                      rank.usuario_id = "1";
+                                      rank.nombre = firstController.text;
+                                      rank.aciertos = globals.aciertos;
+                                      rank.fallos = globals.fallos;
+                                      rank.tiempo = 0;
+                                      rank.rutasId = globals.idRuta;
+                                      rankingModelo rankings = await actualizarNombreRanking(rank); 
                                       setState(() {
                                         usuario = usuarios as String;
+                                        ranking = rankings;
                                       });
                                       Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) => HomePage(),

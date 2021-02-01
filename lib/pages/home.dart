@@ -67,9 +67,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<LatLng> listaUbicaciones = List();
   List<int> posicionesPreguntas = [];
   List<String> preguntas = [];
-  int puntuacionTotal = 0;
-  int aciertos = 0;
-  int fallos = 0;
+
   Position _currentPosition;
   List<int> posiciones;
   var guardarIdMarker = '';
@@ -101,36 +99,36 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
     print(globals.conectado);
-    if(!globals.conectado){
-      globals.socket.listen((data) => escucharServer(utf8.decode(data)));
-      globals.conectado = true;
-      print(globals.conectado);
-    }
+    // if(!globals.conectado){
+    //   globals.socket.listen((data) => escucharServer(utf8.decode(data)));
+    //   globals.conectado = true;
+    //   print(globals.conectado);
+    // }
     _distanceFromCircle();
     super.initState();
   }
 
 
 
-  void escucharServer(json){
-    var datos = jsonDecode(json);
-    print(datos);
-    setState(() {
-      //if(datos["route"] == globals.idRuta){
-        globals.mensajes.add(ChatMessage(
-          buttons: [Text(datos["from"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
-          text: datos["value"], 
-          user: ChatUser(
-            //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
-            color: Colors.cyan,
-            name: datos["from"],
-            uid: datos["from"],
-          ) 
-        ));
-      //}
-    });
-    print(globals.mensajes);
-  }
+  // void escucharServer(json){
+  //   var datos = jsonDecode(json);
+  //   print(datos);
+  //   setState(() {
+  //     //if(datos["route"] == globals.idRuta){
+  //       globals.mensajes.add(ChatMessage(
+  //         buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
+  //         text: datos["from"], 
+  //         user: ChatUser(
+  //           //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
+  //           color: Colors.cyan,
+  //           name: datos["from"],
+  //           uid: datos["from"],
+  //         ) 
+  //       ));
+  //     //}
+  //   });
+  //   print(globals.mensajes);
+  // }
 
   Future<List<rankingModelo>> getRanking() async {
     var data = await http.get('${globals.ipLocal}/ranking/ordenado');
@@ -143,8 +141,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       rankings.puntos = e["puntos"];
       rankings.usuario_id = e["usuario_id"];
       rankings.nombre = e["nombre"];
-      rankings.aciertos = e["aciertos"];
-      rankings.fallos = e["fallos"];
+      rankings.aciertos = e["globals.aciertos"];
+      rankings.fallos = e["globals.fallos"];
       rankings.tiempo = e["tiempo"];
       rankings.rutasId = e["rutasId"];
       ranking.add(rankings);
@@ -340,29 +338,37 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       // if ((distancia < 50) && (_isVisible1 == false) && (_isVisible2 == false) && (_isVisible3 == false) && (_isVisible4 == false) && (_isVisible5 == false) && (_isVisible6 == false) && (_isVisible7 == false)){
       if (distancia < 50) {
         if(circulo.circleId == CircleId("0")){
+      
           markerVisible1 = true;
-          print("HA LLEGADO");
+   
         }else if(circulo.circleId == CircleId("1")){
-          markerVisible2 = true;
-          //print("HA LLEGADO");
+         
+            markerVisible2 = true;
+    
         }else if(circulo.circleId == CircleId("2")){
-          markerVisible3 = true;
-          //print("HA LLEGADO");
+       
+            markerVisible3 = true;
+       
         }else if(circulo.circleId == CircleId("3")){
-          markerVisible4 = true;
-          //print("HA LLEGADO");
+          
+            markerVisible4 = true;
+         
         }else if(circulo.circleId == CircleId("4")){
-          markerVisible5 = true;
-          //print("HA LLEGADO");
+           markerVisible5 = true;
+      
         }else if(circulo.circleId == CircleId("5")){
-          markerVisible6 = true;
-          //print("HA LLEGADO");
+      
+            markerVisible6 = true;
+    
         }else if(circulo.circleId == CircleId("6")){
-          markerVisible7 = true;
-          //print("HA LLEGADO");
+            markerVisible7 = true;
+       
         }       
+      
+
         break;
       } else {
+
           markerVisible1 = false;
           markerVisible2 = false;
           markerVisible3 = false;
@@ -370,14 +376,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           markerVisible5 = false;
           markerVisible6 = false;
           markerVisible7 = false;
+      
       }
+
     }
     //Timer.periodic(new Duration(seconds: 5), (timer) {
       _distanceFromCircle();
     //});
   }
 
-  Future<void> _setMarkers() async {
+  void _setMarkers() async {
     // String _iconImage = 'images/interrogacion2.png';
     // final bitmapIcon = await BitmapDescriptor.fromAssetImage(
     //       ImageConfiguration(devicePixelRatio: 5), _iconImage);
@@ -400,37 +408,30 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           setState(() {  
             _isVisible1 = true;
             });
-            print("kaka");
           }else if(markerVisible2){
           setState(() {  
             _isVisible2 = true;
             });
-            print("kaka");
           }else if(markerVisible3){
           setState(() {  
             _isVisible3 = true;
             });
-            print("kaka");
           }else if(markerVisible4){
           setState(() {  
             _isVisible4 = true;
             });
-            print("kaka");
           }else if(markerVisible5){
           setState(() {  
             _isVisible5 = true;
             });
-            print("kaka");
           }else if(markerVisible6){
           setState(() {  
             _isVisible6 = true;
             });
-            print("kaka");
           }else if(markerVisible7){
           setState(() {  
             _isVisible7 = true;
             });
-            print("kaka");
           }
         },
         //visible: markerVisible1,
@@ -796,17 +797,20 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               );
               }else{
                  //print("HOLA 3");
+ 
                  if(contador == 0){
                   devolverLista(snapshot2);
                   devolverLista2(snapshot2);
-                  devolverUbicacionesUsuarios(snapshot3);  
-                  _setMarkers();                               
+                  devolverUbicacionesUsuarios(snapshot3);                            
                   cogerUbicacion(snapshot);  
+                  _setMarkers(); 
                   contador++;
                 }
+               
                 Timer.periodic(new Duration(seconds: 5), (timer) {
                   actualizarUbicacionUsuario(snapshot);
                 });
+              
                 for(int i=0; i<snapshot.data.length; i++)
                   if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
                       globals.existeAvatar = true;
@@ -880,12 +884,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       bottomNavigationBar: BottomNavigationBar( //LAS OPCIONES DEL BOTTOMNAVIGATIONBAR
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Mapa',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.chat),
             label: 'Chat',
+          ),
+                    BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Mapa',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.insert_chart_outlined),
@@ -905,7 +909,50 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   // Future<List<rankingModelo>> getRanking();
 
   List<Widget> _widgetOptions() => [
-    Column( //PANTALLA MAPA
+   //LAS OPCIONES DEL B
+    Center(
+      child: Container( //PANTALLA CHAT (POR HACER)
+        padding: EdgeInsets.all(25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container( 
+              child: DashChat(                
+                messageContainerDecoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
+                ),
+                inputContainerStyle: BoxDecoration(        
+                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                  border: Border.all(color: Colors.cyan, width: 2),
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                height: MediaQuery.of(context).size.height/1.4,               
+                user: ChatUser( 
+                  name: globals.usuario,
+                  uid: globals.idUsuario,
+                  // avatar:
+                  //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+                ),
+                messages: globals.mensajes,      
+                onSend: (ChatMessage) {
+                  var mensajeUsuario = Map();
+                  mensajeUsuario["action"] = "msg";
+                  mensajeUsuario["from"] = globals.usuario;
+                  mensajeUsuario["route"] = globals.idRuta;
+                  mensajeUsuario["value"] = ChatMessage.text;
+                  globals.mensajes.add(ChatMessage);
+                  globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
+                },
+              ),
+            ),
+            // messageListArea(), //EL CONTAINER DE LOS MENSAJES
+            // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
+          ],
+        )
+      ),
+    ),
+      Column( //PANTALLA MAPA
       children: [
         Stack( //ES COMO POSITION ABSOLUTE PARA COLOCAR LOS BOTONES
           children: <Widget>[
@@ -992,15 +1039,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       setState(() async {
                                                           if(opcion1 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;  
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;  
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                              
@@ -1011,15 +1058,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                                                                                                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
-                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.id = globals.idRanking;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
@@ -1063,15 +1110,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion1 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);  
@@ -1083,15 +1130,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
@@ -1134,15 +1181,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion1 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                   
@@ -1153,15 +1200,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
@@ -1268,16 +1315,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion2 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible2 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                       
@@ -1288,15 +1335,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                           
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -1339,16 +1386,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion2 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible2 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                       
@@ -1359,15 +1406,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -1410,16 +1457,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion2 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible2 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
@@ -1430,15 +1477,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -1545,16 +1592,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion3 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible3 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
@@ -1564,15 +1611,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             });
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                          
@@ -1614,16 +1661,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion3 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible3 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                 
@@ -1634,15 +1681,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                          
@@ -1685,16 +1732,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion3 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible3 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -1705,15 +1752,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -1820,16 +1867,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion4 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible4 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
@@ -1840,15 +1887,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                   
@@ -1891,16 +1938,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion4 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible4 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                        
@@ -1911,15 +1958,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -1962,16 +2009,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion4 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible4 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
@@ -1982,15 +2029,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                       
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -2097,16 +2144,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion5 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible5 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -2117,15 +2164,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                         
@@ -2168,16 +2215,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion5 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible5 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                
@@ -2188,15 +2235,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                  
@@ -2239,16 +2286,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion5 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible5 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                    
@@ -2259,15 +2306,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                          
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -2374,15 +2421,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion6 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
@@ -2393,15 +2440,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                        
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -2444,16 +2491,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion6 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible6 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                 
@@ -2464,15 +2511,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                            
                                                           }else{
                                                            print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                     
@@ -2513,16 +2560,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion6 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible6 = false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                    
@@ -2533,15 +2580,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
@@ -2648,16 +2695,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion7 == 1){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible7= false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
@@ -2673,15 +2720,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);   
@@ -2726,16 +2773,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion7 == 2){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible7= false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);   
@@ -2751,15 +2798,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                            
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);   
@@ -2804,16 +2851,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         setState(() async {
                                                           if(opcion7 == 3){
                                                             print("RESPUESTA CORRECTA");
-                                                            puntuacionTotal = puntuacionTotal + 50;
-                                                            aciertos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                            globals.aciertos++;
                                                             _isVisible7= false;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);  
@@ -2827,15 +2874,15 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             ));
                                                           }else{
                                                             print("RESPUESTA INCORRECTA");
-                                                            puntuacionTotal = puntuacionTotal - 25;
-                                                            fallos++;
+                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                            globals.fallos++;
                                                             rankingModelo rank = new rankingModelo();
                                                             rank.id = globals.idRanking;
-                                                            rank.puntos = puntuacionTotal;
+                                                            rank.puntos = globals.puntuacionTotal;
                                                             rank.usuario_id = "1";
                                                             rank.nombre = globals.usuario;
-                                                            rank.aciertos = aciertos;
-                                                            rank.fallos = fallos;
+                                                            rank.aciertos = globals.aciertos;
+                                                            rank.fallos = globals.fallos;
                                                             rank.tiempo = 0;
                                                             rank.rutasId = globals.idRuta;
                                                             rankingModelo rankings = await actualizarRanking(rank);
@@ -2880,48 +2927,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
           ]
         ),
       ],
-    ), //LAS OPCIONES DEL B
-    Center(
-      child: Container( //PANTALLA CHAT (POR HACER)
-        padding: EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container( 
-              child: DashChat(                
-                messageContainerDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
-                ),
-                inputContainerStyle: BoxDecoration(        
-                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
-                  border: Border.all(color: Colors.cyan, width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                ),
-                height: MediaQuery.of(context).size.height/1.4,               
-                user: ChatUser( 
-                  name: globals.usuario,
-                  uid: globals.idUsuario,
-                  // avatar:
-                  //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                ),
-                messages: globals.mensajes,      
-                onSend: (ChatMessage) {
-                  var mensajeUsuario = Map();
-                  mensajeUsuario["action"] = "msg";
-                  mensajeUsuario["from"] = globals.usuario;
-                  mensajeUsuario["route"] = globals.idRuta;
-                  mensajeUsuario["value"] = ChatMessage.text;
-                  globals.mensajes.add(ChatMessage);
-                  globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
-                },
-              ),
-            ),
-            // messageListArea(), //EL CONTAINER DE LOS MENSAJES
-            // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
-          ],
-        )
-      ),
     ),
     FutureBuilder(
       future: getUsuarios(),
@@ -2938,7 +2943,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 List<String> fotos = [];
                 List<int> listaRankingPuntos = [];
                 List<String> listaRankingNombres = [];
-
+                for(int i=0; i<snapshot5.data.length;i++){
+                  if(snapshot5.data[i].nombre == globals.usuario && snapshot5.data[i].rutasId == globals.idRuta){
+                    globals.idRanking = snapshot5.data[i].id;
+                  }
+                }  
               //guardar los puntos
                 for(int i=0; i<snapshot5.data.length;i++){
                   listaRankingPuntos.add(snapshot5.data[i].puntos);
@@ -3319,9 +3328,9 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                           Divider(height: 10),
                           Text('${snapshot.data[i].tiempo}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                           Divider(height: 10),
-                          Text('${snapshot.data[i].aciertos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Text('${globals.aciertos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                           Divider(height: 10),
-                          Text('${snapshot.data[i].fallos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                          Text('${globals.fallos}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                         ],
                       ),
                     ],
