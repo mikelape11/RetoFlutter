@@ -98,37 +98,38 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   void initState() { 
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-    print(globals.conectado);
-    // if(!globals.conectado){
-    //   globals.socket.listen((data) => escucharServer(utf8.decode(data)));
-    //   globals.conectado = true;
-    //   print(globals.conectado);
-    // }
+    iniciarServidor();
     _distanceFromCircle();
     super.initState();
   }
 
+  void iniciarServidor()async{
+    if(!globals.conectado){
+      await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
+      globals.conectado = true;
+    }
+  }
 
 
-  // void escucharServer(json){
-  //   var datos = jsonDecode(json);
-  //   print(datos);
-  //   setState(() {
-  //     //if(datos["route"] == globals.idRuta){
-  //       globals.mensajes.add(ChatMessage(
-  //         buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
-  //         text: datos["from"], 
-  //         user: ChatUser(
-  //           //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
-  //           color: Colors.cyan,
-  //           name: datos["from"],
-  //           uid: datos["from"],
-  //         ) 
-  //       ));
-  //     //}
-  //   });
-  //   print(globals.mensajes);
-  // }
+  void escucharServer(json){
+    var datos = jsonDecode(json);
+    print(datos);
+    setState(() {
+      //if(datos["route"] == globals.idRuta){
+        globals.mensajes.add(ChatMessage(
+          buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
+          text: datos["from"], 
+          user: ChatUser(
+            //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
+            color: Colors.cyan,
+            name: datos["from"],
+            uid: datos["from"],
+          ) 
+        ));
+      //}
+    });
+    print(globals.mensajes);
+  }
 
   Future<List<rankingModelo>> getRanking() async {
     var data = await http.get('${globals.ipLocal}/ranking/ordenado');
@@ -910,47 +911,62 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
 
   List<Widget> _widgetOptions() => [
    //LAS OPCIONES DEL B
-    Center(
-      child: Container( //PANTALLA CHAT (POR HACER)
-        padding: EdgeInsets.all(25),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container( 
-              child: DashChat(                
-                messageContainerDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
+    FutureBuilder(
+      future: getRanking(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {  
+        if(!snapshot.hasData){
+          return Center(child: CircularProgressIndicator(strokeWidth: 2));
+        }else{
+          for(int i=0; i<snapshot.data.length;i++){
+            if(snapshot.data[i].nombre == globals.usuario && snapshot.data[i].rutasId == globals.idRuta){
+              globals.idRanking = snapshot.data[i].id;
+            }
+          }
+          
+        return Center(
+        child: Container( //PANTALLA CHAT (POR HACER)
+          padding: EdgeInsets.all(25),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container( 
+                child: DashChat(                
+                  messageContainerDecoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
+                  ),
+                  inputContainerStyle: BoxDecoration(        
+                    color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                    border: Border.all(color: Colors.cyan, width: 2),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  height: MediaQuery.of(context).size.height/1.4,               
+                  user: ChatUser( 
+                    name: globals.usuario,
+                    uid: globals.idUsuario,
+                    // avatar:
+                    //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+                  ),
+                  messages: globals.mensajes,      
+                  onSend: (ChatMessage) {
+                    var mensajeUsuario = Map();
+                    mensajeUsuario["action"] = "msg";
+                    mensajeUsuario["from"] = globals.usuario;
+                    mensajeUsuario["route"] = globals.idRuta;
+                    mensajeUsuario["value"] = ChatMessage.text;
+                    globals.mensajes.add(ChatMessage);
+                    globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
+                  },
                 ),
-                inputContainerStyle: BoxDecoration(        
-                  color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
-                  border: Border.all(color: Colors.cyan, width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                ),
-                height: MediaQuery.of(context).size.height/1.4,               
-                user: ChatUser( 
-                  name: globals.usuario,
-                  uid: globals.idUsuario,
-                  // avatar:
-                  //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                ),
-                messages: globals.mensajes,      
-                onSend: (ChatMessage) {
-                  var mensajeUsuario = Map();
-                  mensajeUsuario["action"] = "msg";
-                  mensajeUsuario["from"] = globals.usuario;
-                  mensajeUsuario["route"] = globals.idRuta;
-                  mensajeUsuario["value"] = ChatMessage.text;
-                  globals.mensajes.add(ChatMessage);
-                  globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
-                },
               ),
-            ),
-            // messageListArea(), //EL CONTAINER DE LOS MENSAJES
-            // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
-          ],
-        )
-      ),
+              // messageListArea(), //EL CONTAINER DE LOS MENSAJES
+              // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
+            ],
+          )
+        ),
+      );
+        }
+      }
     ),
       Column( //PANTALLA MAPA
       children: [

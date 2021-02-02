@@ -108,7 +108,6 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
     }
 
     Future<void> takePhoto(ImageSource source) async{ //FUNCION PARA LA FOTO DE PERFIL
-     globals.existeAvatar = true;
       final pickedFile = await ImagePicker.pickImage(source: source, maxWidth: 600,);
 
       setState((){
@@ -503,10 +502,10 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                 usu.password = lastController.text;
                                 usu.rol = "1";
                                 if(savedImage == null){
-                                    guardarRuta = "images/perfil.png";
+                                    guardarRuta = globals.avatar;
                                 }else{
-                                  guardarRuta = savedImage.path;
-                                }
+                                    guardarRuta = savedImage.path;
+                                }  
                                 usu.avatar = guardarRuta;
                                 usuarioModelo usuarios = await actualizarUsuario(usu);
                                 rankingModelo rank = new rankingModelo();
@@ -556,7 +555,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
                                       usu.password = lastController.text;
                                       usu.rol = "1";
                                       if(savedImage == null){
-                                          guardarRuta = "images/perfil.png";
+                                        guardarRuta = globals.avatar;
                                       }else{
                                         guardarRuta = savedImage.path;
                                       }
