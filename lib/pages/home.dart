@@ -107,7 +107,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   void recibirMensaje() async{
-
       await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
       globals.conectado = true;
     
@@ -801,7 +800,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               );
               }else{
                  //print("HOLA 3");
- 
+                  
                  if(contador == 0){
                   devolverLista(snapshot2);
                   devolverLista2(snapshot2);
@@ -891,7 +890,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             icon: Icon(Icons.chat),
             label: 'Chat',
           ),
-                    BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Mapa',
           ),

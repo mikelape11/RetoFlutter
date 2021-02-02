@@ -15,7 +15,6 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 
 import '../models/rankingModelo.dart';
-import '../models/rankingModelo.dart';
 import '../theme/theme.dart';
 import 'menu_ruta.dart';
 
