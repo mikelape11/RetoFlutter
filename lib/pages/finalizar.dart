@@ -45,6 +45,7 @@ class Finalizar extends State<FinalizarPage>{
     return Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
         title: Text("FIN"),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         actions: [
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO

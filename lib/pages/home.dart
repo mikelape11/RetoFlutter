@@ -94,28 +94,31 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   bool markerVisible6 = false;
   bool markerVisible7 = false;
 
-  @override
+ @override
   void initState() { 
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-    iniciarServidor();
     _distanceFromCircle();
+    setState((){});
+    recibirMensaje();
+    setState((){});
+    //globals.socket.listen((data) => escucharServer(utf8.decode(data)));
     super.initState();
   }
 
-  void iniciarServidor()async{
-    if(!globals.conectado){
+  void recibirMensaje() async{
+
       await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
       globals.conectado = true;
-    }
+    
   }
-
 
   void escucharServer(json){
     var datos = jsonDecode(json);
     print(datos);
     setState(() {
       //if(datos["route"] == globals.idRuta){
+        print("hola");
         globals.mensajes.add(ChatMessage(
           buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
           text: datos["from"], 

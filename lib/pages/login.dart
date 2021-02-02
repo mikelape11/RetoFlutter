@@ -95,6 +95,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("LOGIN"),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         actions: [
           IconButton( //CAMBIO EL TEMA SI SE PULSA EL ICONO
             icon: _setIcon(),
