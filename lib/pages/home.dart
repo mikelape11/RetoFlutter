@@ -98,24 +98,26 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   void initState() { 
     context.read<MiUbicacionBloc>().iniciarSeguimiento();
     WidgetsBinding.instance.addObserver(this);
-    iniciarServidor();
     _distanceFromCircle();
+    setState((){});
+    recibirMensaje();
+    setState((){});
+    //globals.socket.listen((data) => escucharServer(utf8.decode(data)));
     super.initState();
   }
 
-  void iniciarServidor()async{
-    if(!globals.conectado){
+  void recibirMensaje() async{
       await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
       globals.conectado = true;
-    }
+    
   }
-
 
   void escucharServer(json){
     var datos = jsonDecode(json);
     print(datos);
     setState(() {
       //if(datos["route"] == globals.idRuta){
+        print("hola");
         globals.mensajes.add(ChatMessage(
           buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
           text: datos["from"], 
@@ -798,7 +800,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               );
               }else{
                  //print("HOLA 3");
- 
+                  
                  if(contador == 0){
                   devolverLista(snapshot2);
                   devolverLista2(snapshot2);
@@ -888,7 +890,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             icon: Icon(Icons.chat),
             label: 'Chat',
           ),
-                    BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Mapa',
           ),

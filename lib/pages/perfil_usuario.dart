@@ -15,7 +15,6 @@ import 'package:path_provider/path_provider.dart' as syspaths;
 import 'package:path/path.dart' as path;
 
 import '../models/rankingModelo.dart';
-import '../models/rankingModelo.dart';
 import '../theme/theme.dart';
 import 'menu_ruta.dart';
 
@@ -127,8 +126,8 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         return "Rellena el campo";
       } else if (value.length < 3) {
         return "El usuario tiene que tener como minimo 3 caracteres";
-      } else if (value.length > 12) {
-        return "El usuario tiene que tener como maximo 12 caracteres";
+      } else if (value.length > 10) {
+        return "El usuario tiene que tener como maximo 10 caracteres";
       } else if(value == _usuario){
         return "El usuario ya existe";
       } else 
