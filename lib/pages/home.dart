@@ -2352,9 +2352,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                               ranking = rankings as List<rankingModelo>;
                                                               _isVisible6= false;
                                                             });
-                                                      
                                                           }
-                                                    
                                                       },
                                                     );
                                                     })
