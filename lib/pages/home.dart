@@ -191,8 +191,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return datos;
   }
 
-  Future<List<preguntasModelo>> getPreguntas() async {
-    var data = await http.get('${globals.ipLocal}/preguntas/all');
+  Future<List<preguntasModelo>> getPreguntas(String rutaId) async {
+    var data = await http.get('${globals.ipLocal}/preguntas/${rutaId}');
     var jsonData = json.decode(data.body);
 
     List<preguntasModelo> datos = [];
@@ -584,190 +584,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     }
     return listaMarkers;
   }
-
-  Future<List> devolverLista3(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(globals.idRuta == snapshot3.data[i].rutasId && posicionesPreguntas.length<7){
-        posicionesPreguntas.add(snapshot3.data[i].numPregunta);
-      }
-    }
-    return posicionesPreguntas;
-  }
-
-  Future<List> devolverRespuestas1(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 1){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas1.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas1;   
-  }
-
-  Future<List> devolverRespuestas2(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 2){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas2.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas2;   
-  }
-
-  Future<List> devolverRespuestas3(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 3){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas3.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas3;   
-  }
-
-  Future<List> devolverRespuestas4(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 4){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas4.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas4;   
-  }
-
-  Future<List> devolverRespuestas5(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 5){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas5.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas5;   
-  }
-
-  Future<List> devolverRespuestas6(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 6){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas6.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas6;   
-  }
-
-  Future<List> devolverRespuestas7(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 7){
-          for(int m=0; m<snapshot3.data[i].respuestas.length;m++){
-            respuestas7.add(snapshot3.data[i].respuestas[m].respuesta);
-          } 
-        }
-      }
-    }
-    return respuestas7;   
-  }
-
-  int opcion1 = 0;
-  Future<int> devolverOpcion1(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 1){
-            opcion1 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion1;   
-  }
-
-  int opcion2 = 0;
-  Future<int> devolverOpcion2(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 2){
-            opcion2 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion2;   
-  }
-
-  int opcion3 = 0;
-  Future<int> devolverOpcion3(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 3){
-            opcion3 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion3;   
-  }
-
-  int opcion4 = 0;
-  Future<int> devolverOpcion4(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 4){
-            opcion4 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion4;   
-  }
-
-  int opcion5 = 0;
-  Future<int> devolverOpcion5(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 5){
-            opcion5 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion5;   
-  }
-
-  int opcion6 = 0;
-  Future<int> devolverOpcion6(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 6){
-            opcion6 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion6;   
-  }
-
-  int opcion7 = 0;
-  Future<int> devolverOpcion7(AsyncSnapshot snapshot3) async{
-    for(int i =0;i<snapshot3.data.length; i++){
-      if(snapshot3.data[i].rutasId == globals.idRuta){
-        if(snapshot3.data[i].numPregunta == 7){
-            opcion7 = snapshot3.data[i].opcion; 
-        }
-      }
-    }
-    return opcion7;   
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -908,7 +724,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  // Future<List<preguntasModelo>> getPreguntas();
+  // Future<List<preguntasModelo>> getPreguntas(globals.idRuta);
   // Future<List<rankingModelo>> getRanking();
 
   List<Widget> _widgetOptions() => [
@@ -1006,31 +822,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){    
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));
                                         }else{ 
-                                           print("HOLA 4");
-                                          devolverLista3(snapshot3);
-                                          devolverRespuestas1(snapshot3);
-                                          devolverOpcion1(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[0]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[0].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -1051,11 +853,11 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas1[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[0].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                       setState(() async {
-                                                          if(opcion1 == 1){
+                                                          if(snapshot3.data[0].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;  
@@ -1121,12 +923,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas1[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[0].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion1 == 2){
+                                                          if(snapshot3.data[0].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1192,12 +994,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas1[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[0].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion1 == 3){
+                                                          if(snapshot3.data[0].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1282,30 +1084,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){   
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));          
-                                        }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas2(snapshot3);
-                                          devolverOpcion2(snapshot3);                                        
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                     
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                        }else{          
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[1]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[1].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -1326,12 +1115,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas2[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[1].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion2 == 1){
+                                                          if(snapshot3.data[1].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1397,12 +1186,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas2[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[1].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion2 == 2){
+                                                          if(snapshot3.data[1].opcion  == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1468,12 +1257,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas2[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[1].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion2 == 3){
+                                                          if(snapshot3.data[1].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1559,30 +1348,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){ 
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));            
-                                        }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas3(snapshot3);
-                                          devolverOpcion3(snapshot3);                                       
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                     
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                        }else{                
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[2]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[2].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -1603,12 +1379,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas3[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[2].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion3 == 1){
+                                                          if(snapshot3.data[2].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1672,12 +1448,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas3[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[2].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion3 == 2){
+                                                          if(snapshot3.data[2].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1743,12 +1519,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas3[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[2].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () async {
                                                         setState(() async {
-                                                          if(opcion3 == 3){
+                                                          if(snapshot3.data[2].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1834,30 +1610,18 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){      
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));       
                                         }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas4(snapshot3);
-                                          devolverOpcion4(snapshot3);                                    
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                      
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                                                   
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[3]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[3].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -1878,12 +1642,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas4[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[3].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion4 == 1){
+                                                          if(snapshot3.data[3].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -1949,12 +1713,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas4[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[3].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion4 == 2){
+                                                          if(snapshot3.data[3].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2020,12 +1784,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas4[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[3].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion4 == 3){
+                                                          if(snapshot3.data[3].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2111,30 +1875,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){  
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));           
-                                        }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas5(snapshot3);
-                                          devolverOpcion5(snapshot3);                                      
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                     
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                        }else{                                   
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[4]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[4].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -2155,12 +1906,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas5[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[4].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion5 == 1){
+                                                          if(snapshot3.data[4].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2226,12 +1977,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas5[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[4].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion5 == 2){
+                                                          if(snapshot3.data[4].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2297,12 +2048,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas5[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[4].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion5 == 3){
+                                                          if(snapshot3.data[4].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2388,30 +2139,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-                                        }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas6(snapshot3);
-                                          devolverOpcion6(snapshot3);                                      
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                     
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                        }else{                  
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[5]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[5].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -2432,12 +2170,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas6[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[5].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion6 == 1){
+                                                          if(snapshot3.data[5].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2502,12 +2240,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas6[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[5].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion6 == 2){
+                                                          if(snapshot3.data[5].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2571,12 +2309,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas6[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[5].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion6 == 3){
+                                                          if(snapshot3.data[5].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2612,7 +2350,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                             rankingModelo rankings = await actualizarRanking(rank);                                                      
                                                             setState(() {
                                                               ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
+                                                              _isVisible6= false;
                                                             });
                                                       
                                                           }
@@ -2662,30 +2400,17 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   //color: Colors.white,
                                   child: Center(
                                     child: FutureBuilder(
-                                      future: getPreguntas(),
+                                      future: getPreguntas(globals.idRuta),
                                       builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
                                         if(!snapshot3.hasData){   
                                           return Center(child: CircularProgressIndicator(strokeWidth: 2));          
-                                        }else{
-                                          devolverLista3(snapshot3);
-                                          posicionesPreguntas.sort(); //LAS ORDENA
-                                          devolverRespuestas7(snapshot3);
-                                          devolverOpcion7(snapshot3);                                       
-                                          for(int j=0;j<snapshot3.data.length;j++){
-                                            if(globals.idRuta == snapshot3.data[j].rutasId){
-                                                for(int i=0;i<posicionesPreguntas.length;i++){
-                                                  if(posicionesPreguntas[j]== snapshot3.data[i].numPregunta){
-                                                    preguntas.add(snapshot3.data[i].pregunta);
-                                                 }
-                                              }
-                                            }            
-                                          }                                    
-                                          for(int n=0;n<preguntas.length;n++){                                      
+                                        }else{                  
+                                          for(int n=0;n<snapshot3.data.length;n++){                                      
                                             return Column(
                                               children: <Widget>[
                                                 Container( //Pregunta
                                                   width: 300,
-                                                  child: Center(child: Text('${preguntas[6]}',  style: TextStyle(fontSize: 24),)),
+                                                  child: Center(child: Text('${snapshot3.data[6].pregunta}',  style: TextStyle(fontSize: 24),)),
                                                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
                                                 ),
                                                 SizedBox(
@@ -2706,12 +2431,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas7[0]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[6].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion7 == 1){
+                                                          if(snapshot3.data[6].opcion == 1){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2784,12 +2509,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas7[1]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[6].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion7 == 2){
+                                                          if(snapshot3.data[6].opcion == 2){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;
@@ -2862,12 +2587,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     width: 250,
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
-                                                      child: Text('${respuestas7[2]}', style: TextStyle(fontSize: 16),),
+                                                      child: Text('${snapshot3.data[6].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
                                                       padding: EdgeInsets.only(left: 50, right: 50),
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
-                                                          if(opcion7 == 3){
+                                                          if(snapshot3.data[6].opcion == 3){
                                                             print("RESPUESTA CORRECTA");
                                                             globals.puntuacionTotal = globals.puntuacionTotal + 50;
                                                             globals.aciertos++;

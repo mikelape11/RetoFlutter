@@ -187,6 +187,7 @@ class __CardContentState extends State<_CardContent> {
                     }
                     for(int i=0; i<snapshot2.data.length; i++){
                       if(snapshot2.data[i].nombre == globals.usuario && snapshot2.data[i].usuario_id == "1"){   
+
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => HomePage(),
                           ));
