@@ -4,6 +4,7 @@ rutasDataModelo rutasDataModeloJson(String str)=> rutasDataModelo.fromJson(json.
 
 String rutasDataModeloToJson(rutasDataModelo data) => json.encode(data.toJson());
 
+//modelo de rutasData
 class rutasDataModelo{
   String id;
   double lat;

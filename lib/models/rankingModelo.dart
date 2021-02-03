@@ -4,6 +4,7 @@ rankingModelo rankingModeloJson(String str)=> rankingModelo.fromJson(json.decode
 
 String rankingModeloToJson(rankingModelo data) => json.encode(data.toJson());
 
+//modelo de ranking
 class rankingModelo{
   String id;
   int puntos;

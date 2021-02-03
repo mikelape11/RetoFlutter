@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:reto/globals/globals.dart';
 import 'package:reto/models/rankingModelo.dart';
 import 'package:reto/pages/home.dart';
 import 'package:reto/globals/globals.dart' as globals;
@@ -82,22 +81,24 @@ class _CardContent extends StatefulWidget {
   __CardContentState createState() => __CardContentState();
 }
 
- Future<rankingModelo> registrarPuntuacion(int puntos,String usuario_id, String nombre, int aciertos, int fallos, int tiempo, String rutasId) async{
-  var Url = "${globals.ipLocal}/ranking/nuevo";
-  var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
-  body:jsonEncode(<String , String>{
-    "puntos" : puntos.toString(),
-    "usuario_id" : usuario_id,
-    "nombre": nombre,
-    "aciertos": aciertos.toString(),
-    "fallos": fallos.toString(),
-    "tiempo": tiempo.toString(),
-    "rutasId": rutasId
-  }));
+  //funcion que registra la puntuacion
+    Future<rankingModelo> registrarPuntuacion(int puntos,String usuario_id, String nombre, int aciertos, int fallos, int tiempo, String rutasId) async{
+      var Url = "${globals.ipLocal}/ranking/nuevo";
+      var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
+      body:jsonEncode(<String , String>{
+        "puntos" : puntos.toString(),
+        "usuario_id" : usuario_id,
+        "nombre": nombre,
+        "aciertos": aciertos.toString(),
+        "fallos": fallos.toString(),
+        "tiempo": tiempo.toString(),
+        "rutasId": rutasId
+      }));
 
-}
+    }
 
-Future<List<rankingModelo>> getRanking() async {
+  //funcion que devuelve los datos del ranking
+    Future<List<rankingModelo>> getRanking() async {
       var data = await http.get('${globals.ipLocal}/ranking/all');
       var jsonData = json.decode(data.body);
       

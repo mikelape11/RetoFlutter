@@ -2,12 +2,11 @@ import 'dart:convert';
 
 import 'package:reto/models/preguntasRespuestasModelo.dart';
 
-
-
 preguntasModelo preguntasModeloJson(String str)=> preguntasModelo.fromJson(json.decode(str));
 
 String preguntasModeloToJson(preguntasModelo data) => json.encode(data.toJson());
 
+//modelo de preguntas
 class preguntasModelo{
   String id;
   int numPregunta;

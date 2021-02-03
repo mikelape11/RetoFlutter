@@ -4,6 +4,8 @@ ubicacionModelo ubicacionModeloJson(String str)=> ubicacionModelo.fromJson(json.
 
 String ubicacionModeloToJson(ubicacionModelo data) => json.encode(data.toJson());
 
+
+//modelo de ubicacion
 class ubicacionModelo{
   String id;
   String nombreUsuario;

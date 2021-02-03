@@ -26,6 +26,7 @@ class PerfilUsuario extends StatefulWidget {
 
 }
 
+//funcion que devuelve todos los usuarios de la api
  Future<List<usuarioModelo>> getUsuarios() => Future.delayed(Duration(milliseconds: 0 ), () async {
     var data = await http.get('${globals.ipLocal}/usuarios/todos');
     var jsonData = json.decode(data.body);
@@ -44,6 +45,7 @@ class PerfilUsuario extends StatefulWidget {
 
 class PerfilUsuarioPage extends State<PerfilUsuario>{
 
+//funcion que actualiza el usuario
   Future<usuarioModelo> actualizarUsuario(usuarioModelo usuario) async{
     var Url = "${globals.ipLocal}/usuarios/actualizar";
     var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
@@ -51,6 +53,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
   }
 
 
+//funcion que actualiza el nombre del usuario en el ranking
   Future<rankingModelo> actualizarNombreRanking(rankingModelo ranking) async{
     var Url = "${globals.ipLocal}/ranking/actualizar";
     var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
@@ -58,6 +61,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
   }
 
 
+//funcion que elimina una ubicacion con el nombreUsuario
   Future<http.Response> deleteUbicacion(String nombreUsuario) async {
    final http.Response response = await http.delete(
     "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
@@ -122,6 +126,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
       globals.avatar = guardarRuta;
     }
 
+//validaciones del usuario
     String validarUsuario(String value) {
       if (value.isEmpty) {
         return "Rellena el campo";
@@ -135,6 +140,7 @@ class PerfilUsuarioPage extends State<PerfilUsuario>{
         return null;
     }
 
+//validaciones de la contraseña
     String validarPassword(String value) {
       if (value.isEmpty) {
         return "Rellena el campo";

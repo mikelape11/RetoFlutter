@@ -24,6 +24,7 @@ class rankingPage extends StatefulWidget {
 
 class _rankingPageState extends State<rankingPage> {
 
+//funcion que devuvle los datos del ranking ordenado por puntos en orden descendente
   Future<List<rankingModelo>> getRanking() async {
     var data = await http.get('${globals.ipLocal}/ranking/ordenado');
     var jsonData = json.decode(data.body);
@@ -44,6 +45,7 @@ class _rankingPageState extends State<rankingPage> {
     return ranking;
   }
 
+//funcion que devuelve las rutas
   Future<List<rutasModelo>> getRutasData() async {
     var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);
@@ -70,6 +72,7 @@ class _rankingPageState extends State<rankingPage> {
   }
 
   
+//funcion que eliminar una ubicacion con el nombreUsuario
   Future<http.Response> deleteUbicacion(String nombreUsuario) async {
    final http.Response response = await http.delete(
     "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
@@ -452,7 +455,7 @@ class _rankingPageState extends State<rankingPage> {
           );
       }
     ),
-       )
+    )
     );
   }
 

@@ -4,6 +4,7 @@ usuarioModelo usuarioModeloJson(String str)=> usuarioModelo.fromJson(json.decode
 
 String usuarioModeloToJson(usuarioModelo data) => json.encode(data.toJson());
 
+//modelo de usuario
 class usuarioModelo{
   String id;
   String usuario;

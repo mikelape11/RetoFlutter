@@ -5,6 +5,7 @@ preguntasRespuestasModelo preguntasRespuestasModeloJson(String str)=> preguntasR
 
 String preguntasRespuestasModeloToJson(preguntasRespuestasModelo data) => json.encode(data.toJson());
 
+//modelo de preguntasRespuestas
 class preguntasRespuestasModelo{
   String id;
   int numRespeusta;

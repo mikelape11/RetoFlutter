@@ -63,17 +63,17 @@ class Finalizar extends State<FinalizarPage>{
                   children: [
                     Stack(
                       children: <Widget>[
-                        //CENTER -- Blast
+                        //CENTER 
                         Align(
                           alignment: Alignment.center,
                           child: ConfettiWidget(
                             confettiController: _controllerCenter,
-                            emissionFrequency: 0.03, // how often it should emit
+                            emissionFrequency: 0.03, 
                             numberOfParticles: 20,
                             blastDirectionality: BlastDirectionality
-                                .explosive, // don't specify a direction, blast randomly
+                                .explosive, 
                             shouldLoop:
-                                true, // start again as soon as the animation is finished
+                                true, 
                             colors: [
                               Colors.green,
                               Colors.yellow,
@@ -82,7 +82,7 @@ class Finalizar extends State<FinalizarPage>{
                               Colors.orange,
                               Colors.purple,
                               Colors.red
-                            ], // manually specify the colors to be used
+                            ], 
                           ),
                         ),
                       ]

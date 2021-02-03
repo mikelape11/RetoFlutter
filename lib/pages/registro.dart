@@ -20,21 +20,23 @@ class RegistroPage extends StatefulWidget {
     Registro createState()=> Registro();
   }
 
-Future<usuarioModelo> registrarUsuario(String usuario, String password, String rol, String avatar) async{
-  var Url = "${globals.ipLocal}/usuarios/nuevo";
-  var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
-  body:jsonEncode(<String , String>{
-    "usuario" : usuario,
-    "password" : password,
-    "rol": rol,
-    "avatar": avatar
-  }));
-}
+//funcion que registra un usuario en la base de datos
+  Future<usuarioModelo> registrarUsuario(String usuario, String password, String rol, String avatar) async{
+    var Url = "${globals.ipLocal}/usuarios/nuevo";
+    var response = await http.post(Url,headers:<String , String>{"Content-Type": "application/json"},
+    body:jsonEncode(<String , String>{
+      "usuario" : usuario,
+      "password" : password,
+      "rol": rol,
+      "avatar": avatar
+    }));
+  }
 
 class Registro extends State<RegistroPage>{
 
   String _usuario;
 
+//funcion que devuelve todos los usuarios
   Future<List<usuarioModelo>> getUsuarios() async {
     var data = await http.get('${globals.ipLocal}/usuarios/todos');
     var jsonData = json.decode(data.body);
@@ -48,6 +50,7 @@ class Registro extends State<RegistroPage>{
     return usuario;
   }
 
+//validaciones del usuario
   String validarUsuario(String value) {
     if (value.isEmpty) {
       return "Rellena el campo";

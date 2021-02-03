@@ -48,6 +48,7 @@ class LoginPage extends StatelessWidget {
       GlobalKey<FormState>(),
     ];
 
+  //validaciones de usuario
     String validarUsuario(String value) {
       if (value.isEmpty) {
         return "Rellena el campo";
@@ -61,6 +62,7 @@ class LoginPage extends StatelessWidget {
         return null;
     }
 
+//validaciones de la contraseña
     String validarPassword(String value) {
       if (value.isEmpty) {
         return "Rellena el campo";
@@ -76,7 +78,8 @@ class LoginPage extends StatelessWidget {
         return null;
     }
 
-    Future<List<usuarioModelo>> getUsuarios() async {
+  //funcion que devuelve los usuarios de la api
+    Future<List<usuarioModelo>> getUsuarios() async {    
       var data = await http.get('${globals.ipLocal}/usuarios/todos');
       var jsonData = json.decode(data.body);
       

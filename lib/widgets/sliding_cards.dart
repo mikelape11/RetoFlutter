@@ -16,6 +16,7 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
   PageController pageController;
   double pageOffset = 0;
 
+//funcion que devuelve todas las rutas
   Future<List<rutasModelo>> getRutas() => Future.delayed(Duration(milliseconds: 500 ), () async {
     var data = await http.get('${globals.ipLocal}/routes/all');
     var jsonData = json.decode(data.body);

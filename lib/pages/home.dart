@@ -48,7 +48,6 @@ class HomePage extends StatefulWidget {
 
 class Home extends State<HomePage> with WidgetsBindingObserver{
   GoogleMapController _controller;
-
   PickedFile _imageFile; //PARA LA FOTO DE PERFIL
   MapType _currentMapType = MapType.normal;
   List<ChatMessage> mensajes = [];
@@ -67,7 +66,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<LatLng> listaUbicaciones = List();
   List<int> posicionesPreguntas = [];
   List<String> preguntas = [];
-
   Position _currentPosition;
   List<int> posiciones;
   var guardarIdMarker = '';
@@ -85,7 +83,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   List<rankingModelo> ranking = [];
   Position ubicacionUsuario;
   var variableGlobal;
-
   bool markerVisible1 = false;
   bool markerVisible2 = false;
   bool markerVisible3 = false;
@@ -102,35 +99,28 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     setState((){});
     recibirMensaje();
     setState((){});
-    //globals.socket.listen((data) => escucharServer(utf8.decode(data)));
     super.initState();
   }
 
   void recibirMensaje() async{
-      await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
-      globals.conectado = true;
-    
+    await globals.socket.listen((data) => escucharServer(utf8.decode(data)));
+    globals.conectado = true;
   }
 
   void escucharServer(json){
     var datos = jsonDecode(json);
     print(datos);
     setState(() {
-      //if(datos["route"] == globals.idRuta){
-        print("hola");
-        globals.mensajes.add(ChatMessage(
-          buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
-          text: datos["from"], 
-          user: ChatUser(
-            //containerColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.red,
-            color: Colors.cyan,
-            name: datos["from"],
-            uid: datos["from"],
-          ) 
-        ));
-      //}
+      globals.mensajes.add(ChatMessage(
+        buttons: [Text(datos["value"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),)],
+        text: datos["from"], 
+        user: ChatUser(
+          color: Colors.cyan,
+          name: datos["from"],
+          uid: datos["from"],
+        ) 
+      ));
     });
-    print(globals.mensajes);
   }
 
   Future<List<rankingModelo>> getRanking() async {
@@ -158,8 +148,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     var response = await http.put(Url,headers:<String , String>{"Content-Type": "application/json"},
     body: jsonEncode(ranking));
   }
-
-
 
   Future<List<usuarioModelo>> getAvatar() async {
     var data = await http.get('${globals.ipLocal}/usuarios/todos');
@@ -228,13 +216,12 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   }
 
   Future<http.Response> deleteUbicacion(String nombreUsuario) async {
-   final http.Response response = await http.delete(
-    "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-  );
-
+    final http.Response response = await http.delete(
+      "${globals.ipLocal}/ubicacion/eliminarPorNombre/${nombreUsuario}",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
     return response;
   }
 
@@ -286,12 +273,8 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
       }
     }
     ubicacionModelo ubicaciones = await registrarUbicacion(globals.idUsuario, nombreUsuario, latitude, longitud, globals.idRuta);
-    ubicacion = ubicaciones;
-    
+    ubicacion = ubicaciones;  
   }
-
-  
-
 
   ubicacionModelo ubicacion2 = new ubicacionModelo();
   void actualizarUbicacionUsuario(AsyncSnapshot snapshot) async{
@@ -310,7 +293,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     ubi.rutaId = globals.idRuta;
     ubicacionModelo ubicaciones = await actualizarUbicacion(ubi);
     ubicacion2 = ubicaciones;
-    
   }
 
   Future<List<LatLng>> devolverUbicacionesUsuarios(AsyncSnapshot snapshot) async{
@@ -329,69 +311,45 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     return listaUbicaciones;
   }
 
-  
   Future<void> _distanceFromCircle() async {
     _currentPosition = await _localizacionUsuario();
     for (var circulo in Set.from(_circles)) {
       var distancia = Geolocator.distanceBetween(
-        _currentPosition.latitude,
-        _currentPosition.longitude,
-        circulo.center.latitude,
-        circulo.center.longitude);
-      // if ((distancia < 50) && (_isVisible1 == false) && (_isVisible2 == false) && (_isVisible3 == false) && (_isVisible4 == false) && (_isVisible5 == false) && (_isVisible6 == false) && (_isVisible7 == false)){
+      _currentPosition.latitude,
+      _currentPosition.longitude,
+      circulo.center.latitude,
+      circulo.center.longitude);
       if (distancia < 50) {
         if(circulo.circleId == CircleId("0")){
-      
           markerVisible1 = true;
-   
-        }else if(circulo.circleId == CircleId("1")){
-         
-            markerVisible2 = true;
-    
-        }else if(circulo.circleId == CircleId("2")){
-       
-            markerVisible3 = true;
-       
-        }else if(circulo.circleId == CircleId("3")){
-          
-            markerVisible4 = true;
-         
+        }else if(circulo.circleId == CircleId("1")){        
+          markerVisible2 = true;    
+        }else if(circulo.circleId == CircleId("2")){      
+          markerVisible3 = true;     
+        }else if(circulo.circleId == CircleId("3")){         
+          markerVisible4 = true;        
         }else if(circulo.circleId == CircleId("4")){
-           markerVisible5 = true;
-      
-        }else if(circulo.circleId == CircleId("5")){
-      
-            markerVisible6 = true;
-    
+          markerVisible5 = true;     
+        }else if(circulo.circleId == CircleId("5")){      
+          markerVisible6 = true;    
         }else if(circulo.circleId == CircleId("6")){
-            markerVisible7 = true;
-       
+          markerVisible7 = true;       
         }       
-      
-
         break;
-      } else {
-
-          markerVisible1 = false;
-          markerVisible2 = false;
-          markerVisible3 = false;
-          markerVisible4 = false;
-          markerVisible5 = false;
-          markerVisible6 = false;
-          markerVisible7 = false;
-      
+      }else{
+        markerVisible1 = false;
+        markerVisible2 = false;
+        markerVisible3 = false;
+        markerVisible4 = false;
+        markerVisible5 = false;
+        markerVisible6 = false;
+        markerVisible7 = false;    
       }
-
     }
-    //Timer.periodic(new Duration(seconds: 5), (timer) {
-      _distanceFromCircle();
-    //});
+    _distanceFromCircle();
   }
 
   void _setMarkers() async {
-    // String _iconImage = 'images/interrogacion2.png';
-    // final bitmapIcon = await BitmapDescriptor.fromAssetImage(
-    //       ImageConfiguration(devicePixelRatio: 5), _iconImage);
     setState(() {
       for(int i=0; i<listaMarkers.length;i++){
         _circles.add(Circle(
@@ -408,37 +366,35 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
         _markers.add(Marker(
         onTap: () {
           if(markerVisible1){
-          setState(() {  
+            setState(() {  
             _isVisible1 = true;
             });
           }else if(markerVisible2){
-          setState(() {  
+            setState(() {  
             _isVisible2 = true;
             });
           }else if(markerVisible3){
-          setState(() {  
+            setState(() {  
             _isVisible3 = true;
             });
           }else if(markerVisible4){
-          setState(() {  
+            setState(() {  
             _isVisible4 = true;
             });
           }else if(markerVisible5){
-          setState(() {  
+            setState(() {  
             _isVisible5 = true;
             });
           }else if(markerVisible6){
-          setState(() {  
+            setState(() {  
             _isVisible6 = true;
             });
           }else if(markerVisible7){
-          setState(() {  
+            setState(() {  
             _isVisible7 = true;
             });
           }
         },
-        //visible: markerVisible1,
-        //icon: bitmapIcon,
         icon: BitmapDescriptor.defaultMarkerWithHue(
           BitmapDescriptor.hueCyan
         ),
@@ -594,76 +550,69 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
     
     return new Scaffold( //EMPIEZA LA PANTALLA DEL REGISTRO
       appBar: AppBar(
-      leading: FutureBuilder(
-        future: getRutasData(),
-        builder: (BuildContext context, AsyncSnapshot snapshot2){
+        leading: FutureBuilder(
+          future: getRutasData(),
+          builder: (BuildContext context, AsyncSnapshot snapshot2){
             if(!snapshot2.hasData){
               return Center(child: CircularProgressIndicator(strokeWidth: 2));             
             }else{ 
-              //print("HOLA 1");
-          return FutureBuilder(
-          future: getUbicaciones(),
-          builder: (BuildContext context, AsyncSnapshot snapshot3){
-             if(!snapshot3.hasData){
-              return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-            }else{ 
-               //print("HOLA 2");
-            return FutureBuilder(
-            future: getUsuarios(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if(!snapshot.hasData){
-                return Center(child: CircularProgressIndicator(strokeWidth: 2),
-              );
-              }else{
-                 //print("HOLA 3");
-                  
-                 if(contador == 0){
-                  devolverLista(snapshot2);
-                  devolverLista2(snapshot2);
-                  devolverUbicacionesUsuarios(snapshot3);                            
-                  cogerUbicacion(snapshot);  
-                  _setMarkers(); 
-                  contador++;
-                }
-               
-                Timer.periodic(new Duration(seconds: 5), (timer) {
-                  actualizarUbicacionUsuario(snapshot);
-                });
-              
-                for(int i=0; i<snapshot.data.length; i++)
-                  if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
-                      globals.existeAvatar = true;
-                        break;
-                  }else{
-                      globals.existeAvatar = false;
+              return FutureBuilder(
+                future: getUbicaciones(),
+                builder: (BuildContext context, AsyncSnapshot snapshot3){
+                  if(!snapshot3.hasData){
+                    return Center(child: CircularProgressIndicator(strokeWidth: 2));             
+                  }else{ 
+                    return FutureBuilder(
+                    future: getUsuarios(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if(!snapshot.hasData){
+                          return Center(child: CircularProgressIndicator(strokeWidth: 2),);
+                        }else{                          
+                          if(contador == 0){
+                            devolverLista(snapshot2);
+                            devolverLista2(snapshot2);
+                            devolverUbicacionesUsuarios(snapshot3);                            
+                            cogerUbicacion(snapshot);  
+                            _setMarkers(); 
+                            contador++;
+                          }             
+                          Timer.periodic(new Duration(seconds: 5), (timer) {
+                            actualizarUbicacionUsuario(snapshot);
+                          });            
+                          for(int i=0; i<snapshot.data.length; i++)
+                            if(snapshot.data[i].usuario == globals.usuario && snapshot.data[i].avatar == "images/perfil.png"){
+                                globals.existeAvatar = true;
+                                  break;
+                            }else{
+                                globals.existeAvatar = false;
+                            }
+                          return Center(
+                            child: Container(
+                              child: Stack(
+                                children: <Widget>[
+                                  CircleAvatar(
+                                    radius: 22.0,
+                                    backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
+                                    child: CircleAvatar(
+                                      radius: 20.0,
+                                      backgroundImage: globals.existeAvatar
+                                      ? AssetImage("images/perfil.png") 
+                                      : FileImage(File(globals.avatar))
+                                    )            
+                                  ),
+                                ],
+                              )
+                            ),
+                          );
+                        }
+                      }
+                    );
                   }
-                return Center(
-                  child: Container(
-                    child: Stack(
-                      children: <Widget>[
-                        CircleAvatar(
-                          radius: 22.0,
-                          backgroundColor: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.cyan : Colors.black,
-                          child: CircleAvatar(
-                            radius: 20.0,
-                            backgroundImage: globals.existeAvatar
-                            ? AssetImage("images/perfil.png") 
-                            : FileImage(File(globals.avatar))
-                          )            
-                        ),
-                      ],
-                    )
-                  ),
-                );
-              }
-              }
-            );
+                }
+              );
             }
           }
-          );
-            }
-          }
-      ),       
+        ),       
         automaticallyImplyLeading: false,
         title: Text("HOME"),
         centerTitle: true,
@@ -724,11 +673,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
   
   int _selectedIndex = 0;
   static const TextStyle optionStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.normal);
-  // Future<List<preguntasModelo>> getPreguntas(globals.idRuta);
-  // Future<List<rankingModelo>> getRanking();
-
   List<Widget> _widgetOptions() => [
-   //LAS OPCIONES DEL B
     FutureBuilder(
       future: getRanking(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {  
@@ -740,49 +685,44 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
               globals.idRanking = snapshot.data[i].id;
             }
           }
-          
-        return Center(
-        child: Container( //PANTALLA CHAT (POR HACER)
-          padding: EdgeInsets.all(25),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container( 
-                child: DashChat(                
-                  messageContainerDecoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
+          return Center(
+            child: Container(
+              padding: EdgeInsets.all(25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container( 
+                    child: DashChat(                
+                      messageContainerDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.cyan[300],
+                      ),
+                      inputContainerStyle: BoxDecoration(        
+                        color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
+                        border: Border.all(color: Colors.cyan, width: 2),
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                      height: MediaQuery.of(context).size.height/1.4,               
+                      user: ChatUser( 
+                        name: globals.usuario,
+                        uid: globals.idUsuario,
+                      ),
+                      messages: globals.mensajes,      
+                      onSend: (ChatMessage) {
+                        var mensajeUsuario = Map();
+                        mensajeUsuario["action"] = "msg";
+                        mensajeUsuario["from"] = globals.usuario;
+                        mensajeUsuario["route"] = globals.idRuta;
+                        mensajeUsuario["value"] = ChatMessage.text;
+                        globals.mensajes.add(ChatMessage);
+                        globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
+                      },
+                    ),
                   ),
-                  inputContainerStyle: BoxDecoration(        
-                    color: Theme.of(context).primaryColor == Colors.grey[900] ? Colors.grey[900] : Colors.grey[300],
-                    border: Border.all(color: Colors.cyan, width: 2),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  height: MediaQuery.of(context).size.height/1.4,               
-                  user: ChatUser( 
-                    name: globals.usuario,
-                    uid: globals.idUsuario,
-                    // avatar:
-                    //     "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-                  ),
-                  messages: globals.mensajes,      
-                  onSend: (ChatMessage) {
-                    var mensajeUsuario = Map();
-                    mensajeUsuario["action"] = "msg";
-                    mensajeUsuario["from"] = globals.usuario;
-                    mensajeUsuario["route"] = globals.idRuta;
-                    mensajeUsuario["value"] = ChatMessage.text;
-                    globals.mensajes.add(ChatMessage);
-                    globals.socket?.write("${jsonEncode(mensajeUsuario)}\n");
-                  },
-                ),
-              ),
-              // messageListArea(), //EL CONTAINER DE LOS MENSAJES
-              // submitArea(), //EL CONTAINER PARA ENVIAR LOS MENSAJES
-            ],
-          )
-        ),
-      );
+                ],
+              )
+            ),
+          );
         }
       }
     ),
@@ -796,50 +736,47 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                 builder: ( _ , state) => crearMapa(state) //LLAMO A LA FUNCION DEL MAPA
               ),
             ),
-
             Column( //COLOCACION DE TODOS LOS BOTONES
-                children: <Widget>[
-                  Visibility(
-                    visible: _isVisible1,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){    
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                        }else{ 
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[0].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
+              children: <Widget>[
+                Visibility(
+                  visible: _isVisible1,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){    
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                      }else{ 
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[0].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
                                                   builder: (BuildContext context, AsyncSnapshot snapshot4) {  
                                                   if(!snapshot4.hasData){    
                                                     return Center(child: CircularProgressIndicator(strokeWidth: 2));
@@ -849,1822 +786,1696 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                         globals.idRanking = snapshot4.data[i].id;
                                                       }
                                                     } 
-                                                  return Container( //Respuesta1
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[0].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                      setState(() async {
-                                                          if(snapshot3.data[0].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;  
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                              
-                                                             setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
-                                                            }); 
-                                                                                                                                                                         
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                           setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
+                                                    return Container( 
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[0].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[0].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;  
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                              
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible1 = false;
+                                                              });                                                                                                                                                                             
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                              });
+                                                              _isVisible1 = false;                                                                                                                  
+                                                            }                                                                                                                      
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }                                                 
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[0].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                 
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[0].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);  
+                                                              setState(() {                                                     
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible1 = false;
+                                                              });
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible1 = false;
+                                                              });                                                      
+                                                            }
                                                           });
-                                                            _isVisible1 = false;
-                                                                                                                  
-                                                          }
-                                                                                                                                                   
-                                                      },
+                                                        },
+                                                      )
                                                     );
-                                                      })
-                                                  );
+                                                  }
                                                 }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[0].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
+                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[0].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                   
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible1 = false;
+                                                              });                                                         
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible1 = false;
+                                                              });                                                       
+                                                            }
+                                                          });
+                                                        },                                                         
+                                                      )
+                                                    );
+                                                  }
                                                 }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                    
-                                                  return Container( //Respuesta2
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[0].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[0].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);  
-                                                            setState(() {                                                     
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
-                                                            });
-                                                           
-                                                       
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
-                                                            });
-                                                        
-                                                          }
-                                                        });
-                                                      },
-                                                    )
-                                                  );
-                                                  }
-                                                  }
-                                                
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[0].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[0].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                   
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
-                                                            });
-                                                       
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible1 = false;
-                                                            });
-                                                        
-                                                          }
-                                                        });
-                                                      },
-                                                        
-                                                    )
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                              ],
-                                            ); 
-                                          } 
-                                        }     
-                                      }
-                                    ),
+                                              ),
+                                            ],
+                                          ); 
+                                        } 
+                                      }     
+                                    }
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ]
-                    ),
+                      ),
+                    ]
                   ),
-                  Visibility(
-                    visible: _isVisible2,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){   
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));          
-                                        }else{          
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[1].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[1].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[1].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible2 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
-                                                            ranking = rankings as List<rankingModelo>;
-                                                            setState(() {
-                                                              _isVisible2 = false;
-                                                            });
-                                                          
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible2 = false;
-                                                            });
-                                                         
-                                                          }
-                                                      
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
+                ),
+                Visibility(
+                  visible: _isVisible2,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                //padding: EdgeInsets.all(0),
+                                //color: Colors.white,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){   
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));          
+                                      }else{          
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[1].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[1].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[1].opcion  == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible2 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                       
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible2 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                           print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible2 = false;
-                                                            });
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[1].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
                                                         
-                                                          }
-                                                     
-                                                      },
-                                                    );
-                                                      })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[1].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[1].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible2 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[1].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
                                                               _isVisible2 = false;
-                                                            });
-                                                       
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                            ranking = rankings as List<rankingModelo>;
-                                                              _isVisible2 = false;
-                                                            });
-                                                          
-                                                          }
-                                                     
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                              ],
-                                            );                                     
-                                          } 
-                                        }     
-                                      }
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isVisible3,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){ 
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));            
-                                        }else{                
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[2].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible2 = false;
+                                                              });                                                           
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible2 = false;
+                                                              });                                                           
+                                                            }                                                        
+                                                          },);
                                                         }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[2].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[2].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible3 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;                                                         
-                                                              _isVisible3 = false;
-                                                            });
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                          
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible3 = false;
-                                                            });                                                      
-                                                          }
-                                                      
-                                                      },
+                                                      )
                                                     );
-                                                      })
-                                                  );
-                                                   }
                                                   }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[2].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[2].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible3 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                 
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible3 = false;
-                                                            });
-                                                      
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                          
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible3 = false;
-                                                            });
-                                                       
-                                                          }
-                                                     
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                 FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[2].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () async {
-                                                        setState(() async {
-                                                          if(snapshot3.data[2].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible3 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible3 = false;
-                                                            });
-                                                      
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible3 = false;
-                                                            });
-                                                        
-                                                          }
-                                                      
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                              ],
-                                            );                                      
-                                          } 
-                                        }     
-                                      }
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isVisible4,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){      
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));       
-                                        }else{
-                                                                   
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[3].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[3].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[3].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible4 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                   
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                         
-                                                          }
-                                                       
-                                                      },
-                                                    );
-                                                      })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[3].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[3].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible4 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                        
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                           print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                       
-                                                          }
-                                                  
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[3].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[3].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible4 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                      
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible4 = false;
-                                                            });
-                                                      
-                                                          }
-                                                   
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                              ],
-                                            );                                      
-                                          } 
-                                        }     
-                                      }
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isVisible5,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){  
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));           
-                                        }else{                                   
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[4].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[4].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[4].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible5 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                           print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                         
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                      
-                                                          }
-                                                 
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[4].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[4].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible5 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                  
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                         
-                                                          }
-                                                      
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[4].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[4].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible5 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                    
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                         
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible5 = false;
-                                                            });
-                                                        
-                                                          }
-                                                      
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                              ],
-                                            );                                      
-                                          } 
-                                        }     
-                                      }
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isVisible6,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));             
-                                        }else{                  
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[5].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[5].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[5].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6 = false;
-                                                            });
-                                                       
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6 = false;
-                                                            });
-                                                          
-                                                          }
-                                                      
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[5].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[5].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible6 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                 
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6 = false;
-                                                            });
-                                                           
-                                                          }else{
-                                                           print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                     
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6 = false;
-                                                            });
-                                                          }
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[1].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                   
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[1].opcion  == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible2 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                       
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible2 = false;
+                                                              });
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible2 = false;
+                                                              });                                                      
+                                                            }                                                  
+                                                          },);
                                                         }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[5].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[5].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible6 = false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                    
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6 = false;
-                                                            });
-                                                        
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);                                                      
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible6= false;
-                                                            });
-                                                          }
-                                                      },
+                                                      )
                                                     );
-                                                    })
-                                                  );
-                                                   }
                                                   }
-                                                ),
-                                              ],
-                                            );                                     
-                                          } 
-                                        }     
-                                      }
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ]
-                    ),
-                  ),
-                  Visibility(
-                    visible: _isVisible7,
-                    child: Stack(
-                      children:[
-                        Container(
-                          margin: EdgeInsets.only(top: 60),
-                          child: CustomAlertDialog(
-                            contentPadding: EdgeInsets.all(5),
-                            content: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.cyan, width: 4),
-                                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 1.2,
-                                  height: MediaQuery.of(context).size.height / 2,
-                                  //padding: EdgeInsets.all(0),
-                                  //color: Colors.white,
-                                  child: Center(
-                                    child: FutureBuilder(
-                                      future: getPreguntas(globals.idRuta),
-                                      builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
-                                        if(!snapshot3.hasData){   
-                                          return Center(child: CircularProgressIndicator(strokeWidth: 2));          
-                                        }else{                  
-                                          for(int n=0;n<snapshot3.data.length;n++){                                      
-                                            return Column(
-                                              children: <Widget>[
-                                                Container( //Pregunta
-                                                  width: 300,
-                                                  child: Center(child: Text('${snapshot3.data[6].pregunta}',  style: TextStyle(fontSize: 24),)),
-                                                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[6].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[6].opcion == 1){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible7= false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                            setState(() {
-                                                               ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });
-                                                           
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));
-                                                            
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);   
-                                                            setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });                                                  
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));   
-                                                          }                                                    
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
-                                                FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[6].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[6].opcion == 2){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible7= false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);   
-                                                             setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });                                                   
-                                                           
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));
-                                                           
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);   
-                                                             setState(() {
-                                                              ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });                                                 
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));                                                        
-                                                          }
-                                                      },
-                                                    );
-                                                    })
-                                                  );
-                                                   }
-                                                  }
-                                                ),
-                                                SizedBox(
-                                                  height: 15,
-                                                ),
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
                                               FutureBuilder(
-                                                  future: getRanking(),
-                                                  builder: (BuildContext context, AsyncSnapshot snapshot4) { 
-                                                    if(!snapshot4.hasData){    
-                                                      return Center(child: CircularProgressIndicator(strokeWidth: 2));
-                                                    }else{ 
-                                                      for(int i=0; i<snapshot4.data.length;i++){
-                                                        if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
-                                                          globals.idRanking = snapshot4.data[i].id;
-                                                        }
-                                                      }  
-                                                  return Container( //Respuesta3
-                                                    width: 250,
-                                                    child: RaisedButton(
-                                                      color: Colors.cyan,
-                                                      child: Text('${snapshot3.data[6].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      
-                                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                                      onPressed: () {
-                                                        setState(() async {
-                                                          if(snapshot3.data[6].opcion == 3){
-                                                            print("RESPUESTA CORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal + 50;
-                                                            globals.aciertos++;
-                                                            _isVisible7= false;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);  
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[1].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),                                                    
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[1].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible2 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                  
                                                               setState(() {
                                                               ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });                                                
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));
-                                                          }else{
-                                                            print("RESPUESTA INCORRECTA");
-                                                            globals.puntuacionTotal = globals.puntuacionTotal - 25;
-                                                            globals.fallos++;
-                                                            rankingModelo rank = new rankingModelo();
-                                                            rank.id = globals.idRanking;
-                                                            rank.puntos = globals.puntuacionTotal;
-                                                            rank.usuario_id = "1";
-                                                            rank.nombre = globals.usuario;
-                                                            rank.aciertos = globals.aciertos;
-                                                            rank.fallos = globals.fallos;
-                                                            rank.tiempo = 0;
-                                                            rank.rutasId = globals.idRuta;
-                                                            rankingModelo rankings = await actualizarRanking(rank);
-                                                             setState(() {
-                                                               ranking = rankings as List<rankingModelo>;
-                                                              _isVisible7 = false;
-                                                            });
-                                                            deleteUbicacion(globals.usuario);
-                                                            Navigator.of(context).push(MaterialPageRoute(
-                                                              builder: (context) => FinalizarPage(),
-                                                            ));
-                                                           
-                                                          }
-                                                       
-                                                      },
+                                                                _isVisible2 = false;
+                                                              });                                                        
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible2 = false;
+                                                              });                                                         
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
                                                     );
-                                                    })
-                                                  );
-                                                   }
                                                   }
-                                                ),
-                                              ],
-                                            );                                      
-                                          } 
-                                        }     
-                                      }
-                                    ),
+                                                }
+                                              ),
+                                            ],
+                                          );                                     
+                                        } 
+                                      }     
+                                    }
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      ]
-                    ),
+                      ),
+                    ]
                   ),
-                  button(_onMapTypeButtonPressed),                
-                  BtnSeguirUbicacion(),
-                  BtnUbicacion(),
-                ],
-              ) 
+                ),
+                Visibility(
+                  visible: _isVisible3,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){ 
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));            
+                                      }else{                
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[2].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[2].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),                                                 
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[2].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible3 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;                                                         
+                                                                _isVisible3 = false;
+                                                              });
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                          
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible3 = false;
+                                                              });                                                      
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[2].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[2].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible3 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                 
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible3 = false;
+                                                              });                                                
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                          
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible3 = false;
+                                                              });                                              
+                                                            }                                          
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                                FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[2].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () async {
+                                                          setState(() async {
+                                                            if(snapshot3.data[2].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible3 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible3 = false;
+                                                              });                                                       
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible3 = false;
+                                                              });                                                   
+                                                            } 
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
+                                      }     
+                                    }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible4,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){      
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));       
+                                      }else{                                                                
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[3].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[3].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[3].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible4 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                          
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                   
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                           
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[3].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                       
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[3].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible4 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                        
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                         
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                         
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[3].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),                                                      
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[3].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible4 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                       
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible4 = false;
+                                                              });                                                       
+                                                            }                                                     
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
+                                      }     
+                                    }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible5,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){  
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));           
+                                      }else{                                   
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[4].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[4].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),                                                    
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[4].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible5 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });                                                           
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                         
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });                                                      
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[4].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[4].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible5 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });                                                 
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                  
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });                                                           
+                                                            }                                                       
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[4].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),   
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[4].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible5 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                    
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible5 = false;
+                                                              });                                                         
+                                                            }                                                      
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
+                                      }     
+                                    }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible6,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,                          
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));             
+                                      }else{                  
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[5].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container(
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[5].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),                                                 
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[5].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6 = false;
+                                                              });                                                     
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6 = false;
+                                                              });
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[5].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                       
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[5].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible6 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                 
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6 = false;
+                                                              });                                                            
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                     
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6 = false;
+                                                              });
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[5].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),                                         
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[5].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible6 = false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                    
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6 = false;
+                                                              });                                                       
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);                                                      
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible6= false;
+                                                              });
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                            ],
+                                          );                                     
+                                        } 
+                                      }     
+                                    }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                Visibility(
+                  visible: _isVisible7,
+                  child: Stack(
+                    children:[
+                      Container(
+                        margin: EdgeInsets.only(top: 60),
+                        child: CustomAlertDialog(
+                          contentPadding: EdgeInsets.all(5),
+                          content: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.cyan, width: 4),
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                width: MediaQuery.of(context).size.width / 1.2,
+                                height: MediaQuery.of(context).size.height / 2,
+                                child: Center(
+                                  child: FutureBuilder(
+                                    future: getPreguntas(globals.idRuta),
+                                    builder: (BuildContext context, AsyncSnapshot snapshot3) {                       
+                                      if(!snapshot3.hasData){   
+                                        return Center(child: CircularProgressIndicator(strokeWidth: 2));          
+                                      }else{                  
+                                        for(int n=0;n<snapshot3.data.length;n++){                                      
+                                          return Column(
+                                            children: <Widget>[
+                                              Container( //Pregunta
+                                                width: 300,
+                                                child: Center(child: Text('${snapshot3.data[6].pregunta}',  style: TextStyle(fontSize: 24),)),
+                                                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[6].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),                                                       
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[6].opcion == 1){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible7= false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);
+                                                              setState(() {
+                                                                  ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });                                                            
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));
+                                                              
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);   
+                                                              setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });                                                  
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));   
+                                                            }                                                    
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[6].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),                                                       
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[6].opcion == 2){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible7= false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);   
+                                                                setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });                                                                                                                
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));                                                             
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);   
+                                                                setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });                                                 
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));                                                        
+                                                            }
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              FutureBuilder(
+                                                future: getRanking(),
+                                                builder: (BuildContext context, AsyncSnapshot snapshot4) { 
+                                                  if(!snapshot4.hasData){    
+                                                    return Center(child: CircularProgressIndicator(strokeWidth: 2));
+                                                  }else{ 
+                                                    for(int i=0; i<snapshot4.data.length;i++){
+                                                      if(snapshot4.data[i].nombre == globals.usuario && snapshot4.data[i].rutasId == globals.idRuta){
+                                                        globals.idRanking = snapshot4.data[i].id;
+                                                      }
+                                                    }  
+                                                    return Container( //Respuesta3
+                                                      width: 250,
+                                                      child: RaisedButton(
+                                                        color: Colors.cyan,
+                                                        child: Text('${snapshot3.data[6].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),                                                        
+                                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                        onPressed: () {
+                                                          setState(() async {
+                                                            if(snapshot3.data[6].opcion == 3){
+                                                              globals.puntuacionTotal = globals.puntuacionTotal + 50;
+                                                              globals.aciertos++;
+                                                              _isVisible7= false;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);  
+                                                                setState(() {
+                                                                ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });                                                
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));
+                                                            }else{
+                                                              globals.puntuacionTotal = globals.puntuacionTotal - 25;
+                                                              globals.fallos++;
+                                                              rankingModelo rank = new rankingModelo();
+                                                              rank.id = globals.idRanking;
+                                                              rank.puntos = globals.puntuacionTotal;
+                                                              rank.usuario_id = "1";
+                                                              rank.nombre = globals.usuario;
+                                                              rank.aciertos = globals.aciertos;
+                                                              rank.fallos = globals.fallos;
+                                                              rank.tiempo = 0;
+                                                              rank.rutasId = globals.idRuta;
+                                                              rankingModelo rankings = await actualizarRanking(rank);
+                                                                setState(() {
+                                                                  ranking = rankings as List<rankingModelo>;
+                                                                _isVisible7 = false;
+                                                              });
+                                                              deleteUbicacion(globals.usuario);
+                                                              Navigator.of(context).push(MaterialPageRoute(
+                                                                builder: (context) => FinalizarPage(),
+                                                              ));                                                             
+                                                            }                                                         
+                                                          },);
+                                                        }
+                                                      )
+                                                    );
+                                                  }
+                                                }
+                                              ),
+                                            ],
+                                          );                                      
+                                        } 
+                                      }     
+                                    }
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ]
+                  ),
+                ),
+                button(_onMapTypeButtonPressed),                
+                BtnSeguirUbicacion(),
+                BtnUbicacion(),
+              ],
+            ) 
           ]
         ),
       ],
@@ -2678,8 +2489,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
             future: getRanking(),
             builder: (BuildContext context, AsyncSnapshot snapshot5) {
               if(!snapshot2.hasData || !snapshot5.hasData){
-                return Center(child: CircularProgressIndicator(strokeWidth: 2),
-                );
+                return Center(child: CircularProgressIndicator(strokeWidth: 2),);
               }else{
                 List<String> fotos = [];
                 List<int> listaRankingPuntos = [];
@@ -2689,16 +2499,16 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                     globals.idRanking = snapshot5.data[i].id;
                   }
                 }  
-              //guardar los puntos
+                //guardar los puntos
                 for(int i=0; i<snapshot5.data.length;i++){
                   listaRankingPuntos.add(snapshot5.data[i].puntos);
                 }
-              //guardar los nombres
+                //guardar los nombres
                 for(int i=0; i<snapshot5.data.length;i++){
                   listaRankingNombres.add(snapshot5.data[i].nombre);
                 }
               
-              //guardar los avatars
+                //guardar los avatars
                 for(int k=0;k<listaRankingNombres.length;k++){
                   for(int j=0;j<listaRankingPuntos.length;j++){
                     if(listaRankingNombres[k] == snapshot2.data[j].usuario){
@@ -2706,7 +2516,6 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                     }
                   }
                 }
-
                 return Column(
                   children: <Widget>[ 
                     Divider(),
@@ -2881,8 +2690,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                   ),
                                 ],
                               ),
-                            ),
-                            
+                            ),                            
                             Container( //NOMBRE PRIMERA POSICION
                               color: Colors.amberAccent[400],
                               padding: EdgeInsets.symmetric(vertical: 20),
