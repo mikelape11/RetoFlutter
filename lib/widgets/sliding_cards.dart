@@ -51,8 +51,8 @@ class _SlidingCardsViewState extends State<SlidingCardsView> {
                   SlidingCard(      
                     id: i,
                     name: '${snapshot.data[i].ciudad}',
-                    distancia: "${snapshot.data[i].distancia} KM" ,
-                    tiempo: "${snapshot.data[i].tiempo}",
+                    distancia: "${(snapshot.data[i].distancia/1000).toStringAsFixed(2)} KM" ,
+                    tiempo: "${((snapshot.data[i].tiempo/1000)/60).round()} min.",
                     assetName: '${snapshot.data[i].imagen}',
                     length: snapshot.data.length,
                     snapshot : snapshot,

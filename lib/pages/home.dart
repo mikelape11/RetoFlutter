@@ -924,7 +924,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[0].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -995,7 +995,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[0].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1116,7 +1116,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[1].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1187,7 +1187,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[1].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1258,7 +1258,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[1].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1380,7 +1380,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[2].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1449,7 +1449,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[2].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1520,7 +1520,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[2].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () async {
                                                         setState(() async {
@@ -1643,7 +1643,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[3].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1714,7 +1714,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[3].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1785,7 +1785,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[3].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1907,7 +1907,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[4].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -1978,7 +1978,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[4].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2049,7 +2049,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[4].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2171,7 +2171,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[5].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2241,7 +2241,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[5].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2310,7 +2310,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[5].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2430,7 +2430,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[6].respuestas[0].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2508,7 +2508,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[6].respuestas[1].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
@@ -2586,7 +2586,7 @@ class Home extends State<HomePage> with WidgetsBindingObserver{
                                                     child: RaisedButton(
                                                       color: Colors.cyan,
                                                       child: Text('${snapshot3.data[6].respuestas[2].respuesta}', style: TextStyle(fontSize: 16),),
-                                                      padding: EdgeInsets.only(left: 50, right: 50),
+                                                      
                                                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                                       onPressed: () {
                                                         setState(() async {
